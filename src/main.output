@@ -15,68 +15,88 @@ Grammar
 
     4 statement: SEMICOLON
     5          | declaration SEMICOLON
+    6          | function
 
-    6 declaration: T IDENTIFIER LOP_ASSIGN expr
-    7            | T IDENTIFIERS
+    7 function: T IDENTIFIER LEFTBR PARMS RIGHTBR LBRACE statements RBRACE
+    8         | T IDENTIFIER LEFTBR RIGHTBR LBRACE statements RBRACE
+    9         | T_VOID IDENTIFIER LEFTBR PARMS RIGHTBR LBRACE statements RBRACE
+   10         | T_VOID IDENTIFIER LEFTBR RIGHTBR LBRACE statements RBRACE
 
-    8 IDENTIFIERS: IDENTIFIER
-    9            | IDENTIFIERS COMMA IDENTIFIER
+   11 PARMS: T IDENTIFIER
+   12      | PARMS COMMA T IDENTIFIER
 
-   10 expr: IDENTIFIER
-   11     | INTEGER
-   12     | CHAR
-   13     | STRING
+   13 declaration: T IDENTIFIER LOP_ASSIGN expr
+   14            | T IDENTIFIERS
 
-   14 T: T_INT
-   15  | T_CHAR
-   16  | T_BOOL
-   17  | T_STRING
+   15 IDENTIFIERS: IDENTIFIER
+   16            | IDENTIFIERS COMMA IDENTIFIER
+
+   17 expr: IDENTIFIER
+   18     | INTEGER
+   19     | CHAR
+   20     | STRING
+
+   21 T: T_INT
+   22  | T_CHAR
+   23  | T_BOOL
+   24  | T_STRING
 
 
 Terminals, with rules where they appear
 
     $end (0) 0
     error (256)
-    T_CHAR (258) 15
-    T_INT (259) 14
-    T_STRING (260) 17
-    T_BOOL (261) 16
-    LOP_ASSIGN (262) 6
-    SEMICOLON (263) 4 5
-    COMMA (264) 9
-    IDENTIFIER (265) 6 8 9 10
-    INTEGER (266) 11
-    CHAR (267) 12
-    BOOL (268)
-    STRING (269) 13
-    LOP_EQ (270)
+    T_CHAR (258) 22
+    T_INT (259) 21
+    T_STRING (260) 24
+    T_BOOL (261) 23
+    T_VOID (262) 9 10
+    LEFTBR (263) 7 8 9 10
+    RIGHTBR (264) 7 8 9 10
+    LBRACE (265) 7 8 9 10
+    RBRACE (266) 7 8 9 10
+    LOP_ASSIGN (267) 13
+    SEMICOLON (268) 4 5
+    COMMA (269) 12 16
+    IDENTIFIER (270) 7 8 9 10 11 12 13 15 16 17
+    INTEGER (271) 18
+    CHAR (272) 19
+    BOOL (273)
+    STRING (274) 20
+    LOP_EQ (275)
 
 
 Nonterminals, with rules where they appear
 
-    $accept (16)
+    $accept (21)
         on left: 0
-    program (17)
+    program (22)
         on left: 1
         on right: 0
-    statements (18)
+    statements (23)
         on left: 2 3
-        on right: 1 3
-    statement (19)
-        on left: 4 5
+        on right: 1 3 7 8 9 10
+    statement (24)
+        on left: 4 5 6
         on right: 2 3
-    declaration (20)
-        on left: 6 7
-        on right: 5
-    IDENTIFIERS (21)
-        on left: 8 9
-        on right: 7 9
-    expr (22)
-        on left: 10 11 12 13
+    function (25)
+        on left: 7 8 9 10
         on right: 6
-    T (23)
-        on left: 14 15 16 17
-        on right: 6 7
+    PARMS (26)
+        on left: 11 12
+        on right: 7 9 12
+    declaration (27)
+        on left: 13 14
+        on right: 5
+    IDENTIFIERS (28)
+        on left: 15 16
+        on right: 14 16
+    expr (29)
+        on left: 17 18 19 20
+        on right: 13
+    T (30)
+        on left: 21 22 23 24
+        on right: 7 8 11 12 13 14
 
 
 State 0
@@ -87,58 +107,68 @@ State 0
     T_INT      shift, and go to state 2
     T_STRING   shift, and go to state 3
     T_BOOL     shift, and go to state 4
-    SEMICOLON  shift, and go to state 5
+    T_VOID     shift, and go to state 5
+    SEMICOLON  shift, and go to state 6
 
-    program      go to state 6
-    statements   go to state 7
-    statement    go to state 8
-    declaration  go to state 9
-    T            go to state 10
+    program      go to state 7
+    statements   go to state 8
+    statement    go to state 9
+    function     go to state 10
+    declaration  go to state 11
+    T            go to state 12
 
 
 State 1
 
-   15 T: T_CHAR .
+   22 T: T_CHAR .
 
-    $default  reduce using rule 15 (T)
+    $default  reduce using rule 22 (T)
 
 
 State 2
 
-   14 T: T_INT .
+   21 T: T_INT .
 
-    $default  reduce using rule 14 (T)
+    $default  reduce using rule 21 (T)
 
 
 State 3
 
-   17 T: T_STRING .
+   24 T: T_STRING .
 
-    $default  reduce using rule 17 (T)
+    $default  reduce using rule 24 (T)
 
 
 State 4
 
-   16 T: T_BOOL .
+   23 T: T_BOOL .
 
-    $default  reduce using rule 16 (T)
+    $default  reduce using rule 23 (T)
 
 
 State 5
+
+    9 function: T_VOID . IDENTIFIER LEFTBR PARMS RIGHTBR LBRACE statements RBRACE
+   10         | T_VOID . IDENTIFIER LEFTBR RIGHTBR LBRACE statements RBRACE
+
+    IDENTIFIER  shift, and go to state 13
+
+
+State 6
 
     4 statement: SEMICOLON .
 
     $default  reduce using rule 4 (statement)
 
 
-State 6
+State 7
 
     0 $accept: program . $end
 
-    $end  shift, and go to state 11
+    $end  shift, and go to state 14
 
 
-State 7
+State 8
 
     1 program: statements .
     3 statements: statements . statement
@@ -147,136 +177,450 @@ State 7
     T_INT      shift, and go to state 2
     T_STRING   shift, and go to state 3
     T_BOOL     shift, and go to state 4
-    SEMICOLON  shift, and go to state 5
+    T_VOID     shift, and go to state 5
+    SEMICOLON  shift, and go to state 6
 
     $default  reduce using rule 1 (program)
 
-    statement    go to state 12
-    declaration  go to state 9
-    T            go to state 10
+    statement    go to state 15
+    function     go to state 10
+    declaration  go to state 11
+    T            go to state 12
 
 
-State 8
+State 9
 
     2 statements: statement .
 
     $default  reduce using rule 2 (statements)
 
 
-State 9
-
-    5 statement: declaration . SEMICOLON
-
-    SEMICOLON  shift, and go to state 13
-
-
 State 10
 
-    6 declaration: T . IDENTIFIER LOP_ASSIGN expr
-    7            | T . IDENTIFIERS
+    6 statement: function .
 
-    IDENTIFIER  shift, and go to state 14
-
-    IDENTIFIERS  go to state 15
+    $default  reduce using rule 6 (statement)
 
 
 State 11
+
+    5 statement: declaration . SEMICOLON
+
+    SEMICOLON  shift, and go to state 16
+
+
+State 12
+
+    7 function: T . IDENTIFIER LEFTBR PARMS RIGHTBR LBRACE statements RBRACE
+    8         | T . IDENTIFIER LEFTBR RIGHTBR LBRACE statements RBRACE
+   13 declaration: T . IDENTIFIER LOP_ASSIGN expr
+   14            | T . IDENTIFIERS
+
+    IDENTIFIER  shift, and go to state 17
+
+    IDENTIFIERS  go to state 18
+
+
+State 13
+
+    9 function: T_VOID IDENTIFIER . LEFTBR PARMS RIGHTBR LBRACE statements RBRACE
+   10         | T_VOID IDENTIFIER . LEFTBR RIGHTBR LBRACE statements RBRACE
+
+    LEFTBR  shift, and go to state 19
+
+
+State 14
 
     0 $accept: program $end .
 
     $default  accept
 
 
-State 12
+State 15
 
     3 statements: statements statement .
 
     $default  reduce using rule 3 (statements)
 
 
-State 13
+State 16
 
     5 statement: declaration SEMICOLON .
 
     $default  reduce using rule 5 (statement)
 
 
-State 14
-
-    6 declaration: T IDENTIFIER . LOP_ASSIGN expr
-    8 IDENTIFIERS: IDENTIFIER .
-
-    LOP_ASSIGN  shift, and go to state 16
-
-    $default  reduce using rule 8 (IDENTIFIERS)
-
-
-State 15
-
-    7 declaration: T IDENTIFIERS .
-    9 IDENTIFIERS: IDENTIFIERS . COMMA IDENTIFIER
-
-    COMMA  shift, and go to state 17
-
-    $default  reduce using rule 7 (declaration)
-
-
-State 16
-
-    6 declaration: T IDENTIFIER LOP_ASSIGN . expr
-
-    IDENTIFIER  shift, and go to state 18
-    INTEGER     shift, and go to state 19
-    CHAR        shift, and go to state 20
-    STRING      shift, and go to state 21
-
-    expr  go to state 22
-
-
 State 17
 
-    9 IDENTIFIERS: IDENTIFIERS COMMA . IDENTIFIER
+    7 function: T IDENTIFIER . LEFTBR PARMS RIGHTBR LBRACE statements RBRACE
+    8         | T IDENTIFIER . LEFTBR RIGHTBR LBRACE statements RBRACE
+   13 declaration: T IDENTIFIER . LOP_ASSIGN expr
+   15 IDENTIFIERS: IDENTIFIER .
 
-    IDENTIFIER  shift, and go to state 23
+    LEFTBR      shift, and go to state 20
+    LOP_ASSIGN  shift, and go to state 21
+
+    $default  reduce using rule 15 (IDENTIFIERS)
 
 
 State 18
 
-   10 expr: IDENTIFIER .
+   14 declaration: T IDENTIFIERS .
+   16 IDENTIFIERS: IDENTIFIERS . COMMA IDENTIFIER
 
-    $default  reduce using rule 10 (expr)
+    COMMA  shift, and go to state 22
+
+    $default  reduce using rule 14 (declaration)
 
 
 State 19
 
-   11 expr: INTEGER .
+    9 function: T_VOID IDENTIFIER LEFTBR . PARMS RIGHTBR LBRACE statements RBRACE
+   10         | T_VOID IDENTIFIER LEFTBR . RIGHTBR LBRACE statements RBRACE
 
-    $default  reduce using rule 11 (expr)
+    T_CHAR    shift, and go to state 1
+    T_INT     shift, and go to state 2
+    T_STRING  shift, and go to state 3
+    T_BOOL    shift, and go to state 4
+    RIGHTBR   shift, and go to state 23
+
+    PARMS  go to state 24
+    T      go to state 25
 
 
 State 20
 
-   12 expr: CHAR .
+    7 function: T IDENTIFIER LEFTBR . PARMS RIGHTBR LBRACE statements RBRACE
+    8         | T IDENTIFIER LEFTBR . RIGHTBR LBRACE statements RBRACE
 
-    $default  reduce using rule 12 (expr)
+    T_CHAR    shift, and go to state 1
+    T_INT     shift, and go to state 2
+    T_STRING  shift, and go to state 3
+    T_BOOL    shift, and go to state 4
+    RIGHTBR   shift, and go to state 26
+
+    PARMS  go to state 27
+    T      go to state 25
 
 
 State 21
 
-   13 expr: STRING .
+   13 declaration: T IDENTIFIER LOP_ASSIGN . expr
 
-    $default  reduce using rule 13 (expr)
+    IDENTIFIER  shift, and go to state 28
+    INTEGER     shift, and go to state 29
+    CHAR        shift, and go to state 30
+    STRING      shift, and go to state 31
+
+    expr  go to state 32
 
 
 State 22
 
-    6 declaration: T IDENTIFIER LOP_ASSIGN expr .
+   16 IDENTIFIERS: IDENTIFIERS COMMA . IDENTIFIER
 
-    $default  reduce using rule 6 (declaration)
+    IDENTIFIER  shift, and go to state 33
 
 
 State 23
 
-    9 IDENTIFIERS: IDENTIFIERS COMMA IDENTIFIER .
+   10 function: T_VOID IDENTIFIER LEFTBR RIGHTBR . LBRACE statements RBRACE
 
-    $default  reduce using rule 9 (IDENTIFIERS)
+    LBRACE  shift, and go to state 34
+
+
+State 24
+
+    9 function: T_VOID IDENTIFIER LEFTBR PARMS . RIGHTBR LBRACE statements RBRACE
+   12 PARMS: PARMS . COMMA T IDENTIFIER
+
+    RIGHTBR  shift, and go to state 35
+    COMMA    shift, and go to state 36
+
+
+State 25
+
+   11 PARMS: T . IDENTIFIER
+
+    IDENTIFIER  shift, and go to state 37
+
+
+State 26
+
+    8 function: T IDENTIFIER LEFTBR RIGHTBR . LBRACE statements RBRACE
+
+    LBRACE  shift, and go to state 38
+
+
+State 27
+
+    7 function: T IDENTIFIER LEFTBR PARMS . RIGHTBR LBRACE statements RBRACE
+   12 PARMS: PARMS . COMMA T IDENTIFIER
+
+    RIGHTBR  shift, and go to state 39
+    COMMA    shift, and go to state 36
+
+
+State 28
+
+   17 expr: IDENTIFIER .
+
+    $default  reduce using rule 17 (expr)
+
+
+State 29
+
+   18 expr: INTEGER .
+
+    $default  reduce using rule 18 (expr)
+
+
+State 30
+
+   19 expr: CHAR .
+
+    $default  reduce using rule 19 (expr)
+
+
+State 31
+
+   20 expr: STRING .
+
+    $default  reduce using rule 20 (expr)
+
+
+State 32
+
+   13 declaration: T IDENTIFIER LOP_ASSIGN expr .
+
+    $default  reduce using rule 13 (declaration)
+
+
+State 33
+
+   16 IDENTIFIERS: IDENTIFIERS COMMA IDENTIFIER .
+
+    $default  reduce using rule 16 (IDENTIFIERS)
+
+
+State 34
+
+   10 function: T_VOID IDENTIFIER LEFTBR RIGHTBR LBRACE . statements RBRACE
+
+    T_CHAR     shift, and go to state 1
+    T_INT      shift, and go to state 2
+    T_STRING   shift, and go to state 3
+    T_BOOL     shift, and go to state 4
+    T_VOID     shift, and go to state 5
+    SEMICOLON  shift, and go to state 6
+
+    statements   go to state 40
+    statement    go to state 9
+    function     go to state 10
+    declaration  go to state 11
+    T            go to state 12
+
+
+State 35
+
+    9 function: T_VOID IDENTIFIER LEFTBR PARMS RIGHTBR . LBRACE statements RBRACE
+
+    LBRACE  shift, and go to state 41
+
+
+State 36
+
+   12 PARMS: PARMS COMMA . T IDENTIFIER
+
+    T_CHAR    shift, and go to state 1
+    T_INT     shift, and go to state 2
+    T_STRING  shift, and go to state 3
+    T_BOOL    shift, and go to state 4
+
+    T  go to state 42
+
+
+State 37
+
+   11 PARMS: T IDENTIFIER .
+
+    $default  reduce using rule 11 (PARMS)
+
+
+State 38
+
+    8 function: T IDENTIFIER LEFTBR RIGHTBR LBRACE . statements RBRACE
+
+    T_CHAR     shift, and go to state 1
+    T_INT      shift, and go to state 2
+    T_STRING   shift, and go to state 3
+    T_BOOL     shift, and go to state 4
+    T_VOID     shift, and go to state 5
+    SEMICOLON  shift, and go to state 6
+
+    statements   go to state 43
+    statement    go to state 9
+    function     go to state 10
+    declaration  go to state 11
+    T            go to state 12
+
+
+State 39
+
+    7 function: T IDENTIFIER LEFTBR PARMS RIGHTBR . LBRACE statements RBRACE
+
+    LBRACE  shift, and go to state 44
+
+
+State 40
+
+    3 statements: statements . statement
+   10 function: T_VOID IDENTIFIER LEFTBR RIGHTBR LBRACE statements . RBRACE
+
+    T_CHAR     shift, and go to state 1
+    T_INT      shift, and go to state 2
+    T_STRING   shift, and go to state 3
+    T_BOOL     shift, and go to state 4
+    T_VOID     shift, and go to state 5
+    RBRACE     shift, and go to state 45
+    SEMICOLON  shift, and go to state 6
+
+    statement    go to state 15
+    function     go to state 10
+    declaration  go to state 11
+    T            go to state 12
+
+
+State 41
+
+    9 function: T_VOID IDENTIFIER LEFTBR PARMS RIGHTBR LBRACE . statements RBRACE
+
+    T_CHAR     shift, and go to state 1
+    T_INT      shift, and go to state 2
+    T_STRING   shift, and go to state 3
+    T_BOOL     shift, and go to state 4
+    T_VOID     shift, and go to state 5
+    SEMICOLON  shift, and go to state 6
+
+    statements   go to state 46
+    statement    go to state 9
+    function     go to state 10
+    declaration  go to state 11
+    T            go to state 12
+
+
+State 42
+
+   12 PARMS: PARMS COMMA T . IDENTIFIER
+
+    IDENTIFIER  shift, and go to state 47
+
+
+State 43
+
+    3 statements: statements . statement
+    8 function: T IDENTIFIER LEFTBR RIGHTBR LBRACE statements . RBRACE
+
+    T_CHAR     shift, and go to state 1
+    T_INT      shift, and go to state 2
+    T_STRING   shift, and go to state 3
+    T_BOOL     shift, and go to state 4
+    T_VOID     shift, and go to state 5
+    RBRACE     shift, and go to state 48
+    SEMICOLON  shift, and go to state 6
+
+    statement    go to state 15
+    function     go to state 10
+    declaration  go to state 11
+    T            go to state 12
+
+
+State 44
+
+    7 function: T IDENTIFIER LEFTBR PARMS RIGHTBR LBRACE . statements RBRACE
+
+    T_CHAR     shift, and go to state 1
+    T_INT      shift, and go to state 2
+    T_STRING   shift, and go to state 3
+    T_BOOL     shift, and go to state 4
+    T_VOID     shift, and go to state 5
+    SEMICOLON  shift, and go to state 6
+
+    statements   go to state 49
+    statement    go to state 9
+    function     go to state 10
+    declaration  go to state 11
+    T            go to state 12
+
+
+State 45
+
+   10 function: T_VOID IDENTIFIER LEFTBR RIGHTBR LBRACE statements RBRACE .
+
+    $default  reduce using rule 10 (function)
+
+
+State 46
+
+    3 statements: statements . statement
+    9 function: T_VOID IDENTIFIER LEFTBR PARMS RIGHTBR LBRACE statements . RBRACE
+
+    T_CHAR     shift, and go to state 1
+    T_INT      shift, and go to state 2
+    T_STRING   shift, and go to state 3
+    T_BOOL     shift, and go to state 4
+    T_VOID     shift, and go to state 5
+    RBRACE     shift, and go to state 50
+    SEMICOLON  shift, and go to state 6
+
+    statement    go to state 15
+    function     go to state 10
+    declaration  go to state 11
+    T            go to state 12
+
+
+State 47
+
+   12 PARMS: PARMS COMMA T IDENTIFIER .
+
+    $default  reduce using rule 12 (PARMS)
+
+
+State 48
+
+    8 function: T IDENTIFIER LEFTBR RIGHTBR LBRACE statements RBRACE .
+
+    $default  reduce using rule 8 (function)
+
+
+State 49
+
+    3 statements: statements . statement
+    7 function: T IDENTIFIER LEFTBR PARMS RIGHTBR LBRACE statements . RBRACE
+
+    T_CHAR     shift, and go to state 1
+    T_INT      shift, and go to state 2
+    T_STRING   shift, and go to state 3
+    T_BOOL     shift, and go to state 4
+    T_VOID     shift, and go to state 5
+    RBRACE     shift, and go to state 51
+    SEMICOLON  shift, and go to state 6
+
+    statement    go to state 15
+    function     go to state 10
+    declaration  go to state 11
+    T            go to state 12
+
+
+State 50
+
+    9 function: T_VOID IDENTIFIER LEFTBR PARMS RIGHTBR LBRACE statements RBRACE .
+
+    $default  reduce using rule 9 (function)
+
+
+State 51
+
+    7 function: T IDENTIFIER LEFTBR PARMS RIGHTBR LBRACE statements RBRACE .
+
+    $default  reduce using rule 7 (function)

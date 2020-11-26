@@ -12,6 +12,8 @@ enum NodeType
     NODE_TYPE,
 
     NODE_STMT,
+    NODE_PARA,
+    NODE_FUNC,
     NODE_PROG,
 };
 

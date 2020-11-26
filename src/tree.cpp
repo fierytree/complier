@@ -44,7 +44,19 @@ void TreeNode::printNodeInfo() {
         }
         case NODE_STMT:{
             cout<<"stmt"<<"\t";
+            cout<<"type:"+sType2String(stype)<<"\t";
+            cout<<"name:"<<var_name<<"\t";      
+            break;
+        }
+        case NODE_PARA:{
+            cout<<"para"<<"\t";
             cout<<"type:"+sType2String(stype)<<"\t";    
+            break;
+        }
+        case NODE_FUNC:{
+            cout<<"func"<<"\t";
+            cout<<"type:"+type->getTypeInfo()<<"\t";
+            cout<<"name:"<<var_name<<"\t";    
             break;
         }
         case NODE_TYPE:{
@@ -115,7 +127,7 @@ string TreeNode::sType2String(StmtType t) {
 
 
 string TreeNode::nodeType2String (NodeType t){
-    string nodeType_name[]={"const","var","expr","type","stmt","prog"};
+    string nodeType_name[]={"const","var","expr","type","stmt","para","func","prog"};
     return nodeType_name[t];
 }
 

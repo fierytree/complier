@@ -53,15 +53,20 @@ extern int yydebug;
     T_INT = 259,
     T_STRING = 260,
     T_BOOL = 261,
-    LOP_ASSIGN = 262,
-    SEMICOLON = 263,
-    COMMA = 264,
-    IDENTIFIER = 265,
-    INTEGER = 266,
-    CHAR = 267,
-    BOOL = 268,
-    STRING = 269,
-    LOP_EQ = 270
+    T_VOID = 262,
+    LEFTBR = 263,
+    RIGHTBR = 264,
+    LBRACE = 265,
+    RBRACE = 266,
+    LOP_ASSIGN = 267,
+    SEMICOLON = 268,
+    COMMA = 269,
+    IDENTIFIER = 270,
+    INTEGER = 271,
+    CHAR = 272,
+    BOOL = 273,
+    STRING = 274,
+    LOP_EQ = 275
   };
 #endif
 

@@ -24,10 +24,16 @@ IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
 "int" return T_INT;
 "bool" return T_BOOL;
 "char" return T_CHAR;
+"void" return T_VOID;
 
+"(" return LEFTBR;
+")" return RIGHTBR;
 "=" return LOP_ASSIGN;
 
 ";" return  SEMICOLON;
+"{" return LBRACE;
+"}" return RBRACE;
+
 
 "," return COMMA;
 

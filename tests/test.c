@@ -1,5 +1,9 @@
-int a = 0;
-int b = 1;
-int c = 1;
 char d = 'a';
 int e,f,g;
+void h(int x){
+    int z;
+}
+int main(){
+    int x=0;
+    char y='k';
+}

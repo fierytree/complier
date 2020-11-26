@@ -1,24 +1,30 @@
 file has been opened
-@22	lineno:0	prog	children:3,7,11,15,21	
-@3	lineno:1	stmt	type:decl	children:0,1,2	
-@0	lineno:1	type	int 	children:	
-@1	lineno:1	var 	name:a	children:	
-@2	lineno:1	const	int 	val:0	children:	
-@7	lineno:2	stmt	type:decl	children:4,5,6	
+@29	lineno:0	prog	children:3,8,16,28	
+@3	lineno:1	stmt	type:decl	name:	children:0,1,2	
+@0	lineno:1	type	char	children:	
+@1	lineno:1	var 	name:d	children:	
+@2	lineno:1	const	char	val:a	children:	
+@8	lineno:2	stmt	type:decl	name:	children:4,5	
 @4	lineno:2	type	int 	children:	
-@5	lineno:2	var 	name:b	children:	
-@6	lineno:2	const	int 	val:1	children:	
-@11	lineno:3	stmt	type:decl	children:8,9,10	
-@8	lineno:3	type	int 	children:	
-@9	lineno:3	var 	name:c	children:	
-@10	lineno:3	const	int 	val:1	children:	
-@15	lineno:4	stmt	type:decl	children:12,13,14	
-@12	lineno:4	type	char	children:	
-@13	lineno:4	var 	name:d	children:	
-@14	lineno:4	const	char	val:a	children:	
-@21	lineno:5	stmt	type:decl	children:16,17	
-@16	lineno:5	type	int 	children:	
-@17	lineno:5	var 	name:e	children:	
-@18	lineno:5	var 	name:f	children:	
-@19	lineno:5	var 	name:g	children:	
-@20	lineno:5	var 	name:h	children:	
+@5	lineno:2	var 	name:e	children:	
+@6	lineno:2	var 	name:f	children:	
+@7	lineno:2	var 	name:g	children:	
+@16	lineno:2	func	type:void	name:h	children:17,9,10,15	
+@17	lineno:5	type	void	children:	
+@9	lineno:3	var 	name:h	children:	
+@10	lineno:3	type	int 	children:	
+@15	lineno:4	stmt	type:decl	name:	children:13,14	
+@13	lineno:4	type	int 	children:	
+@14	lineno:4	var 	name:z	children:	
+@11	lineno:3	var 	name:x	children:	
+@28	lineno:6	func	type:int 	name:main	children:18,19,23	
+@18	lineno:6	type	int 	children:	
+@19	lineno:6	var 	name:main	children:	
+@23	lineno:7	stmt	type:decl	name:	children:20,21,22	
+@20	lineno:7	type	int 	children:	
+@21	lineno:7	var 	name:x	children:	
+@22	lineno:7	const	int 	val:0	children:	
+@27	lineno:8	stmt	type:decl	name:	children:24,25,26	
+@24	lineno:8	type	char	children:	
+@25	lineno:8	var 	name:y	children:	
+@26	lineno:8	const	char	val:k	children:	
