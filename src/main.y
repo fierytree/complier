@@ -12,6 +12,8 @@
 
 %token SEMICOLON
 
+%token COMMA
+
 %token IDENTIFIER INTEGER CHAR BOOL STRING
 
 %left LOP_EQ
@@ -40,7 +42,7 @@ declaration
     node->addChild($4);
     $$ = node;   
 } 
-| T IDENTIFIER {
+| T IDENTIFIERS {
     TreeNode* node = new TreeNode($1->lineno, NODE_STMT);
     node->stype = STMT_DECL;
     node->addChild($1);
@@ -48,6 +50,15 @@ declaration
     $$ = node;   
 }
 ;
+IDENTIFIERS
+: IDENTIFIER{
+    $$=$1;
+}
+| IDENTIFIERS COMMA IDENTIFIER{
+    $$=$1;
+    $$->addSibling($3);
+}
+
 
 expr
 : IDENTIFIER {

@@ -17,58 +17,65 @@ Grammar
     5          | declaration SEMICOLON
 
     6 declaration: T IDENTIFIER LOP_ASSIGN expr
-    7            | T IDENTIFIER
+    7            | T IDENTIFIERS
 
-    8 expr: IDENTIFIER
-    9     | INTEGER
-   10     | CHAR
-   11     | STRING
+    8 IDENTIFIERS: IDENTIFIER
+    9            | IDENTIFIERS COMMA IDENTIFIER
 
-   12 T: T_INT
-   13  | T_CHAR
-   14  | T_BOOL
-   15  | T_STRING
+   10 expr: IDENTIFIER
+   11     | INTEGER
+   12     | CHAR
+   13     | STRING
+
+   14 T: T_INT
+   15  | T_CHAR
+   16  | T_BOOL
+   17  | T_STRING
 
 
 Terminals, with rules where they appear
 
     $end (0) 0
     error (256)
-    T_CHAR (258) 13
-    T_INT (259) 12
-    T_STRING (260) 15
-    T_BOOL (261) 14
+    T_CHAR (258) 15
+    T_INT (259) 14
+    T_STRING (260) 17
+    T_BOOL (261) 16
     LOP_ASSIGN (262) 6
     SEMICOLON (263) 4 5
-    IDENTIFIER (264) 6 7 8
-    INTEGER (265) 9
-    CHAR (266) 10
-    BOOL (267)
-    STRING (268) 11
-    LOP_EQ (269)
+    COMMA (264) 9
+    IDENTIFIER (265) 6 8 9 10
+    INTEGER (266) 11
+    CHAR (267) 12
+    BOOL (268)
+    STRING (269) 13
+    LOP_EQ (270)
 
 
 Nonterminals, with rules where they appear
 
-    $accept (15)
+    $accept (16)
         on left: 0
-    program (16)
+    program (17)
         on left: 1
         on right: 0
-    statements (17)
+    statements (18)
         on left: 2 3
         on right: 1 3
-    statement (18)
+    statement (19)
         on left: 4 5
         on right: 2 3
-    declaration (19)
+    declaration (20)
         on left: 6 7
         on right: 5
-    expr (20)
-        on left: 8 9 10 11
+    IDENTIFIERS (21)
+        on left: 8 9
+        on right: 7 9
+    expr (22)
+        on left: 10 11 12 13
         on right: 6
-    T (21)
-        on left: 12 13 14 15
+    T (23)
+        on left: 14 15 16 17
         on right: 6 7
 
 
@@ -91,30 +98,30 @@ State 0
 
 State 1
 
-   13 T: T_CHAR .
-
-    $default  reduce using rule 13 (T)
-
-
-State 2
-
-   12 T: T_INT .
-
-    $default  reduce using rule 12 (T)
-
-
-State 3
-
-   15 T: T_STRING .
+   15 T: T_CHAR .
 
     $default  reduce using rule 15 (T)
 
 
-State 4
+State 2
 
-   14 T: T_BOOL .
+   14 T: T_INT .
 
     $default  reduce using rule 14 (T)
+
+
+State 3
+
+   17 T: T_STRING .
+
+    $default  reduce using rule 17 (T)
+
+
+State 4
+
+   16 T: T_BOOL .
+
+    $default  reduce using rule 16 (T)
 
 
 State 5
@@ -166,9 +173,11 @@ State 9
 State 10
 
     6 declaration: T . IDENTIFIER LOP_ASSIGN expr
-    7            | T . IDENTIFIER
+    7            | T . IDENTIFIERS
 
     IDENTIFIER  shift, and go to state 14
+
+    IDENTIFIERS  go to state 15
 
 
 State 11
@@ -195,55 +204,79 @@ State 13
 State 14
 
     6 declaration: T IDENTIFIER . LOP_ASSIGN expr
-    7            | T IDENTIFIER .
+    8 IDENTIFIERS: IDENTIFIER .
 
-    LOP_ASSIGN  shift, and go to state 15
+    LOP_ASSIGN  shift, and go to state 16
 
-    $default  reduce using rule 7 (declaration)
+    $default  reduce using rule 8 (IDENTIFIERS)
 
 
 State 15
 
-    6 declaration: T IDENTIFIER LOP_ASSIGN . expr
+    7 declaration: T IDENTIFIERS .
+    9 IDENTIFIERS: IDENTIFIERS . COMMA IDENTIFIER
 
-    IDENTIFIER  shift, and go to state 16
-    INTEGER     shift, and go to state 17
-    CHAR        shift, and go to state 18
-    STRING      shift, and go to state 19
+    COMMA  shift, and go to state 17
 
-    expr  go to state 20
+    $default  reduce using rule 7 (declaration)
 
 
 State 16
 
-    8 expr: IDENTIFIER .
+    6 declaration: T IDENTIFIER LOP_ASSIGN . expr
 
-    $default  reduce using rule 8 (expr)
+    IDENTIFIER  shift, and go to state 18
+    INTEGER     shift, and go to state 19
+    CHAR        shift, and go to state 20
+    STRING      shift, and go to state 21
+
+    expr  go to state 22
 
 
 State 17
 
-    9 expr: INTEGER .
+    9 IDENTIFIERS: IDENTIFIERS COMMA . IDENTIFIER
 
-    $default  reduce using rule 9 (expr)
+    IDENTIFIER  shift, and go to state 23
 
 
 State 18
 
-   10 expr: CHAR .
+   10 expr: IDENTIFIER .
 
     $default  reduce using rule 10 (expr)
 
 
 State 19
 
-   11 expr: STRING .
+   11 expr: INTEGER .
 
     $default  reduce using rule 11 (expr)
 
 
 State 20
 
+   12 expr: CHAR .
+
+    $default  reduce using rule 12 (expr)
+
+
+State 21
+
+   13 expr: STRING .
+
+    $default  reduce using rule 13 (expr)
+
+
+State 22
+
     6 declaration: T IDENTIFIER LOP_ASSIGN expr .
 
     $default  reduce using rule 6 (declaration)
+
+
+State 23
+
+    9 IDENTIFIERS: IDENTIFIERS COMMA IDENTIFIER .
+
+    $default  reduce using rule 9 (IDENTIFIERS)

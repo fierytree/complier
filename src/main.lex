@@ -29,6 +29,8 @@ IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
 
 ";" return  SEMICOLON;
 
+"," return COMMA;
+
 {INTEGER} {
     TreeNode* node = new TreeNode(lineno, NODE_CONST);
     node->type = TYPE_INT;
@@ -40,7 +42,7 @@ IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
 {CHAR} {
     TreeNode* node = new TreeNode(lineno, NODE_CONST);
     node->type = TYPE_CHAR;
-    node->int_val = yytext[1];
+    node->ch_val = yytext[1];
     yylval = node;
     return CHAR;
 }

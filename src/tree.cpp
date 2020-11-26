@@ -79,9 +79,13 @@ void TreeNode::printAST() {
     printChildrenId();
 
     if(child!=nullptr){
-        child->printAST();
-        for(auto &x:child->siblings){
+        queue<TreeNode*>q;
+        q.push(child);
+        while(!q.empty()){
+            auto x=q.front();
+            q.pop();
             x->printAST();
+            for(auto &y:x->siblings)q.push(y);
         }
     }
 }
