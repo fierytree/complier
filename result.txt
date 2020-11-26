@@ -1,0 +1,14 @@
+file has been opened
+@12	lineno:0	prog	children:3,7,11	
+@3	lineno:1	stmt	type:decl	children:0,1,2	
+@0	lineno:1	type	int 	children:	
+@1	lineno:1	var 	name:a	children:	
+@2	lineno:1	const	int 	val:0	children:	
+@7	lineno:2	stmt	type:decl	children:4,5,6	
+@4	lineno:2	type	int 	children:	
+@5	lineno:2	var 	name:b	children:	
+@6	lineno:2	const	int 	val:1	children:	
+@11	lineno:3	stmt	type:decl	children:8,9,10	
+@8	lineno:3	type	int 	children:	
+@9	lineno:3	var 	name:c	children:	
+@10	lineno:3	const	int 	val:1	children:	
