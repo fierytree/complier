@@ -5,6 +5,7 @@ extern TreeNode *root;
 extern FILE *yyin;
 extern int yyparse();
 int TreeNode::node_num=0;
+vector<int> TreeNode::visited=vector<int>();
 using namespace std;
 int main(int argc, char *argv[])
 {
@@ -24,6 +25,7 @@ int main(int argc, char *argv[])
     cout<<"file has been opened"<<endl;
     yyparse();
     if(root != NULL) {
+        root->visited.clear();
         root->printAST();
     }
     return 0;

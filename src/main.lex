@@ -3,11 +3,19 @@
 #include "common.h"
 #include "main.tab.h"  // yacc header
 int lineno=1;
+int br_count=0;
+typedef pair<int,int> br;
+br global=make_pair(0,1);
+stack<br> br_list;
+map<pair<string,int>,TreeNode*> id_list;
+TreeNode* last;
 %}
 BLOCKCOMMENT \/\*([^\*^\/]*|[\*^\/*]*|[^\**\/]*)*\*\/
 LINECOMMENT \/\/[^\n]*
 EOL	(\r\n|\r|\n)
 WHILTESPACE [[:blank:]]
+
+TT int|char|bool
 
 INTEGER [0-9]+
 
@@ -60,8 +68,14 @@ IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
 "^=" return XOR_ASS;
 
 ";" return  SEMICOLON;
-"{" return LBRACE;
-"}" return RBRACE;
+"{" {
+    br_list.push(make_pair(++br_count,lineno));
+    return LBRACE;
+}
+"}" {
+    br_list.pop();
+    return RBRACE;
+}
 
 
 "," return COMMA;
@@ -83,9 +97,18 @@ IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
 }
 
 {IDENTIFIER} {
-    TreeNode* node = new TreeNode(lineno, NODE_VAR);
-    node->var_name = string(yytext);
-    yylval = node;
+    br sc=br_list.empty()?global:br_list.top();
+    auto x=make_pair(yytext,sc.first);
+    if(id_list.find(x)==id_list.end()){
+        TreeNode* node = new TreeNode(lineno, NODE_VAR);
+        id_list[x]=node;
+        node->var_name = string(yytext);
+        node->scope=sc;
+        yylval = node;
+    }
+    else{
+        yylval=id_list[x];
+    }
     return IDENTIFIER;
 }
 

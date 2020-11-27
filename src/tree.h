@@ -86,6 +86,8 @@ public:
     bool b_val;
     string str_val;
     string var_name;
+    pair<int,int> scope;
+    static vector<int> visited;
 
 public:
     static string nodeType2String (NodeType t);

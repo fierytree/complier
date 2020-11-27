@@ -35,6 +35,8 @@ void TreeNode::printNodeInfo() {
         case NODE_VAR:{
             cout<<"var "<<"\t";
             cout<<"name:"<<var_name<<"\t";
+            if(scope.first==0)cout<<"scope:global"<<"\t";
+            else cout<<"scope:br"<<scope.first<<" in line"<<scope.second<<"\t";
             break;
         }
         case NODE_EXPR:{
@@ -89,15 +91,19 @@ void TreeNode::printChildrenId() {
 void TreeNode::printAST() {
     printNodeInfo();
     printChildrenId();
+    visited.push_back(this->nodeID);
+    sort(visited.begin(),visited.end());
 
     if(child!=nullptr){
         queue<TreeNode*>q;
-        q.push(child);
+        if(find(visited.begin(),visited.end(),child->nodeID)==visited.end())q.push(child);
         while(!q.empty()){
             auto x=q.front();
             q.pop();
             x->printAST();
-            for(auto &y:x->siblings)q.push(y);
+            for(auto &y:x->siblings){
+                if(find(visited.begin(),visited.end(),y->nodeID)==visited.end())q.push(y);
+            }
         }
     }
 }
