@@ -19,8 +19,38 @@ enum NodeType
 
 enum OperatorType
 {
-    OP_EQ,  // ==
-    OP_LOP_ASS,  //=
+	OP_MUL,
+	OP_DIV,
+	OP_SUR,
+	OP_ADD,
+	OP_SUB,
+	OP_LSHIFT,
+	OP_RSHIFT,
+	OP_LE,
+	OP_GE,
+	OP_LT,
+	OP_GT,
+	OP_EQ,
+	OP_UEQ,
+	OP_LOG_AND,
+	OP_LOG_OR,
+	OP_BIT_AND,
+	OP_BIT_OR,
+	OP_BIT_XOR,
+	OP_LOP_ASS,
+	OP_ADD_ASS,
+	OP_SUB_ASS,
+	OP_MUL_ASS,
+	OP_DIV_ASS,
+	OP_SUR_ASS,
+	OP_LS_ASS,
+	OP_RS_ASS,
+	OP_AND_ASS,
+	OP_OR_ASS,
+	OP_XOR_ASS,
+    OP_UMINUS,
+    OP_UADD,
+    OP_BR    
 };
 
 enum StmtType {

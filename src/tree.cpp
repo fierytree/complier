@@ -132,6 +132,11 @@ string TreeNode::nodeType2String (NodeType t){
 }
 
 string TreeNode::opType2String (OperatorType t){
-    string optype_name[]={"EQ","LOP_ASS"};
+    string optype_name[]={
+	"mul","div","sur","add","sub","lshift","rshift","le","ge",	
+    "lt","gt","eq","ueq","log_and","log_or","bit_and","bit_or",	
+    "bit_xor","ass","add_ass","sub_ass","mul_ass","div_ass","sur_ass",	
+    "ls_ass","rs_ass","and_ass","or_ass","xor_ass","minus_sign","pos_sign","br"    
+    };
     return optype_name[t];
 }

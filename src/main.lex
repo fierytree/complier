@@ -28,7 +28,36 @@ IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
 
 "(" return LEFTBR;
 ")" return RIGHTBR;
-"=" return LOP_ASSIGN;
+"*" return MUL;
+"/" return DIV;
+"%" return SUR;
+"+" return ADD;
+"-" return SUB;
+"<<" return LSHIFT;
+">>" return RSHIFT;
+"<=" return LE;
+">=" return GE;
+"<" return LT;
+">" return GT;
+"==" return EQ;
+"!=" return UEQ;
+"&&" return LOG_AND;
+"||" return LOG_OR;
+"&" return BIT_AND;
+"|" return BIT_OR;
+"^" return BIT_XOR;
+
+"=" return LOP_ASS;
+"+=" return ADD_ASS;
+"-=" return SUB_ASS;
+"*=" return MUL_ASS;
+"/=" return DIV_ASS;
+"%=" return SUR_ASS;
+"<<=" return LS_ASS;
+">>=" return RS_ASS;
+"&=" return AND_ASS;
+"|=" return OR_ASS;
+"^=" return XOR_ASS;
 
 ";" return  SEMICOLON;
 "{" return LBRACE;
