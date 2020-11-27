@@ -26,8 +26,8 @@ file has been opened
 @35	lineno:4	expr	op:bit_or	children:28,34	
 @28	lineno:4	expr	op:br	children:27	
 @27	lineno:4	expr	op:sub	children:25,26	
-@25	lineno:3	expr	op:div	children:23,24	
-@23	lineno:3	var 	name:e	scope:global	children:	
+@25	lineno:4	expr	op:div	children:23,24	
+@23	lineno:4	var 	name:e	scope:global	children:	
 @24	lineno:4	const	int 	val:2	children:	
 @26	lineno:4	const	int 	val:7	children:	
 @34	lineno:4	expr	op:br	children:33	

@@ -127,7 +127,7 @@ void TreeNode::printSpecialInfo() {
 }
 
 string TreeNode::sType2String(StmtType t) {
-    string stype_name[]={"skip","decl"};
+    string stype_name[]={"skip","decl","while","for","if","return"};
     return stype_name[t];
 }
 

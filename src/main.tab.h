@@ -94,8 +94,12 @@ extern int yydebug;
     CHAR = 300,
     BOOL = 301,
     STRING = 302,
-    UMINUS = 303,
-    UADD = 304
+    IF = 303,
+    WHILE = 304,
+    FOR = 305,
+    RETURN = 306,
+    UMINUS = 307,
+    UADD = 308
   };
 #endif
 

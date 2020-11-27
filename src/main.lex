@@ -15,8 +15,6 @@ LINECOMMENT \/\/[^\n]*
 EOL	(\r\n|\r|\n)
 WHILTESPACE [[:blank:]]
 
-TT int|char|bool
-
 INTEGER [0-9]+
 
 CHAR \'.?\'
@@ -33,6 +31,11 @@ IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
 "bool" return T_BOOL;
 "char" return T_CHAR;
 "void" return T_VOID;
+
+"if" return IF;
+"while" return WHILE;
+"for" return FOR;
+"return" return RETURN;
 
 "(" return LEFTBR;
 ")" return RIGHTBR;
@@ -108,6 +111,7 @@ IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
     }
     else{
         yylval=id_list[x];
+        yylval->lineno=lineno;
     }
     return IDENTIFIER;
 }

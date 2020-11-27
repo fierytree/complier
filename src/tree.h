@@ -56,6 +56,10 @@ enum OperatorType
 enum StmtType {
     STMT_SKIP,
     STMT_DECL,
+    STMT_WHILE,
+    STMT_FOR,
+    STMT_IF,
+    STMT_RETURN
 }
 ;
 
