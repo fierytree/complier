@@ -25,6 +25,15 @@ main: src/pch.h.gch
 run: lex yacc main
 	./bin/main tests/test.c > result.txt
 
+run1: lex yacc main
+	./bin/main tests/test1.c > result.txt
+
+run2: lex yacc main
+	./bin/main tests/test2.c > result.txt
+
+run3: lex yacc main
+	./bin/main tests/test3.c > result.txt
+
 clean:
 	rm -f src/*.output src/main.lex.yy.cpp src/main.tab.cpp src/main.tab.h src/main.output src/pch.h.gch $(TARGET) *.o ./bin/* 
 

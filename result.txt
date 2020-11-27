@@ -1,38 +1,83 @@
 file has been opened
-@38	lineno:0	prog	children:4,37	
-@4	lineno:1	stmt	type:decl	name:	children:0,1	
-@0	lineno:1	type	int 	children:	
-@1	lineno:1	var 	name:e	scope:global	children:	
-@2	lineno:1	var 	name:f	scope:global	children:	
-@3	lineno:1	var 	name:g	scope:global	children:	
-@37	lineno:2	func	type:int 	name:main	children:5,6,20	
-@5	lineno:2	type	int 	children:	
-@6	lineno:2	var 	name:main	scope:global	children:	
-@20	lineno:3	expr	op:ass	children:8,19	
-@8	lineno:3	var 	name:e	scope:global	children:	
-@19	lineno:3	expr	op:bit_and	children:17,18	
-@17	lineno:3	expr	op:lshift	children:15,16	
-@15	lineno:3	expr	op:br	children:14	
-@14	lineno:3	expr	op:add	children:10,13	
-@10	lineno:3	expr	op:minus_sign	children:9	
-@9	lineno:3	const	int 	val:1	children:	
-@13	lineno:3	expr	op:mul	children:11,12	
-@11	lineno:3	const	int 	val:5	children:	
-@12	lineno:3	const	int 	val:9	children:	
-@16	lineno:3	const	int 	val:2	children:	
-@18	lineno:3	const	int 	val:15	children:	
-@36	lineno:4	expr	op:ass	children:22,35	
-@22	lineno:4	var 	name:f	scope:global	children:	
-@35	lineno:4	expr	op:bit_or	children:28,34	
-@28	lineno:4	expr	op:br	children:27	
-@27	lineno:4	expr	op:sub	children:25,26	
-@25	lineno:4	expr	op:div	children:23,24	
-@23	lineno:4	var 	name:e	scope:global	children:	
-@24	lineno:4	const	int 	val:2	children:	
-@26	lineno:4	const	int 	val:7	children:	
-@34	lineno:4	expr	op:br	children:33	
-@33	lineno:4	expr	op:lshift	children:29,32	
-@29	lineno:4	const	int 	val:1	children:	
-@32	lineno:4	expr	op:sub	children:30,31	
-@30	lineno:4	const	int 	val:14	children:	
-@31	lineno:4	const	int 	val:1	children:	
+@107	lineno:0	prog	children:106	
+@106	lineno:1	func	type:void	name:main	children:2,3,7	
+@2	lineno:1	type	void	children:	
+@3	lineno:1	var 	name:main	scope:global	children:	
+@7	lineno:2	stmt	type:decl	children:4,5	
+@4	lineno:2	type	int 	children:	
+@5	lineno:2	var 	name:a	scope:br1 in line1	children:	
+@6	lineno:2	var 	name:s	scope:br1 in line1	children:	
+@11	lineno:3	expr	op:ass	children:9,10	
+@9	lineno:3	var 	name:a	scope:br1 in line1	children:	
+@10	lineno:3	const	int 	val:10	children:	
+@15	lineno:4	expr	op:ass	children:13,14	
+@13	lineno:4	var 	name:s	scope:br1 in line1	children:	
+@14	lineno:4	const	int 	val:0	children:	
+@18	lineno:5	stmt	type:decl	children:16,17	
+@16	lineno:5	type	char	children:	
+@17	lineno:5	var 	name:ch	scope:br1 in line1	children:	
+@24	lineno:6	stmt	type:func_use	name:scanf	children:25,20	
+@25	lineno:6	var 	name:	scope:global	children:	
+@20	lineno:6	const	string	val:%s	children:	
+@23	lineno:6	expr	op:addr	children:22	
+@22	lineno:6	var 	name:ch	scope:br1 in line1	children:	
+@105	lineno:7	stmt	type:while	children:47,51	
+@47	lineno:7	expr	op:log_or	children:34,46	
+@34	lineno:7	expr	op:log_and	children:29,33	
+@29	lineno:7	expr	op:gt	children:27,28	
+@27	lineno:7	var 	name:a	scope:br1 in line1	children:	
+@28	lineno:7	const	int 	val:0	children:	
+@33	lineno:7	expr	op:le	children:31,32	
+@31	lineno:7	var 	name:a	scope:br1 in line1	children:	
+@32	lineno:7	const	int 	val:10	children:	
+@46	lineno:7	expr	op:log_and	children:40,45	
+@40	lineno:7	expr	op:eq	children:38,39	
+@38	lineno:7	expr	op:sur	children:36,37	
+@36	lineno:7	var 	name:a	scope:br1 in line1	children:	
+@37	lineno:7	const	int 	val:100	children:	
+@39	lineno:7	const	int 	val:10	children:	
+@45	lineno:7	expr	op:eq	children:43,44	
+@43	lineno:7	expr	op:log_not	children:42	
+@42	lineno:7	var 	name:a	scope:br1 in line1	children:	
+@44	lineno:7	const	int 	val:10	children:	
+@51	lineno:8	expr	op:sub_ass	children:49,50	
+@49	lineno:8	var 	name:a	scope:br1 in line1	children:	
+@50	lineno:8	const	int 	val:1	children:	
+@54	lineno:9	stmt	type:decl	children:52,53	
+@52	lineno:9	type	int 	children:	
+@53	lineno:9	var 	name:a	scope:br2 in line7	children:	
+@59	lineno:10	expr	op:ass	children:57,58	
+@57	lineno:10	var 	name:a	scope:br2 in line7	children:	
+@58	lineno:10	const	int 	val:10	children:	
+@65	lineno:10	expr	op:add_ass	children:61,64	
+@61	lineno:10	var 	name:s	scope:br1 in line1	children:	
+@64	lineno:10	var 	name:a	scope:br2 in line7	children:	
+@104	lineno:11	stmt	type:if	children:71,76	
+@71	lineno:11	expr	op:lt	children:68,70	
+@68	lineno:11	expr	op:minus_sign	children:67	
+@67	lineno:11	var 	name:s	scope:br1 in line1	children:	
+@70	lineno:11	expr	op:minus_sign	children:69	
+@69	lineno:11	const	int 	val:10	children:	
+@76	lineno:12	stmt	type:func_use	name:printf	children:77,73	
+@77	lineno:12	var 	name:scanf	scope:global	children:	
+@73	lineno:12	const	string	val:result is: %d\n	children:	
+@75	lineno:12	var 	name:s	scope:br1 in line1	children:	
+@80	lineno:13	stmt	type:decl	children:78,79	
+@78	lineno:13	type	int 	children:	
+@79	lineno:13	var 	name:b	scope:br3 in line11	children:	
+@84	lineno:14	expr	op:ass	children:82,83	
+@82	lineno:14	var 	name:b	scope:br3 in line11	children:	
+@83	lineno:14	const	int 	val:10	children:	
+@103	lineno:15	stmt	type:for	children:88,93,96,101	
+@88	lineno:15	stmt	type:skip	children:85,86	
+@85	lineno:15	type	int 	children:	
+@86	lineno:15	var 	name:i	scope:br4 in line15	children:	
+@93	lineno:15	expr	op:lt	children:90,92	
+@90	lineno:15	var 	name:i	scope:br4 in line15	children:	
+@92	lineno:15	var 	name:b	scope:br3 in line11	children:	
+@96	lineno:15	expr	op:b_incr	children:94	
+@94	lineno:15	var 	name:i	scope:br4 in line15	children:	
+@101	lineno:16	stmt	type:func_use	name:printf	children:102,98	
+@102	lineno:16	var 	name:scanf	scope:global	children:	
+@98	lineno:16	const	string	val:Have fun: %d\n	children:	
+@100	lineno:16	var 	name:i	scope:br4 in line15	children:	

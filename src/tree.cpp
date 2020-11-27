@@ -47,12 +47,11 @@ void TreeNode::printNodeInfo() {
         case NODE_STMT:{
             cout<<"stmt"<<"\t";
             cout<<"type:"+sType2String(stype)<<"\t";
-            cout<<"name:"<<var_name<<"\t";      
+            if(stype==STMT_FUNC_USE)cout<<"name:"<<var_name<<"\t";      
             break;
         }
         case NODE_PARA:{
-            cout<<"para"<<"\t";
-            cout<<"type:"+sType2String(stype)<<"\t";    
+            cout<<"para"<<"\t";   
             break;
         }
         case NODE_FUNC:{
@@ -127,7 +126,7 @@ void TreeNode::printSpecialInfo() {
 }
 
 string TreeNode::sType2String(StmtType t) {
-    string stype_name[]={"skip","decl","while","for","if","return"};
+    string stype_name[]={"skip","decl","while","for","if","return","func_use"};
     return stype_name[t];
 }
 
@@ -139,10 +138,11 @@ string TreeNode::nodeType2String (NodeType t){
 
 string TreeNode::opType2String (OperatorType t){
     string optype_name[]={
-	"mul","div","sur","add","sub","lshift","rshift","le","ge",	
-    "lt","gt","eq","ueq","log_and","log_or","bit_and","bit_or",	
-    "bit_xor","ass","add_ass","sub_ass","mul_ass","div_ass","sur_ass",	
-    "ls_ass","rs_ass","and_ass","or_ass","xor_ass","minus_sign","pos_sign","br"    
+	"mul","div","sur","add","sub","lshift","rshift","le","ge","lt","gt",
+    "eq","ueq","log_and","log_or","bit_and","bit_or","bit_xor","ass",
+    "add_ass","sub_ass","mul_ass","div_ass","sur_ass","ls_ass","rs_ass",
+    "and_ass","or_ass","xor_ass","minus_sign","pos_sign","log_not",
+    "bit_not","addr","incr","decr","b_incr","b_decr" ,"br"   
     };
     return optype_name[t];
 }

@@ -3,6 +3,7 @@
     #define YYSTYPE TreeNode *  
     TreeNode* root;
     extern int lineno;
+    extern vector<pair<int,int> > br_list2;
     int yylex();
     int yyerror( char const * );
     map<pair<string,int>,TreeNode*> id_list2;
@@ -20,6 +21,8 @@
 %token LSHIFT RSHIFT 
 %token ADD SUB
 %token MUL DIV SUR
+%token BIT_NOT LOG_NOT
+%token INCR DECR
 %token LEFTBR RIGHTBR
 %token LBRACE RBRACE
 
@@ -41,9 +44,12 @@
 %left LSHIFT RSHIFT 
 %left ADD SUB
 %left MUL DIV SUR
-%left LEFTBR RIGHTBR
-%left LBRACE RBRACE
+%right ADDR
+%right LEFTBR RIGHTBR
+%right LOG_NOT BIT_NOT
 %right UMINUS UADD
+%right INCR DECR
+%left BACK_INCR BACK_DECR
 
 
 %%
@@ -62,6 +68,9 @@ units
 function
 : T IDENTIFIER LEFTBR PARMS RIGHTBR LBRACE statements RBRACE{
     TreeNode* node = new TreeNode($1->lineno, NODE_FUNC);
+    auto x=make_pair($2->var_name,$2->scope.first);
+    if(id_list2.find(x)==id_list2.end())id_list2[x]=$2;
+    else cout<<"Variable "<<$2->var_name<<" repeated definition"<<endl;
     node->var_name=$2->var_name;
     node->type=$1->type;
     node->addChild($1);
@@ -72,30 +81,12 @@ function
 }
 | T IDENTIFIER LEFTBR RIGHTBR LBRACE statements RBRACE{
     TreeNode* node = new TreeNode($1->lineno, NODE_FUNC);
+    auto x=make_pair($2->var_name,$2->scope.first);
+    if(id_list2.find(x)==id_list2.end())id_list2[x]=$2;
+    else cout<<"Variable "<<$2->var_name<<" repeated definition"<<endl;
     node->var_name=$2->var_name;
     node->type=$1->type;
     node->addChild($1);
-    node->addChild($2);
-    node->addChild($6);
-    $$=node;
-}
-| T_VOID IDENTIFIER LEFTBR PARMS RIGHTBR LBRACE statements RBRACE{
-    TreeNode* node = new TreeNode($1->lineno, NODE_FUNC);
-    TreeNode* node2 = new TreeNode(lineno, NODE_TYPE); node2->type = TYPE_VOID;
-    node->var_name=$2->var_name;
-    node->type=node2->type;
-    node->addChild(node2);
-    node->addChild($2);
-    node->addChild($4);
-    node->addChild($7);
-    $$=node;
-}
-| T_VOID IDENTIFIER LEFTBR RIGHTBR LBRACE statements RBRACE{
-    TreeNode* node = new TreeNode($1->lineno, NODE_FUNC);
-    TreeNode* node2 = new TreeNode(lineno, NODE_TYPE); node2->type = TYPE_VOID;
-    node->var_name=$2->var_name;
-    node->type=node2->type;
-    node->addChild(node2);
     node->addChild($2);
     node->addChild($6);
     $$=node;
@@ -105,15 +96,22 @@ function
 PARMS
 : T IDENTIFIER{
     TreeNode* node = new TreeNode($1->lineno, NODE_PARA);
+    $2->scope.first=br_list2.size()+1;$2->scope.second=$1->lineno;
+    auto x=make_pair($2->var_name,$2->scope.first);
+    if(id_list2.find(x)==id_list2.end())id_list2[x]=$2;
+    else cout<<"Variable "<<$2->var_name<<" repeated definition"<<endl;
     node->addChild($1);
     node->addChild($2);
+    $$=node;
 }
 | PARMS COMMA T IDENTIFIER{
     $$=$1;
-    TreeNode* node = new TreeNode($1->lineno, NODE_PARA);
-    node->addChild($3);
-    node->addChild($4);
-    $$->addSibling(node);
+    $4->scope.first=br_list2.size()+1;$4->scope.second=$3->lineno;
+    auto x=make_pair($4->var_name,$4->scope.first);
+    if(id_list2.find(x)==id_list2.end())id_list2[x]=$4;
+    else cout<<"Variable "<<$4->var_name<<" repeated definition"<<endl;
+    $1->addChild($3);
+    $1->addChild($4);
 }
 ;
 
@@ -126,14 +124,23 @@ statement
 : SEMICOLON  {$$ = new TreeNode(lineno, NODE_STMT); $$->stype = STMT_SKIP;}
 | declaration SEMICOLON {$$ = $1;}
 | WHILE LEFTBR expr RIGHTBR LBRACE statements RBRACE{
-    TreeNode* node = new TreeNode($1->lineno, NODE_STMT);
+    TreeNode* node = new TreeNode($3->lineno, NODE_STMT);
     node->stype=STMT_WHILE;
     node->addChild($3);
     node->addChild($6);
     $$=node;
 }
 | FOR LEFTBR expr SEMICOLON expr SEMICOLON expr RIGHTBR LBRACE statements RBRACE{
-    TreeNode* node = new TreeNode($1->lineno, NODE_STMT);
+    TreeNode* node = new TreeNode($3->lineno, NODE_STMT);
+    node->stype=STMT_FOR;
+    node->addChild($3);
+    node->addChild($5);
+    node->addChild($7);
+    node->addChild($10);
+    $$=node;
+}
+| FOR LEFTBR for_decl SEMICOLON expr SEMICOLON expr RIGHTBR LBRACE statements RBRACE{
+    TreeNode* node = new TreeNode($3->lineno, NODE_STMT);
     node->stype=STMT_FOR;
     node->addChild($3);
     node->addChild($5);
@@ -142,16 +149,21 @@ statement
     $$=node;
 }
 | IF LEFTBR expr RIGHTBR LBRACE statements RBRACE{
-    TreeNode* node = new TreeNode($1->lineno, NODE_STMT);
+    TreeNode* node = new TreeNode($3->lineno, NODE_STMT);
     node->stype=STMT_IF;
     node->addChild($3);
     node->addChild($6);
     $$=node;
 }
 | RETURN expr SEMICOLON{
+    TreeNode* node = new TreeNode($2->lineno, NODE_STMT);
+    node->stype=STMT_RETURN;
+    node->addChild($2);
+    $$=node;
+}
+| RETURN SEMICOLON{
     TreeNode* node = new TreeNode($1->lineno, NODE_STMT);
     node->stype=STMT_RETURN;
-    node->addChild($1);
     $$=node;
 }
 | expr SEMICOLON{
@@ -159,8 +171,29 @@ statement
 }
 ;
 
+for_decl
+: T IDENTIFIER LOP_ASS expr{
+    TreeNode* node = new TreeNode($1->lineno, NODE_STMT);
+    $2->scope.first=br_list2.size()+1;$2->scope.second=$1->lineno;
+    auto x=make_pair($2->var_name,$2->scope.first);
+    if(id_list2.find(x)==id_list2.end())id_list2[x]=$2;
+    else cout<<"Variable "<<$2->var_name<<" repeated definition"<<endl;
+    node->addChild($1);
+    node->addChild($2);
+    $$=node;
+}
+| PARMS COMMA T IDENTIFIER LOP_ASS expr{
+    $$=$1;
+    $4->scope.first=br_list2.size()+1;$4->scope.second=$3->lineno;
+    auto x=make_pair($4->var_name,$4->scope.first);
+    if(id_list2.find(x)==id_list2.end())id_list2[x]=$4;
+    else cout<<"Variable "<<$4->var_name<<" repeated definition"<<endl;
+    $1->addChild($3);
+    $1->addChild($4);
+}
+;
 declaration
-: T IDENTIFIER LOP_ASS expr{  
+: T IDENTIFIER LOP_ASS expr{ 
     TreeNode* node = new TreeNode($1->lineno, NODE_STMT);
     auto x=make_pair($2->var_name,$2->scope.first);
     if(id_list2.find(x)==id_list2.end())id_list2[x]=$2;
@@ -196,11 +229,16 @@ IDENTIFIERS
 }
 ;
 
+PAS
+: expr {$$=$1;}
+| PAS COMMA expr {$$=$1;$1->addSibling($3);}
+;
+
 expr
 : IDENTIFIER {
     int s=-1;
     TreeNode* v=nullptr;
-    for(auto &x:id_list2){
+    for(auto x:id_list2){
         if(x.first.first==$1->var_name){
             if(x.first.second>s){
                 s=x.first.second;
@@ -221,6 +259,47 @@ expr
 }
 | STRING {
     $$ = $1;
+}
+| IDENTIFIER LEFTBR PAS RIGHTBR{
+    TreeNode* node = new TreeNode($1->lineno, NODE_STMT);
+    int s=-1;
+    TreeNode*v=nullptr;
+    for(auto x:id_list2){
+        if(x.first.first==$1->var_name){
+            if(x.first.second>s){
+                s=x.first.second;
+                v=new TreeNode($1->lineno, NODE_VAR);
+                v->var_name=x.second->var_name;
+                v->scope=x.second->scope;
+            }
+        }
+    }
+    if(s==-1||v==nullptr)cout<<"func name "<<$1->var_name<<" undefinied"<<endl;
+    node->stype=STMT_FUNC_USE;
+    node->var_name=$1->var_name;
+    node->addChild(v);
+    node->addChild($3);
+    $$=node;
+}
+| IDENTIFIER LEFTBR RIGHTBR{
+    TreeNode* node = new TreeNode($1->lineno, NODE_STMT);
+    int s=-1;
+    TreeNode*v=nullptr;
+    for(auto x:id_list2){
+        if(x.first.first==$1->var_name){
+            if(x.first.second>s){
+                s=x.first.second;
+                v=new TreeNode($1->lineno, NODE_VAR);
+                v->var_name=x.second->var_name;
+                v->scope=x.second->scope;
+            }
+        }
+    }
+    if(s==-1||v==nullptr)cout<<"func name "<<$1->var_name<<" undefinied"<<endl;
+    node->stype=STMT_FUNC_USE;
+    node->var_name=$1->var_name;
+    node->addChild(v);
+    $$=node;
 }
 | expr ADD expr {
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
@@ -437,6 +516,48 @@ expr
     node->addChild($2);
     $$ = node;
 }
+| LOG_NOT expr {
+    TreeNode* node = new TreeNode($2->lineno, NODE_EXPR);
+	node->optype = OP_LOG_NOT;
+    node->addChild($2);
+    $$ = node;
+}
+| BIT_NOT expr {
+    TreeNode* node = new TreeNode($2->lineno, NODE_EXPR);
+	node->optype = OP_BIT_NOT;
+    node->addChild($2);
+    $$ = node;
+}
+| BIT_AND expr %prec ADDR {
+    TreeNode* node = new TreeNode($2->lineno, NODE_EXPR);
+	node->optype = OP_ADDR;
+    node->addChild($2);
+    $$ = node;
+}
+| INCR expr {
+    TreeNode* node = new TreeNode($2->lineno, NODE_EXPR);
+	node->optype = OP_INCR;
+    node->addChild($2);
+    $$ = node;
+}
+| DECR expr {
+    TreeNode* node = new TreeNode($2->lineno, NODE_EXPR);
+	node->optype = OP_DECR;
+    node->addChild($2);
+    $$ = node;
+}
+| expr INCR %prec BACK_INCR {
+    TreeNode* node = new TreeNode($2->lineno, NODE_EXPR);
+	node->optype = OP_BACK_INCR;
+    node->addChild($2);
+    $$ = node;
+}
+| expr DECR %prec BACK_DECR {
+    TreeNode* node = new TreeNode($2->lineno, NODE_EXPR);
+	node->optype = OP_BACK_DECR;
+    node->addChild($2);
+    $$ = node;
+}
 | LEFTBR expr RIGHTBR {
     TreeNode* node = new TreeNode($2->lineno, NODE_EXPR);
 	node->optype = OP_BR;
@@ -449,6 +570,7 @@ T: T_INT {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_INT;}
 | T_CHAR {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_CHAR;}
 | T_BOOL {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_BOOL;}
 | T_STRING {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_STRING;}
+| T_VOID {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_VOID;}
 ;
 
 %%

@@ -50,6 +50,13 @@ enum OperatorType
 	OP_XOR_ASS,
     OP_UMINUS,
     OP_UADD,
+    OP_LOG_NOT,
+    OP_BIT_NOT,
+    OP_ADDR,
+    OP_INCR,
+    OP_DECR,
+    OP_BACK_INCR,
+    OP_BACK_DECR,
     OP_BR    
 };
 
@@ -59,7 +66,8 @@ enum StmtType {
     STMT_WHILE,
     STMT_FOR,
     STMT_IF,
-    STMT_RETURN
+    STMT_RETURN,
+    STMT_FUNC_USE
 }
 ;
 

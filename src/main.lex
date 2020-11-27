@@ -8,7 +8,7 @@ typedef pair<int,int> br;
 br global=make_pair(0,1);
 stack<br> br_list;
 map<pair<string,int>,TreeNode*> id_list;
-TreeNode* last;
+vector<br> br_list2;
 %}
 BLOCKCOMMENT \/\*([^\*^\/]*|[\*^\/*]*|[^\**\/]*)*\*\/
 LINECOMMENT \/\/[^\n]*
@@ -35,10 +35,12 @@ IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
 "if" return IF;
 "while" return WHILE;
 "for" return FOR;
-"return" return RETURN;
+"return" {TreeNode* node = new TreeNode(lineno, NODE_CONST);yylval=node;return RETURN;}
 
 "(" return LEFTBR;
 ")" return RIGHTBR;
+"++" return INCR;
+"--" return DECR;
 "*" return MUL;
 "/" return DIV;
 "%" return SUR;
@@ -69,10 +71,13 @@ IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
 "&=" return AND_ASS;
 "|=" return OR_ASS;
 "^=" return XOR_ASS;
+"!" return LOG_NOT;
+"~" return BIT_NOT;
 
 ";" return  SEMICOLON;
 "{" {
     br_list.push(make_pair(++br_count,lineno));
+    br_list2.push_back(make_pair(br_count,lineno));
     return LBRACE;
 }
 "}" {
@@ -99,6 +104,15 @@ IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
     return CHAR;
 }
 
+{STRING} {
+    TreeNode* node = new TreeNode(lineno, NODE_CONST);
+    node->type = TYPE_STRING;
+    string tmp = yytext;
+    node->str_val=tmp.substr(1,tmp.size()-2);
+    yylval = node;
+    return STRING;
+}
+
 {IDENTIFIER} {
     br sc=br_list.empty()?global:br_list.top();
     auto x=make_pair(yytext,sc.first);
@@ -110,8 +124,10 @@ IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
         yylval = node;
     }
     else{
-        yylval=id_list[x];
-        yylval->lineno=lineno;
+        TreeNode* node = new TreeNode(lineno, NODE_VAR);
+        node->var_name = string(yytext);
+        node->scope=id_list[x]->scope;
+        yylval = node;
     }
     return IDENTIFIER;
 }
