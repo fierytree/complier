@@ -67,6 +67,11 @@ void TreeNode::printNodeInfo() {
             cout<<type->getTypeInfo()<<"\t";
             break;
         }
+        case NODE_ARRAY:{
+            cout<<"array"<<"\t";
+            cout<<"dimen:"<<array_dim<<"\t";
+            break;
+        }
         case NODE_PROG:{
             cout<<"prog"<<"\t";
             break;
@@ -134,7 +139,7 @@ string TreeNode::sType2String(StmtType t) {
 
 
 string TreeNode::nodeType2String (NodeType t){
-    string nodeType_name[]={"const","var","expr","type","stmt","para","func","prog"};
+    string nodeType_name[]={"const","var","expr","type","array","stmt","para","func","prog"};
     return nodeType_name[t];
 }
 

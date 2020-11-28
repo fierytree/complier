@@ -25,6 +25,7 @@
 %token INCR DECR
 %token LEFTBR RIGHTBR
 %token LBRACE RBRACE
+%token M_LBR M_RBR
 
 %token SEMICOLON
 
@@ -49,6 +50,7 @@
 %right LOG_NOT BIT_NOT
 %right UMINUS UADD
 %right INCR DECR
+%left M_LBR M_RBR
 %left BACK_INCR BACK_DECR
 
 
@@ -174,6 +176,7 @@ statement
 for_decl
 : T IDENTIFIER LOP_ASS expr{
     TreeNode* node = new TreeNode($1->lineno, NODE_STMT);
+    node->stype=STMT_DECL;
     $2->scope.first=br_list2.size()+1;$2->scope.second=$1->lineno;
     auto x=make_pair($2->var_name,$2->scope.first);
     if(id_list2.find(x)==id_list2.end())id_list2[x]=$2;
@@ -210,6 +213,13 @@ declaration
     node->addChild($1);
     node->addChild($2);
     $$ = node;   
+}
+| T ARRAY {
+    TreeNode* node = new TreeNode($1->lineno, NODE_STMT);
+    node->stype = STMT_DECL;
+    node->addChild($1);
+    node->addChild($2);
+    $$ = node;
 }
 | CONST T_INT IDENTIFIER LOP_ASS CONST_EXP{
     TreeNode* node1 = new TreeNode($3->lineno, NODE_TYPE);node1->type=TYPE_INT;    
@@ -301,6 +311,39 @@ CONST_EXP
     $$ = node;
 }
 ;
+
+ARRAY
+: IDENTIFIER M_LBR CONST_EXP M_RBR{
+    TreeNode* node = new TreeNode($1->lineno, NODE_ARRAY);
+    node->array_dim=1;
+    node->addChild($1);
+    node->addChild($3);
+    $$=node;
+}
+| ARRAY M_LBR CONST_EXP M_RBR{
+    $1->array_dim+=1;
+    $$=$1;
+    $1->addSibling($3);
+}
+;
+
+ARRAY2
+: IDENTIFIER M_LBR expr M_RBR {
+    TreeNode* node = new TreeNode($1->lineno, NODE_ARRAY);
+    node->array_dim=1;
+    node->addChild($1);
+    node->addChild($3);
+    $$=node;
+}
+| ARRAY2 M_LBR expr M_RBR {
+    $1->array_dim+=1;
+    $$=$1;
+    $1->addSibling($3);
+}
+
+LVAL
+: ARRAY2 {$$=$1;}
+| IDENTIFIER {$$=$1;}
 
 IDENTIFIERS
 : IDENTIFIER{
@@ -520,7 +563,7 @@ expr
     node->addChild($3);
     $$ = node;
 }
-| expr LOP_ASS expr {
+| LVAL LOP_ASS expr {
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
     if($1->is_const)cout<<"const Variable can't be assigned!"<<endl;
 	node->optype = OP_LOP_ASS;
@@ -528,70 +571,70 @@ expr
     node->addChild($3);
     $$ = node;
 }
-| expr ADD_ASS expr {
+| LVAL ADD_ASS expr {
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
 	node->optype = OP_ADD_ASS;
     node->addChild($1);
     node->addChild($3);
     $$ = node;
 }
-| expr SUB_ASS expr {
+| LVAL SUB_ASS expr {
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
 	node->optype = OP_SUB_ASS;
     node->addChild($1);
     node->addChild($3);
     $$ = node;
 }
-| expr MUL_ASS expr {
+| LVAL MUL_ASS expr {
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
 	node->optype = OP_MUL_ASS;
     node->addChild($1);
     node->addChild($3);
     $$ = node;
 }
-| expr DIV_ASS expr {
+| LVAL DIV_ASS expr {
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
 	node->optype = OP_DIV_ASS;
     node->addChild($1);
     node->addChild($3);
     $$ = node;
 }
-| expr SUR_ASS expr {
+| LVAL SUR_ASS expr {
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
 	node->optype = OP_SUR_ASS;
     node->addChild($1);
     node->addChild($3);
     $$ = node;
 }
-| expr LS_ASS expr {
+| LVAL LS_ASS expr {
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
 	node->optype = OP_LS_ASS;
     node->addChild($1);
     node->addChild($3);
     $$ = node;
 }
-| expr RS_ASS expr {
+| LVAL RS_ASS expr {
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
 	node->optype = OP_RS_ASS;
     node->addChild($1);
     node->addChild($3);
     $$ = node;
 }
-| expr OR_ASS expr {
+| LVAL OR_ASS expr {
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
 	node->optype = OP_OR_ASS;
     node->addChild($1);
     node->addChild($3);
     $$ = node;
 }
-| expr AND_ASS expr {
+| LVAL AND_ASS expr {
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
 	node->optype = OP_AND_ASS;
     node->addChild($1);
     node->addChild($3);
     $$ = node;
 }
-| expr XOR_ASS expr {
+| LVAL XOR_ASS expr {
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
 	node->optype = OP_XOR_ASS;
     node->addChild($1);

@@ -10,6 +10,7 @@ enum NodeType
     NODE_VAR,
     NODE_EXPR,
     NODE_TYPE,
+    NODE_ARRAY,
 
     NODE_STMT,
     NODE_PARA,
@@ -100,6 +101,7 @@ public:
     string var_name;
     pair<int,int> scope;
     bool is_const;
+    int array_dim;
     static vector<int> visited;
 
 public:

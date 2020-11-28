@@ -87,6 +87,8 @@ IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
     return RBRACE;
 }
 
+"[" return M_LBR;
+"]" return M_RBR;
 
 "," return COMMA;
 
@@ -97,7 +99,7 @@ IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
     else{
         int tmp=0;
         string x=yytext;
-        for(int i=1;i<x.size();i++){
+        for(unsigned i=1;i<x.size();i++){
             tmp=tmp*8+x[i]-'0';
         }
         node->int_val=tmp;
@@ -111,7 +113,7 @@ IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
     node->type = TYPE_INT;
     int tmp=0;
     string x=yytext;
-    for(int i=2;i<x.size();i++){
+    for(unsigned i=2;i<x.size();i++){
         if(x[i]>='0'&&x[i]<='9')tmp=tmp*16+x[i]-'0';
         else if(x[i]>='A'&&x[i]<='F')tmp=tmp*16+x[i]-'A'+10;
         else if(x[i]>='a'&&x[i]<='f')tmp=tmp*16+x[i]-'a'+10;
