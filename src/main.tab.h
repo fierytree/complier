@@ -98,15 +98,17 @@ extern int yydebug;
     CHAR = 304,
     BOOL = 305,
     STRING = 306,
-    IF = 307,
-    WHILE = 308,
-    FOR = 309,
-    RETURN = 310,
-    ADDR = 311,
-    UMINUS = 312,
-    UADD = 313,
-    BACK_INCR = 314,
-    BACK_DECR = 315
+    HEX_INTEGER = 307,
+    IF = 308,
+    WHILE = 309,
+    FOR = 310,
+    RETURN = 311,
+    CONST = 312,
+    ADDR = 313,
+    UMINUS = 314,
+    UADD = 315,
+    BACK_INCR = 316,
+    BACK_DECR = 317
   };
 #endif
 

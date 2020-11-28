@@ -30,8 +30,8 @@
 
 %token COMMA
 
-%token IDENTIFIER INTEGER CHAR BOOL STRING
-%token IF WHILE FOR RETURN
+%token IDENTIFIER INTEGER CHAR BOOL STRING HEX_INTEGER
+%token IF WHILE FOR RETURN CONST
 
 %right LOP_ASS ADD_ASS SUB_ASS MUL_ASS DIV_ASS SUR_ASS LS_ASS RS_ASS AND_ASS OR_ASS XOR_ASS
 %left LOG_OR
@@ -211,6 +211,95 @@ declaration
     node->addChild($2);
     $$ = node;   
 }
+| CONST T_INT IDENTIFIER LOP_ASS CONST_EXP{
+    TreeNode* node1 = new TreeNode($3->lineno, NODE_TYPE);node1->type=TYPE_INT;    
+    TreeNode* node = new TreeNode($3->lineno, NODE_STMT);
+    $3->is_const=1;
+    auto x=make_pair($3->var_name,$3->scope.first);
+    if(id_list2.find(x)==id_list2.end())id_list2[x]=$3;
+    else cout<<"Variable "<<$3->var_name<<" repeated definition"<<endl;
+    node->stype = STMT_DECL;
+    node->addChild(node1);
+    node->addChild($3);
+    node->addChild($5);
+    $$ = node;
+}
+| CONST T_CHAR IDENTIFIER LOP_ASS CHAR{
+    TreeNode* node1 = new TreeNode($3->lineno, NODE_TYPE);node1->type=TYPE_CHAR; 
+    TreeNode* node = new TreeNode($3->lineno, NODE_STMT);
+    $3->is_const=1;
+    auto x=make_pair($3->var_name,$3->scope.first);
+    if(id_list2.find(x)==id_list2.end())id_list2[x]=$3;
+    else cout<<"Variable "<<$3->var_name<<" repeated definition"<<endl;
+    node->stype = STMT_DECL;
+    node->addChild(node1);
+    node->addChild($3);
+    node->addChild($5);
+    $$ = node;
+}
+| CONST T_BOOL IDENTIFIER LOP_ASS INTEGER{
+    TreeNode* node1 = new TreeNode($3->lineno, NODE_TYPE);node1->type=TYPE_BOOL; 
+    TreeNode* node = new TreeNode($3->lineno, NODE_STMT);
+    $3->is_const=1;
+    auto x=make_pair($3->var_name,$3->scope.first);
+    if(id_list2.find(x)==id_list2.end())id_list2[x]=$3;
+    else cout<<"Variable "<<$3->var_name<<" repeated definition"<<endl;
+    node->stype = STMT_DECL;
+    node->addChild(node1);
+    node->addChild($3);
+    node->addChild($5);
+    $$ = node;
+}
+;
+CONST_EXP
+: INTEGER {$$=$1;}
+| CONST_EXP ADD CONST_EXP{
+    TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
+	node->optype = OP_ADD;
+    node->addChild($1);
+    node->addChild($3);
+    $$ = node;
+}
+| CONST_EXP SUB CONST_EXP{
+    TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
+	node->optype = OP_SUB;
+    node->addChild($1);
+    node->addChild($3);
+    $$ = node;
+}
+| CONST_EXP MUL CONST_EXP{
+    TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
+	node->optype = OP_MUL;
+    node->addChild($1);
+    node->addChild($3);
+    $$ = node;
+}
+| CONST_EXP DIV CONST_EXP{
+    TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
+	node->optype = OP_DIV;
+    node->addChild($1);
+    node->addChild($3);
+    $$ = node;
+}
+| CONST_EXP LSHIFT CONST_EXP{
+    TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
+	node->optype = OP_LSHIFT;
+    node->addChild($1);
+    node->addChild($3);
+    $$ = node;
+}
+| SUB CONST_EXP %prec UMINUS{
+    TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
+	node->optype = OP_UMINUS;
+    node->addChild($2);
+    $$ = node;
+}
+| LEFTBR CONST_EXP RIGHTBR{
+    TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
+	node->optype = OP_BR;
+    node->addChild($2);
+    $$ = node;
+}
 ;
 
 IDENTIFIERS
@@ -245,6 +334,7 @@ expr
                 v=new TreeNode($1->lineno, NODE_VAR);
                 v->var_name=x.second->var_name;
                 v->scope=x.second->scope;
+                v->is_const=x.second->is_const;
             }
         }
     }
@@ -252,6 +342,9 @@ expr
     else $$=v;
 }
 | INTEGER {
+    $$ = $1;
+}
+| HEX_INTEGER {
     $$ = $1;
 }
 | CHAR {
@@ -429,6 +522,7 @@ expr
 }
 | expr LOP_ASS expr {
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
+    if($1->is_const)cout<<"const Variable can't be assigned!"<<endl;
 	node->optype = OP_LOP_ASS;
     node->addChild($1);
     node->addChild($3);

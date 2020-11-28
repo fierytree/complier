@@ -16,6 +16,7 @@ EOL	(\r\n|\r|\n)
 WHILTESPACE [[:blank:]]
 
 INTEGER [0-9]+
+HEX_INTERGER 0x[A-Fa-f0-9]+|0X[A-Fa-f0-9]+
 
 CHAR \'.?\'
 STRING \".+\"
@@ -36,6 +37,7 @@ IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
 "while" return WHILE;
 "for" return FOR;
 "return" {TreeNode* node = new TreeNode(lineno, NODE_CONST);yylval=node;return RETURN;}
+"const" return CONST;
 
 "(" return LEFTBR;
 ")" return RIGHTBR;
@@ -91,7 +93,31 @@ IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
 {INTEGER} {
     TreeNode* node = new TreeNode(lineno, NODE_CONST);
     node->type = TYPE_INT;
-    node->int_val = atoi(yytext);
+    if(yytext[0]!='0')node->int_val = atoi(yytext);
+    else{
+        int tmp=0;
+        string x=yytext;
+        for(int i=1;i<x.size();i++){
+            tmp=tmp*8+x[i]-'0';
+        }
+        node->int_val=tmp;
+    }
+    yylval = node;
+    return INTEGER;
+}
+
+{HEX_INTERGER} {
+    TreeNode* node = new TreeNode(lineno, NODE_CONST);
+    node->type = TYPE_INT;
+    int tmp=0;
+    string x=yytext;
+    for(int i=2;i<x.size();i++){
+        if(x[i]>='0'&&x[i]<='9')tmp=tmp*16+x[i]-'0';
+        else if(x[i]>='A'&&x[i]<='F')tmp=tmp*16+x[i]-'A'+10;
+        else if(x[i]>='a'&&x[i]<='f')tmp=tmp*16+x[i]-'a'+10;
+        else cout<<"wrong hex integer!"<<endl;
+    }
+    node->int_val=tmp;
     yylval = node;
     return INTEGER;
 }

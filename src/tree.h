@@ -99,6 +99,7 @@ public:
     string str_val;
     string var_name;
     pair<int,int> scope;
+    bool is_const;
     static vector<int> visited;
 
 public:

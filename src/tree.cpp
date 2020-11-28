@@ -13,6 +13,7 @@ TreeNode::TreeNode(int lineno, NodeType type) {
     this->lineno=lineno;
     this->nodeType=type;
     nodeID=node_num;
+    is_const=0;
     node_num++;
 }
 
@@ -33,7 +34,8 @@ void TreeNode::printNodeInfo() {
         }
             
         case NODE_VAR:{
-            cout<<"var "<<"\t";
+            if(is_const)cout<<"const var"<<"\t";
+            else cout<<"var "<<"\t";
             cout<<"name:"<<var_name<<"\t";
             if(scope.first==0)cout<<"scope:global"<<"\t";
             else cout<<"scope:br"<<scope.first<<" in line"<<scope.second<<"\t";

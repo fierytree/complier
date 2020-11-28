@@ -1,4 +1,5 @@
 int e,f,g;
+const int k=10;
 void main(){
     f=!1;
     g=~15;
