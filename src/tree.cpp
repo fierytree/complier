@@ -6,7 +6,10 @@ void TreeNode::addChild(TreeNode* child) {
 }
 
 void TreeNode::addSibling(TreeNode* sibling){
-    siblings.push_back(sibling);
+    TreeNode* tmp=sibling;
+    while(tmp->siblings!=nullptr)tmp=tmp->siblings;   
+    tmp->siblings=this->siblings;
+    this->siblings=sibling;
 }
 
 TreeNode::TreeNode(int lineno, NodeType type) {
@@ -85,32 +88,38 @@ void TreeNode::printNodeInfo() {
 
 void TreeNode::printChildrenId() {
     cout<<"children:";
-    if(child!=nullptr){
-        cout<<child->nodeID;
-        for(auto x:child->siblings){
-            cout<<","<<x->nodeID;
-        }
+    vector<int> re;
+    TreeNode* tmp=child;
+    while(tmp!=nullptr){
+        re.push_back(tmp->nodeID);
+        tmp=tmp->siblings;
+    }
+    sort(re.begin(),re.end());
+    for(unsigned i=0;i<re.size();i++){
+        cout<<re[i];
+        if(i!=re.size()-1)cout<<",";
     }
     cout<<"\t"<<endl;
 }
-
+bool cmp(TreeNode* t1,TreeNode* t2){
+    return t1->nodeID<t2->nodeID;
+}
 void TreeNode::printAST() {
-    printNodeInfo();
-    printChildrenId();
-    visited.push_back(this->nodeID);
-    sort(visited.begin(),visited.end());
-
-    if(child!=nullptr){
-        queue<TreeNode*>q;
-        if(find(visited.begin(),visited.end(),child->nodeID)==visited.end())q.push(child);
-        while(!q.empty()){
-            auto x=q.front();
-            q.pop();
-            x->printAST();
-            for(auto &y:x->siblings){
-                if(find(visited.begin(),visited.end(),y->nodeID)==visited.end())q.push(y);
-            }
+    queue<TreeNode*> q;
+    q.push(this);
+    while(!q.empty()){
+        TreeNode* cur=q.front();
+        cur->printNodeInfo();
+        cur->printChildrenId();
+        q.pop();
+        vector<TreeNode*> v;
+        TreeNode* tmp=cur->child;
+        while(tmp!=nullptr){
+            v.push_back(tmp);
+            tmp=tmp->siblings;
         }
+        sort(v.begin(),v.end(),cmp);
+        for(auto& x:v)q.push(x);
     }
 }
 
@@ -133,7 +142,7 @@ void TreeNode::printSpecialInfo() {
 }
 
 string TreeNode::sType2String(StmtType t) {
-    string stype_name[]={"skip","decl","while","for","if","return","func_use"};
+    string stype_name[]={"skip","decl","while","for","if","return","block","func_use"};
     return stype_name[t];
 }
 

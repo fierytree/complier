@@ -37,6 +37,9 @@ run3: lex yacc main
 run4: lex yacc main
 	./bin/main tests/test4.c > result.txt
 
+run5: lex yacc main
+	./bin/main tests/test5.c > result.txt
+
 clean:
 	rm -f src/*.output src/main.lex.yy.cpp src/main.tab.cpp src/main.tab.h src/main.output src/pch.h.gch $(TARGET) *.o ./bin/* 
 

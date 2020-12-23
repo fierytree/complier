@@ -68,6 +68,7 @@ enum StmtType {
     STMT_FOR,
     STMT_IF,
     STMT_RETURN,
+    STMT_BLOCK,
     STMT_FUNC_USE
 }
 ;
@@ -79,7 +80,7 @@ public:
     NodeType nodeType;
 
     TreeNode* child=nullptr;
-    vector<TreeNode*> siblings;
+    TreeNode* siblings=nullptr;
 
     void addChild(TreeNode*);
     void addSibling(TreeNode*);
@@ -102,7 +103,6 @@ public:
     pair<int,int> scope;
     bool is_const;
     int array_dim;
-    static vector<int> visited;
 
 public:
     static string nodeType2String (NodeType t);
