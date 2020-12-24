@@ -106,11 +106,12 @@ extern int yydebug;
     FOR = 312,
     RETURN = 313,
     CONST = 314,
-    ADDR = 315,
-    UMINUS = 316,
-    UADD = 317,
-    BACK_INCR = 318,
-    BACK_DECR = 319
+    ELSE = 315,
+    ADDR = 316,
+    UMINUS = 317,
+    UADD = 318,
+    BACK_INCR = 319,
+    BACK_DECR = 320
   };
 #endif
 

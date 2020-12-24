@@ -5,8 +5,7 @@ void main(){
         e=9;
     }
     for(int i=0;i<3;i=i+1){
-        e=e*2;
-        
+        e=e*2;    
         i=4;
     }
     while(e>0){

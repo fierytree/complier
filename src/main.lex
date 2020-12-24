@@ -36,6 +36,7 @@ IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
 "for" return FOR;
 "return" {TreeNode* node = new TreeNode(lineno, NODE_CONST);yylval=node;return RETURN;}
 "const" return CONST;
+"else" return ELSE;
 
 "(" return LEFTBR;
 ")" return RIGHTBR;

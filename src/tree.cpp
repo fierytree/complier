@@ -116,6 +116,7 @@ void TreeNode::printAST() {
         TreeNode* tmp=cur->child;
         while(tmp!=nullptr){
             v.push_back(tmp);
+            if(cur->func_type!=nullptr)tmp->func_type=cur->func_type;
             tmp=tmp->siblings;
         }
         sort(v.begin(),v.end(),cmp);

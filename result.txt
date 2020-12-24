@@ -1,36 +1,26 @@
 file has been opened
-@37	lineno:0	prog	children:5,20,36	
-@5	lineno:1	stmt	type:decl	children:2,3,4	
-@20	lineno:2	func	type:int 	name:f	children:6,7,10,19	
-@36	lineno:6	func	type:void	name:main	children:21,22,23,35	
+@32	lineno:0	prog	children:7,14,31	
+@7	lineno:1	stmt	type:decl	children:2,5	
+@14	lineno:2	stmt	type:decl	children:8,13	
+@31	lineno:3	func	type:void	name:main	children:15,16,17,30	
 @2	lineno:1	type	int 	children:	
+@5	lineno:1	array	dimen:2	children:3,4,6	
+@8	lineno:2	type	char	children:	
+@13	lineno:2	array	dimen:1	children:9,12	
+@15	lineno:3	type	void	children:	
+@16	lineno:3	var 	name:main	scope:global	children:	
+@17	lineno:3	para	children:	
+@30	lineno:6	stmt	type:block	children:29	
 @3	lineno:1	var 	name:a	scope:global	children:	
-@4	lineno:1	const	int 	val:0	children:	
-@6	lineno:2	type	int 	children:	
-@7	lineno:2	var 	name:f	scope:global	children:	
-@10	lineno:2	para	children:8,9,11,12	
-@19	lineno:5	stmt	type:block	children:15,18	
-@21	lineno:6	type	void	children:	
-@22	lineno:6	var 	name:main	scope:global	children:	
-@23	lineno:6	para	children:	
-@35	lineno:9	stmt	type:block	children:30,34	
-@8	lineno:2	type	int 	children:	
-@9	lineno:2	var 	name:x	scope:br1 in line2	children:	
-@11	lineno:2	type	int 	children:	
-@12	lineno:2	var 	name:y	scope:br1 in line2	children:	
-@15	lineno:3	expr	op:ass	children:13,14	
-@18	lineno:4	stmt	type:return	children:17	
-@30	lineno:7	stmt	type:decl	children:24,25,29	
-@34	lineno:8	stmt	type:func_use	name:printf	children:31,32,33	
-@13	lineno:3	var 	name:x	scope:br1 in line2	children:	
-@14	lineno:3	const	int 	val:2	children:	
-@17	lineno:4	const	int 	val:3	children:	
-@24	lineno:7	type	int 	children:	
-@25	lineno:7	var 	name:s	scope:br2 in line6	children:	
-@29	lineno:7	stmt	type:func_use	name:f	children:26,27,28	
-@31	lineno:8	var 	name:printf	scope:global	children:	
-@32	lineno:8	const	string	val:result is: %d\n	children:	
-@33	lineno:8	var 	name:s	scope:br2 in line6	children:	
-@26	lineno:7	var 	name:f	scope:global	children:	
-@27	lineno:7	const	int 	val:1	children:	
-@28	lineno:7	const	int 	val:2	children:	
+@4	lineno:1	const	int 	val:10	children:	
+@6	lineno:1	const	int 	val:10	children:	
+@9	lineno:2	var 	name:b	scope:global	children:	
+@12	lineno:2	expr	op:lshift	children:10,11	
+@29	lineno:5	expr	op:ass	children:27,28	
+@10	lineno:2	const	int 	val:5	children:	
+@11	lineno:2	const	int 	val:2	children:	
+@27	lineno:5	array	dimen:1	children:25,26	
+@28	lineno:5	const	char	val:1	children:	
+@25	lineno:5	var 	name:b	scope:global	children:	
+@26	lineno:5	const	int 	val:0	children:	
+type check pass!

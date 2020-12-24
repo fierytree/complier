@@ -103,6 +103,7 @@ public:
     pair<int,int> scope;
     bool is_const;
     int array_dim;
+    Type* func_type;
 
 public:
     static string nodeType2String (NodeType t);

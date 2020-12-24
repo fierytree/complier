@@ -15,14 +15,14 @@
     }
     TreeNode* find_id(TreeNode* t){
         auto s=make_pair(-1,-1);
-        if(id_list.find(make_pair(t->var_name,0))!=id_list.end())s=make_pair(0,0);
+        Type* tp;
+        auto y=make_pair(t->var_name,0);
+        if(id_list.find(y)!=id_list.end())s=make_pair(0,0),tp=id_list[y]->type;
         for(auto x:br_list){
-            //cout<<x.first<<" "<<x.second<<endl;
             auto y=make_pair(t->var_name,x.first);
-            if(id_list.find(y)!=id_list.end())s=x;
+            if(id_list.find(y)!=id_list.end())s=x,tp=id_list[y]->type;
         }
-        //cout<<s.first<<" ss "<<s.second<<endl;
-        t->scope=s;
+        t->scope=s;t->type=tp;
         if(s.first==-1)cout<<"Variable "<<t->var_name<<" undefinied"<<endl;
         return t;
     }
@@ -52,7 +52,7 @@
 %token COMMA
 
 %token IDENTIFIER INTEGER CHAR BOOL STRING HEX_INTEGER
-%token IF WHILE FOR RETURN CONST
+%token IF WHILE FOR RETURN CONST ELSE
 
 %right LOP_ASS ADD_ASS SUB_ASS MUL_ASS DIV_ASS SUR_ASS LS_ASS RS_ASS AND_ASS OR_ASS XOR_ASS
 %left LOG_OR
@@ -72,12 +72,14 @@
 %right INCR DECR
 %left M_LBR M_RBR
 %left BACK_INCR BACK_DECR
+%precedence IF
+%precedence ELSE
 
 
 %%
 
 program
-: units {root = new TreeNode(0, NODE_PROG); root->addChild($1);};
+: units {root = new TreeNode(0, NODE_PROG); root->addChild($1);root->type=TYPE_VOID;};
 ;
 
 units
@@ -90,9 +92,15 @@ units
 function
 : T IDENTIFIER for_LEFTBR PARMS for_RIGHTBR block{
     TreeNode* node = new TreeNode($1->lineno, NODE_FUNC);
+    
+    $2->type=new Type(COMPOSE_FUNCTION);
+    $2->type->retType=$1->type;
+    $2->type->paramType=$4->type;
     add_id($2);
+
+    $6->func_type=$2->type;
     node->var_name=$2->var_name;
-    node->type=$1->type;
+    node->type=TYPE_VOID;
     node->addChild($1);
     node->addChild($2);
     node->addChild($4);
@@ -104,6 +112,10 @@ function
 PARMS
 : T IDENTIFIER{
     TreeNode* node = new TreeNode($1->lineno, NODE_PARA);
+
+    node->type=new Type(COMPOSE_UNION);
+    node->type->addChild($1->type);
+    $2->type=$1->type;
     add_id($2);
     node->addChild($1);
     node->addChild($2);
@@ -112,10 +124,12 @@ PARMS
 | PARMS COMMA T IDENTIFIER{
     $$=$1;
     add_id($4);
+    $4->type=$3->type;
     $1->addChild($3);
     $1->addChild($4);
+    $1->type->addChild($3->type);
 }
-| {$$ = new TreeNode(lineno, NODE_PARA);}
+| {$$ = new TreeNode(lineno, NODE_PARA);$$->type=new Type(COMPOSE_UNION);}
 ;
 
 block_item
@@ -124,8 +138,13 @@ block_item
 ;
 
 block_items
-: block_item {$$=$1;}
-| block_items block_item {$$=$1; $$->addSibling($2);}
+: {$$ = new TreeNode(lineno, NODE_STMT); $$->stype = STMT_SKIP;}
+| block_items block_item {
+    if($1->stype == STMT_SKIP)$$=$2;
+    else{
+        $$=$1; $$->addSibling($2);
+    }   
+}
 ;
 
 block
@@ -162,6 +181,14 @@ statement
     node->addChild($5);
     $$=node;
 }
+| IF LEFTBR expr RIGHTBR statement ELSE statement{
+    TreeNode* node = new TreeNode($3->lineno, NODE_STMT);
+    node->stype=STMT_IF;
+    node->addChild($3);
+    node->addChild($5);
+    node->addChild($7);
+    $$=node;
+}
 | RETURN expr SEMICOLON{
     TreeNode* node = new TreeNode($2->lineno, NODE_STMT);
     node->stype=STMT_RETURN;
@@ -190,6 +217,7 @@ for_RIGHTBR:RIGHTBR{$$=$1;br_list.pop_back();};
 declaration
 : T IDENTIFIER LOP_ASS expr{ 
     TreeNode* node = new TreeNode($1->lineno, NODE_STMT);
+    $2->type=$1->type;
     add_id($2);
     node->stype = STMT_DECL;
     node->addChild($1);
@@ -202,6 +230,11 @@ declaration
     node->stype = STMT_DECL;
     node->addChild($1);
     node->addChild($2);
+    TreeNode* tmp=$2;
+    while(tmp!=nullptr){
+        tmp->type=$1->type;
+        tmp=tmp->siblings;
+    }
     $$ = node;   
 }
 | T ARRAY {
@@ -209,12 +242,14 @@ declaration
     node->stype = STMT_DECL;
     node->addChild($1);
     node->addChild($2);
+    $2->type->addret($1->type);
     $$ = node;
 }
 | CONST T_INT IDENTIFIER LOP_ASS CONST_EXP{
     TreeNode* node1 = new TreeNode($3->lineno, NODE_TYPE);node1->type=TYPE_INT;    
     TreeNode* node = new TreeNode($3->lineno, NODE_STMT);
     $3->is_const=1;
+    $3->type=TYPE_INT;
     add_id($3);
     node->stype = STMT_DECL;
     node->addChild(node1);
@@ -226,6 +261,7 @@ declaration
     TreeNode* node1 = new TreeNode($3->lineno, NODE_TYPE);node1->type=TYPE_CHAR; 
     TreeNode* node = new TreeNode($3->lineno, NODE_STMT);
     $3->is_const=1;
+    $3->type=TYPE_CHAR;
     add_id($3);
     node->stype = STMT_DECL;
     node->addChild(node1);
@@ -237,6 +273,7 @@ declaration
     TreeNode* node1 = new TreeNode($3->lineno, NODE_TYPE);node1->type=TYPE_BOOL; 
     TreeNode* node = new TreeNode($3->lineno, NODE_STMT);
     $3->is_const=1;
+    $3->type=TYPE_BOOL;
     add_id($3);
     node->stype = STMT_DECL;
     node->addChild(node1);
@@ -252,6 +289,7 @@ CONST_EXP
 	node->optype = OP_ADD;
     node->addChild($1);
     node->addChild($3);
+    node->int_val=$1->int_val+$3->int_val;
     $$ = node;
 }
 | CONST_EXP SUB CONST_EXP{
@@ -259,6 +297,7 @@ CONST_EXP
 	node->optype = OP_SUB;
     node->addChild($1);
     node->addChild($3);
+    node->int_val=$1->int_val-$3->int_val;
     $$ = node;
 }
 | CONST_EXP MUL CONST_EXP{
@@ -266,6 +305,7 @@ CONST_EXP
 	node->optype = OP_MUL;
     node->addChild($1);
     node->addChild($3);
+    node->int_val=$1->int_val*$3->int_val;
     $$ = node;
 }
 | CONST_EXP DIV CONST_EXP{
@@ -273,6 +313,7 @@ CONST_EXP
 	node->optype = OP_DIV;
     node->addChild($1);
     node->addChild($3);
+    node->int_val=$1->int_val/$3->int_val;
     $$ = node;
 }
 | CONST_EXP LSHIFT CONST_EXP{
@@ -280,18 +321,21 @@ CONST_EXP
 	node->optype = OP_LSHIFT;
     node->addChild($1);
     node->addChild($3);
+    node->int_val=$1->int_val<<$3->int_val;
     $$ = node;
 }
 | SUB CONST_EXP %prec UMINUS{
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
 	node->optype = OP_UMINUS;
     node->addChild($2);
+    node->int_val=-$2->int_val;
     $$ = node;
 }
 | LEFTBR CONST_EXP RIGHTBR{
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
 	node->optype = OP_BR;
     node->addChild($2);
+    node->int_val=$2->int_val;
     $$ = node;
 }
 ;
@@ -299,16 +343,25 @@ CONST_EXP
 ARRAY
 : IDENTIFIER M_LBR CONST_EXP M_RBR{
     TreeNode* node = new TreeNode($1->lineno, NODE_ARRAY);
+
+    $1->type=new Type(COMPOSE_ARRAY);
+    $1->type->size=$3->int_val;
+    $1->array_dim=1;
+    
     add_id($1);
     node->array_dim=1;
     node->addChild($1);
     node->addChild($3);
+    node->type=$1->type;
     $$=node;
 }
 | ARRAY M_LBR CONST_EXP M_RBR{
     $1->array_dim+=1;
     $$=$1;
-    $1->addSibling($3);
+    $1->addChild($3);
+    Type* at=new Type(COMPOSE_ARRAY);
+    at->size=$3->int_val;
+    $1->type->addret(at);
 }
 ;
 
@@ -323,12 +376,12 @@ ARRAY2
 | ARRAY2 M_LBR expr M_RBR {
     $1->array_dim+=1;
     $$=$1;
-    $1->addSibling($3);
+    $1->addChild($3);
 }
 
 LVAL
 : ARRAY2 {$$=$1;}
-| IDENTIFIER {$$=$1;}
+| IDENTIFIER {$$=find_id($1);}
 
 IDENTIFIERS
 : IDENTIFIER{
@@ -343,8 +396,14 @@ IDENTIFIERS
 ;
 
 PAS
-: expr {$$=$1;}
-| PAS COMMA expr {$$=$1;$1->addSibling($3);}
+: {$$ = new TreeNode(lineno, NODE_PARA);$$->type=new Type(COMPOSE_UNION);}
+| PAS COMMA expr {$$=$1;$1->addChild($3);}
+| expr {
+    TreeNode* node=new TreeNode(lineno, NODE_PARA);
+    node->type=new Type(COMPOSE_UNION);
+    node->addChild($1);
+    $$=node;
+}
 ;
 
 expr
@@ -369,13 +428,6 @@ expr
     node->var_name=$1->var_name;
     node->addChild(find_id($1));
     node->addChild($3);
-    $$=node;
-}
-| IDENTIFIER LEFTBR RIGHTBR{
-    TreeNode* node = new TreeNode($1->lineno, NODE_STMT);
-    node->stype=STMT_FUNC_USE;
-    node->var_name=$1->var_name;
-    node->addChild(find_id($1));
     $$=node;
 }
 | expr ADD expr {

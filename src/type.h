@@ -12,7 +12,8 @@ enum ValueType
     VALUE_VOID,
     COMPOSE_STRUCT,
     COMPOSE_UNION,
-    COMPOSE_FUNCTION
+    COMPOSE_FUNCTION,
+    COMPOSE_ARRAY
 };
 
 class Type
@@ -22,16 +23,18 @@ public:
     Type(ValueType valueType);
 public:  
     /* 如果你要设计复杂类型系统的话，可以修改这一部分 */
-    ValueType* childType; // for union or struct
-    ValueType* paramType, retType; // for function
+    vector<Type*> childType; // for union or struct
+    Type* paramType;
+    Type* retType; // for function or array
+    unsigned size; // for array
     
     void addChild(Type* t);
-    void addParam(Type* t);
-    void addRet(Type* t);
-public:
-    ValueType* sibling; 
+    void addret(Type* t);
+ 
 public:
     string getTypeInfo();
+    bool operator==(Type t);
+    bool operator!=(Type t);
 };
 
 // 设置几个常量Type，可以节省空间开销

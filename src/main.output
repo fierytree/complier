@@ -23,7 +23,7 @@ Grammar
    10 block_item: statement
    11           | declaration SEMICOLON
 
-   12 block_items: block_item
+   12 block_items: %empty
    13            | block_items block_item
 
    14 block: LBRACE block_items RBRACE
@@ -33,235 +33,237 @@ Grammar
    17          | WHILE LEFTBR expr RIGHTBR statement
    18          | FOR for_LEFTBR for_expr SEMICOLON for_expr SEMICOLON for_expr for_RIGHTBR statement
    19          | IF LEFTBR expr RIGHTBR statement
-   20          | RETURN expr SEMICOLON
-   21          | RETURN SEMICOLON
-   22          | expr SEMICOLON
+   20          | IF LEFTBR expr RIGHTBR statement ELSE statement
+   21          | RETURN expr SEMICOLON
+   22          | RETURN SEMICOLON
+   23          | expr SEMICOLON
 
-   23 for_expr: declaration
-   24         | expr
-   25         | %empty
+   24 for_expr: declaration
+   25         | expr
+   26         | %empty
 
-   26 for_LEFTBR: LEFTBR
+   27 for_LEFTBR: LEFTBR
 
-   27 for_RIGHTBR: RIGHTBR
+   28 for_RIGHTBR: RIGHTBR
 
-   28 declaration: T IDENTIFIER LOP_ASS expr
-   29            | T IDENTIFIERS
-   30            | T ARRAY
-   31            | CONST T_INT IDENTIFIER LOP_ASS CONST_EXP
-   32            | CONST T_CHAR IDENTIFIER LOP_ASS CHAR
-   33            | CONST T_BOOL IDENTIFIER LOP_ASS INTEGER
+   29 declaration: T IDENTIFIER LOP_ASS expr
+   30            | T IDENTIFIERS
+   31            | T ARRAY
+   32            | CONST T_INT IDENTIFIER LOP_ASS CONST_EXP
+   33            | CONST T_CHAR IDENTIFIER LOP_ASS CHAR
+   34            | CONST T_BOOL IDENTIFIER LOP_ASS INTEGER
 
-   34 CONST_EXP: INTEGER
-   35          | CONST_EXP ADD CONST_EXP
-   36          | CONST_EXP SUB CONST_EXP
-   37          | CONST_EXP MUL CONST_EXP
-   38          | CONST_EXP DIV CONST_EXP
-   39          | CONST_EXP LSHIFT CONST_EXP
-   40          | SUB CONST_EXP
-   41          | LEFTBR CONST_EXP RIGHTBR
+   35 CONST_EXP: INTEGER
+   36          | CONST_EXP ADD CONST_EXP
+   37          | CONST_EXP SUB CONST_EXP
+   38          | CONST_EXP MUL CONST_EXP
+   39          | CONST_EXP DIV CONST_EXP
+   40          | CONST_EXP LSHIFT CONST_EXP
+   41          | SUB CONST_EXP
+   42          | LEFTBR CONST_EXP RIGHTBR
 
-   42 ARRAY: IDENTIFIER M_LBR CONST_EXP M_RBR
-   43      | ARRAY M_LBR CONST_EXP M_RBR
+   43 ARRAY: IDENTIFIER M_LBR CONST_EXP M_RBR
+   44      | ARRAY M_LBR CONST_EXP M_RBR
 
-   44 ARRAY2: IDENTIFIER M_LBR expr M_RBR
-   45       | ARRAY2 M_LBR expr M_RBR
+   45 ARRAY2: IDENTIFIER M_LBR expr M_RBR
+   46       | ARRAY2 M_LBR expr M_RBR
 
-   46 LVAL: ARRAY2
-   47     | IDENTIFIER
+   47 LVAL: ARRAY2
+   48     | IDENTIFIER
 
-   48 IDENTIFIERS: IDENTIFIER
-   49            | IDENTIFIERS COMMA IDENTIFIER
+   49 IDENTIFIERS: IDENTIFIER
+   50            | IDENTIFIERS COMMA IDENTIFIER
 
-   50 PAS: expr
-   51    | PAS COMMA expr
+   51 PAS: %empty
+   52    | PAS COMMA expr
+   53    | expr
 
-   52 expr: IDENTIFIER
-   53     | INTEGER
-   54     | HEX_INTEGER
-   55     | CHAR
-   56     | STRING
-   57     | IDENTIFIER LEFTBR PAS RIGHTBR
-   58     | IDENTIFIER LEFTBR RIGHTBR
-   59     | expr ADD expr
-   60     | expr SUB expr
-   61     | expr MUL expr
-   62     | expr DIV expr
-   63     | expr SUR expr
-   64     | expr LSHIFT expr
-   65     | expr RSHIFT expr
-   66     | expr BIT_AND expr
-   67     | expr BIT_OR expr
-   68     | expr BIT_XOR expr
-   69     | expr EQ expr
-   70     | expr UEQ expr
-   71     | expr LT expr
-   72     | expr GT expr
-   73     | expr LE expr
-   74     | expr GE expr
-   75     | expr LOG_AND expr
-   76     | expr LOG_OR expr
-   77     | LVAL LOP_ASS expr
-   78     | LVAL ADD_ASS expr
-   79     | LVAL SUB_ASS expr
-   80     | LVAL MUL_ASS expr
-   81     | LVAL DIV_ASS expr
-   82     | LVAL SUR_ASS expr
-   83     | LVAL LS_ASS expr
-   84     | LVAL RS_ASS expr
-   85     | LVAL OR_ASS expr
-   86     | LVAL AND_ASS expr
-   87     | LVAL XOR_ASS expr
-   88     | SUB expr
-   89     | ADD expr
-   90     | LOG_NOT expr
-   91     | BIT_NOT expr
-   92     | BIT_AND expr
-   93     | INCR expr
-   94     | DECR expr
-   95     | expr INCR
-   96     | expr DECR
-   97     | LEFTBR expr RIGHTBR
+   54 expr: IDENTIFIER
+   55     | INTEGER
+   56     | HEX_INTEGER
+   57     | CHAR
+   58     | STRING
+   59     | IDENTIFIER LEFTBR PAS RIGHTBR
+   60     | expr ADD expr
+   61     | expr SUB expr
+   62     | expr MUL expr
+   63     | expr DIV expr
+   64     | expr SUR expr
+   65     | expr LSHIFT expr
+   66     | expr RSHIFT expr
+   67     | expr BIT_AND expr
+   68     | expr BIT_OR expr
+   69     | expr BIT_XOR expr
+   70     | expr EQ expr
+   71     | expr UEQ expr
+   72     | expr LT expr
+   73     | expr GT expr
+   74     | expr LE expr
+   75     | expr GE expr
+   76     | expr LOG_AND expr
+   77     | expr LOG_OR expr
+   78     | LVAL LOP_ASS expr
+   79     | LVAL ADD_ASS expr
+   80     | LVAL SUB_ASS expr
+   81     | LVAL MUL_ASS expr
+   82     | LVAL DIV_ASS expr
+   83     | LVAL SUR_ASS expr
+   84     | LVAL LS_ASS expr
+   85     | LVAL RS_ASS expr
+   86     | LVAL OR_ASS expr
+   87     | LVAL AND_ASS expr
+   88     | LVAL XOR_ASS expr
+   89     | SUB expr
+   90     | ADD expr
+   91     | LOG_NOT expr
+   92     | BIT_NOT expr
+   93     | BIT_AND expr
+   94     | INCR expr
+   95     | DECR expr
+   96     | expr INCR
+   97     | expr DECR
+   98     | LEFTBR expr RIGHTBR
 
-   98 T: T_INT
-   99  | T_CHAR
-  100  | T_BOOL
-  101  | T_STRING
-  102  | T_VOID
+   99 T: T_INT
+  100  | T_CHAR
+  101  | T_BOOL
+  102  | T_STRING
+  103  | T_VOID
 
 
 Terminals, with rules where they appear
 
     $end (0) 0
     error (256)
-    T_CHAR (258) 32 99
-    T_INT (259) 31 98
-    T_STRING (260) 101
-    T_BOOL (261) 33 100
-    T_VOID (262) 102
-    LOP_ASS (263) 28 31 32 33 77
-    ADD_ASS (264) 78
-    SUB_ASS (265) 79
-    MUL_ASS (266) 80
-    DIV_ASS (267) 81
-    SUR_ASS (268) 82
-    LS_ASS (269) 83
-    RS_ASS (270) 84
-    AND_ASS (271) 86
-    OR_ASS (272) 85
-    XOR_ASS (273) 87
-    LOG_OR (274) 76
-    LOG_AND (275) 75
-    BIT_OR (276) 67
-    BIT_XOR (277) 68
-    BIT_AND (278) 66 92
-    EQ (279) 69
-    UEQ (280) 70
-    GT (281) 72
-    LT (282) 71
-    GE (283) 74
-    LE (284) 73
-    LSHIFT (285) 39 64
-    RSHIFT (286) 65
-    ADD (287) 35 59 89
-    SUB (288) 36 40 60 88
-    MUL (289) 37 61
-    DIV (290) 38 62
-    SUR (291) 63
-    BIT_NOT (292) 91
-    LOG_NOT (293) 90
-    INCR (294) 93 95
-    DECR (295) 94 96
-    LEFTBR (296) 17 19 26 41 57 58 97
-    RIGHTBR (297) 17 19 27 41 57 58 97
+    T_CHAR (258) 33 100
+    T_INT (259) 32 99
+    T_STRING (260) 102
+    T_BOOL (261) 34 101
+    T_VOID (262) 103
+    LOP_ASS (263) 29 32 33 34 78
+    ADD_ASS (264) 79
+    SUB_ASS (265) 80
+    MUL_ASS (266) 81
+    DIV_ASS (267) 82
+    SUR_ASS (268) 83
+    LS_ASS (269) 84
+    RS_ASS (270) 85
+    AND_ASS (271) 87
+    OR_ASS (272) 86
+    XOR_ASS (273) 88
+    LOG_OR (274) 77
+    LOG_AND (275) 76
+    BIT_OR (276) 68
+    BIT_XOR (277) 69
+    BIT_AND (278) 67 93
+    EQ (279) 70
+    UEQ (280) 71
+    GT (281) 73
+    LT (282) 72
+    GE (283) 75
+    LE (284) 74
+    LSHIFT (285) 40 65
+    RSHIFT (286) 66
+    ADD (287) 36 60 90
+    SUB (288) 37 41 61 89
+    MUL (289) 38 62
+    DIV (290) 39 63
+    SUR (291) 64
+    BIT_NOT (292) 92
+    LOG_NOT (293) 91
+    INCR (294) 94 96
+    DECR (295) 95 97
+    LEFTBR (296) 17 19 20 27 42 59 98
+    RIGHTBR (297) 17 19 20 28 42 59 98
     LBRACE (298) 14
     RBRACE (299) 14
-    M_LBR (300) 42 43 44 45
-    M_RBR (301) 42 43 44 45
-    SEMICOLON (302) 2 4 11 15 18 20 21 22
-    COMMA (303) 8 49 51
-    IDENTIFIER (304) 6 7 8 28 31 32 33 42 44 47 48 49 52 57 58
-    INTEGER (305) 33 34 53
-    CHAR (306) 32 55
+    M_LBR (300) 43 44 45 46
+    M_RBR (301) 43 44 45 46
+    SEMICOLON (302) 2 4 11 15 18 21 22 23
+    COMMA (303) 8 50 52
+    IDENTIFIER (304) 6 7 8 29 32 33 34 43 45 48 49 50 54 59
+    INTEGER (305) 34 35 55
+    CHAR (306) 33 57
     BOOL (307)
-    STRING (308) 56
-    HEX_INTEGER (309) 54
-    IF (310) 19
+    STRING (308) 58
+    HEX_INTEGER (309) 56
+    IF (310) 19 20
     WHILE (311) 17
     FOR (312) 18
-    RETURN (313) 20 21
-    CONST (314) 31 32 33
-    ADDR (315)
-    UMINUS (316)
-    UADD (317)
-    BACK_INCR (318)
-    BACK_DECR (319)
+    RETURN (313) 21 22
+    CONST (314) 32 33 34
+    ELSE (315) 20
+    ADDR (316)
+    UMINUS (317)
+    UADD (318)
+    BACK_INCR (319)
+    BACK_DECR (320)
 
 
 Nonterminals, with rules where they appear
 
-    $accept (65)
+    $accept (66)
         on left: 0
-    program (66)
+    program (67)
         on left: 1
         on right: 0
-    units (67)
+    units (68)
         on left: 2 3 4 5
         on right: 1 4 5
-    function (68)
+    function (69)
         on left: 6
         on right: 3 5
-    PARMS (69)
+    PARMS (70)
         on left: 7 8 9
         on right: 6 8
-    block_item (70)
+    block_item (71)
         on left: 10 11
-        on right: 12 13
-    block_items (71)
+        on right: 13
+    block_items (72)
         on left: 12 13
         on right: 13 14
-    block (72)
+    block (73)
         on left: 14
         on right: 6 16
-    statement (73)
-        on left: 15 16 17 18 19 20 21 22
-        on right: 10 17 18 19
-    for_expr (74)
-        on left: 23 24 25
+    statement (74)
+        on left: 15 16 17 18 19 20 21 22 23
+        on right: 10 17 18 19 20
+    for_expr (75)
+        on left: 24 25 26
         on right: 18
-    for_LEFTBR (75)
-        on left: 26
-        on right: 6 18
-    for_RIGHTBR (76)
+    for_LEFTBR (76)
         on left: 27
         on right: 6 18
-    declaration (77)
-        on left: 28 29 30 31 32 33
-        on right: 2 4 11 23
-    CONST_EXP (78)
-        on left: 34 35 36 37 38 39 40 41
-        on right: 31 35 36 37 38 39 40 41 42 43
-    ARRAY (79)
-        on left: 42 43
-        on right: 30 43
-    ARRAY2 (80)
-        on left: 44 45
-        on right: 45 46
-    LVAL (81)
-        on left: 46 47
-        on right: 77 78 79 80 81 82 83 84 85 86 87
-    IDENTIFIERS (82)
-        on left: 48 49
-        on right: 29 49
-    PAS (83)
-        on left: 50 51
-        on right: 51 57
-    expr (84)
-        on left: 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97
-        on right: 17 19 20 22 24 28 44 45 50 51 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97
-    T (85)
-        on left: 98 99 100 101 102
-        on right: 6 7 8 28 29 30
+    for_RIGHTBR (77)
+        on left: 28
+        on right: 6 18
+    declaration (78)
+        on left: 29 30 31 32 33 34
+        on right: 2 4 11 24
+    CONST_EXP (79)
+        on left: 35 36 37 38 39 40 41 42
+        on right: 32 36 37 38 39 40 41 42 43 44
+    ARRAY (80)
+        on left: 43 44
+        on right: 31 44
+    ARRAY2 (81)
+        on left: 45 46
+        on right: 46 47
+    LVAL (82)
+        on left: 47 48
+        on right: 78 79 80 81 82 83 84 85 86 87 88
+    IDENTIFIERS (83)
+        on left: 49 50
+        on right: 30 50
+    PAS (84)
+        on left: 51 52 53
+        on right: 52 59
+    expr (85)
+        on left: 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98
+        on right: 17 19 20 21 23 25 29 45 46 52 53 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98
+    T (86)
+        on left: 99 100 101 102 103
+        on right: 6 7 8 29 30 31
 
 
 State 0
@@ -284,44 +286,44 @@ State 0
 
 State 1
 
-   99 T: T_CHAR .
-
-    $default  reduce using rule 99 (T)
-
-
-State 2
-
-   98 T: T_INT .
-
-    $default  reduce using rule 98 (T)
-
-
-State 3
-
-  101 T: T_STRING .
-
-    $default  reduce using rule 101 (T)
-
-
-State 4
-
-  100 T: T_BOOL .
+  100 T: T_CHAR .
 
     $default  reduce using rule 100 (T)
 
 
-State 5
+State 2
 
-  102 T: T_VOID .
+   99 T: T_INT .
+
+    $default  reduce using rule 99 (T)
+
+
+State 3
+
+  102 T: T_STRING .
 
     $default  reduce using rule 102 (T)
 
 
+State 4
+
+  101 T: T_BOOL .
+
+    $default  reduce using rule 101 (T)
+
+
+State 5
+
+  103 T: T_VOID .
+
+    $default  reduce using rule 103 (T)
+
+
 State 6
 
-   31 declaration: CONST . T_INT IDENTIFIER LOP_ASS CONST_EXP
-   32            | CONST . T_CHAR IDENTIFIER LOP_ASS CHAR
-   33            | CONST . T_BOOL IDENTIFIER LOP_ASS INTEGER
+   32 declaration: CONST . T_INT IDENTIFIER LOP_ASS CONST_EXP
+   33            | CONST . T_CHAR IDENTIFIER LOP_ASS CHAR
+   34            | CONST . T_BOOL IDENTIFIER LOP_ASS INTEGER
 
     T_CHAR  shift, and go to state 12
     T_INT   shift, and go to state 13
@@ -372,9 +374,9 @@ State 10
 State 11
 
     6 function: T . IDENTIFIER for_LEFTBR PARMS for_RIGHTBR block
-   28 declaration: T . IDENTIFIER LOP_ASS expr
-   29            | T . IDENTIFIERS
-   30            | T . ARRAY
+   29 declaration: T . IDENTIFIER LOP_ASS expr
+   30            | T . IDENTIFIERS
+   31            | T . ARRAY
 
     IDENTIFIER  shift, and go to state 19
 
@@ -384,21 +386,21 @@ State 11
 
 State 12
 
-   32 declaration: CONST T_CHAR . IDENTIFIER LOP_ASS CHAR
+   33 declaration: CONST T_CHAR . IDENTIFIER LOP_ASS CHAR
 
     IDENTIFIER  shift, and go to state 22
 
 
 State 13
 
-   31 declaration: CONST T_INT . IDENTIFIER LOP_ASS CONST_EXP
+   32 declaration: CONST T_INT . IDENTIFIER LOP_ASS CONST_EXP
 
     IDENTIFIER  shift, and go to state 23
 
 
 State 14
 
-   33 declaration: CONST T_BOOL . IDENTIFIER LOP_ASS INTEGER
+   34 declaration: CONST T_BOOL . IDENTIFIER LOP_ASS INTEGER
 
     IDENTIFIER  shift, and go to state 24
 
@@ -434,56 +436,56 @@ State 18
 State 19
 
     6 function: T IDENTIFIER . for_LEFTBR PARMS for_RIGHTBR block
-   28 declaration: T IDENTIFIER . LOP_ASS expr
-   42 ARRAY: IDENTIFIER . M_LBR CONST_EXP M_RBR
-   48 IDENTIFIERS: IDENTIFIER .
+   29 declaration: T IDENTIFIER . LOP_ASS expr
+   43 ARRAY: IDENTIFIER . M_LBR CONST_EXP M_RBR
+   49 IDENTIFIERS: IDENTIFIER .
 
     LOP_ASS  shift, and go to state 26
     LEFTBR   shift, and go to state 27
     M_LBR    shift, and go to state 28
 
-    $default  reduce using rule 48 (IDENTIFIERS)
+    $default  reduce using rule 49 (IDENTIFIERS)
 
     for_LEFTBR  go to state 29
 
 
 State 20
 
-   30 declaration: T ARRAY .
-   43 ARRAY: ARRAY . M_LBR CONST_EXP M_RBR
+   31 declaration: T ARRAY .
+   44 ARRAY: ARRAY . M_LBR CONST_EXP M_RBR
 
     M_LBR  shift, and go to state 30
 
-    $default  reduce using rule 30 (declaration)
+    $default  reduce using rule 31 (declaration)
 
 
 State 21
 
-   29 declaration: T IDENTIFIERS .
-   49 IDENTIFIERS: IDENTIFIERS . COMMA IDENTIFIER
+   30 declaration: T IDENTIFIERS .
+   50 IDENTIFIERS: IDENTIFIERS . COMMA IDENTIFIER
 
     COMMA  shift, and go to state 31
 
-    $default  reduce using rule 29 (declaration)
+    $default  reduce using rule 30 (declaration)
 
 
 State 22
 
-   32 declaration: CONST T_CHAR IDENTIFIER . LOP_ASS CHAR
+   33 declaration: CONST T_CHAR IDENTIFIER . LOP_ASS CHAR
 
     LOP_ASS  shift, and go to state 32
 
 
 State 23
 
-   31 declaration: CONST T_INT IDENTIFIER . LOP_ASS CONST_EXP
+   32 declaration: CONST T_INT IDENTIFIER . LOP_ASS CONST_EXP
 
     LOP_ASS  shift, and go to state 33
 
 
 State 24
 
-   33 declaration: CONST T_BOOL IDENTIFIER . LOP_ASS INTEGER
+   34 declaration: CONST T_BOOL IDENTIFIER . LOP_ASS INTEGER
 
     LOP_ASS  shift, and go to state 34
 
@@ -497,7 +499,7 @@ State 25
 
 State 26
 
-   28 declaration: T IDENTIFIER LOP_ASS . expr
+   29 declaration: T IDENTIFIER LOP_ASS . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -520,14 +522,14 @@ State 26
 
 State 27
 
-   26 for_LEFTBR: LEFTBR .
+   27 for_LEFTBR: LEFTBR .
 
-    $default  reduce using rule 26 (for_LEFTBR)
+    $default  reduce using rule 27 (for_LEFTBR)
 
 
 State 28
 
-   42 ARRAY: IDENTIFIER M_LBR . CONST_EXP M_RBR
+   43 ARRAY: IDENTIFIER M_LBR . CONST_EXP M_RBR
 
     SUB      shift, and go to state 51
     LEFTBR   shift, and go to state 52
@@ -554,7 +556,7 @@ State 29
 
 State 30
 
-   43 ARRAY: ARRAY M_LBR . CONST_EXP M_RBR
+   44 ARRAY: ARRAY M_LBR . CONST_EXP M_RBR
 
     SUB      shift, and go to state 51
     LEFTBR   shift, and go to state 52
@@ -565,21 +567,21 @@ State 30
 
 State 31
 
-   49 IDENTIFIERS: IDENTIFIERS COMMA . IDENTIFIER
+   50 IDENTIFIERS: IDENTIFIERS COMMA . IDENTIFIER
 
     IDENTIFIER  shift, and go to state 58
 
 
 State 32
 
-   32 declaration: CONST T_CHAR IDENTIFIER LOP_ASS . CHAR
+   33 declaration: CONST T_CHAR IDENTIFIER LOP_ASS . CHAR
 
     CHAR  shift, and go to state 59
 
 
 State 33
 
-   31 declaration: CONST T_INT IDENTIFIER LOP_ASS . CONST_EXP
+   32 declaration: CONST T_INT IDENTIFIER LOP_ASS . CONST_EXP
 
     SUB      shift, and go to state 51
     LEFTBR   shift, and go to state 52
@@ -590,14 +592,14 @@ State 33
 
 State 34
 
-   33 declaration: CONST T_BOOL IDENTIFIER LOP_ASS . INTEGER
+   34 declaration: CONST T_BOOL IDENTIFIER LOP_ASS . INTEGER
 
     INTEGER  shift, and go to state 61
 
 
 State 35
 
-   92 expr: BIT_AND . expr
+   93 expr: BIT_AND . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -620,7 +622,7 @@ State 35
 
 State 36
 
-   89 expr: ADD . expr
+   90 expr: ADD . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -643,7 +645,7 @@ State 36
 
 State 37
 
-   88 expr: SUB . expr
+   89 expr: SUB . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -666,7 +668,7 @@ State 37
 
 State 38
 
-   91 expr: BIT_NOT . expr
+   92 expr: BIT_NOT . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -689,7 +691,7 @@ State 38
 
 State 39
 
-   90 expr: LOG_NOT . expr
+   91 expr: LOG_NOT . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -712,7 +714,7 @@ State 39
 
 State 40
 
-   93 expr: INCR . expr
+   94 expr: INCR . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -735,7 +737,7 @@ State 40
 
 State 41
 
-   94 expr: DECR . expr
+   95 expr: DECR . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -758,7 +760,7 @@ State 41
 
 State 42
 
-   97 expr: LEFTBR . expr RIGHTBR
+   98 expr: LEFTBR . expr RIGHTBR
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -781,80 +783,79 @@ State 42
 
 State 43
 
-   44 ARRAY2: IDENTIFIER . M_LBR expr M_RBR
-   47 LVAL: IDENTIFIER .
-   52 expr: IDENTIFIER .
-   57     | IDENTIFIER . LEFTBR PAS RIGHTBR
-   58     | IDENTIFIER . LEFTBR RIGHTBR
+   45 ARRAY2: IDENTIFIER . M_LBR expr M_RBR
+   48 LVAL: IDENTIFIER .
+   54 expr: IDENTIFIER .
+   59     | IDENTIFIER . LEFTBR PAS RIGHTBR
 
     LEFTBR  shift, and go to state 70
     M_LBR   shift, and go to state 71
 
-    LOP_ASS   reduce using rule 47 (LVAL)
-    ADD_ASS   reduce using rule 47 (LVAL)
-    SUB_ASS   reduce using rule 47 (LVAL)
-    MUL_ASS   reduce using rule 47 (LVAL)
-    DIV_ASS   reduce using rule 47 (LVAL)
-    SUR_ASS   reduce using rule 47 (LVAL)
-    LS_ASS    reduce using rule 47 (LVAL)
-    RS_ASS    reduce using rule 47 (LVAL)
-    AND_ASS   reduce using rule 47 (LVAL)
-    OR_ASS    reduce using rule 47 (LVAL)
-    XOR_ASS   reduce using rule 47 (LVAL)
-    $default  reduce using rule 52 (expr)
+    LOP_ASS   reduce using rule 48 (LVAL)
+    ADD_ASS   reduce using rule 48 (LVAL)
+    SUB_ASS   reduce using rule 48 (LVAL)
+    MUL_ASS   reduce using rule 48 (LVAL)
+    DIV_ASS   reduce using rule 48 (LVAL)
+    SUR_ASS   reduce using rule 48 (LVAL)
+    LS_ASS    reduce using rule 48 (LVAL)
+    RS_ASS    reduce using rule 48 (LVAL)
+    AND_ASS   reduce using rule 48 (LVAL)
+    OR_ASS    reduce using rule 48 (LVAL)
+    XOR_ASS   reduce using rule 48 (LVAL)
+    $default  reduce using rule 54 (expr)
 
 
 State 44
 
-   53 expr: INTEGER .
-
-    $default  reduce using rule 53 (expr)
-
-
-State 45
-
-   55 expr: CHAR .
+   55 expr: INTEGER .
 
     $default  reduce using rule 55 (expr)
 
 
+State 45
+
+   57 expr: CHAR .
+
+    $default  reduce using rule 57 (expr)
+
+
 State 46
 
-   56 expr: STRING .
+   58 expr: STRING .
 
-    $default  reduce using rule 56 (expr)
+    $default  reduce using rule 58 (expr)
 
 
 State 47
 
-   54 expr: HEX_INTEGER .
+   56 expr: HEX_INTEGER .
 
-    $default  reduce using rule 54 (expr)
+    $default  reduce using rule 56 (expr)
 
 
 State 48
 
-   45 ARRAY2: ARRAY2 . M_LBR expr M_RBR
-   46 LVAL: ARRAY2 .
+   46 ARRAY2: ARRAY2 . M_LBR expr M_RBR
+   47 LVAL: ARRAY2 .
 
     M_LBR  shift, and go to state 72
 
-    $default  reduce using rule 46 (LVAL)
+    $default  reduce using rule 47 (LVAL)
 
 
 State 49
 
-   77 expr: LVAL . LOP_ASS expr
-   78     | LVAL . ADD_ASS expr
-   79     | LVAL . SUB_ASS expr
-   80     | LVAL . MUL_ASS expr
-   81     | LVAL . DIV_ASS expr
-   82     | LVAL . SUR_ASS expr
-   83     | LVAL . LS_ASS expr
-   84     | LVAL . RS_ASS expr
-   85     | LVAL . OR_ASS expr
-   86     | LVAL . AND_ASS expr
-   87     | LVAL . XOR_ASS expr
+   78 expr: LVAL . LOP_ASS expr
+   79     | LVAL . ADD_ASS expr
+   80     | LVAL . SUB_ASS expr
+   81     | LVAL . MUL_ASS expr
+   82     | LVAL . DIV_ASS expr
+   83     | LVAL . SUR_ASS expr
+   84     | LVAL . LS_ASS expr
+   85     | LVAL . RS_ASS expr
+   86     | LVAL . OR_ASS expr
+   87     | LVAL . AND_ASS expr
+   88     | LVAL . XOR_ASS expr
 
     LOP_ASS  shift, and go to state 73
     ADD_ASS  shift, and go to state 74
@@ -871,27 +872,27 @@ State 49
 
 State 50
 
-   28 declaration: T IDENTIFIER LOP_ASS expr .
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   95     | expr . INCR
-   96     | expr . DECR
+   29 declaration: T IDENTIFIER LOP_ASS expr .
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   96     | expr . INCR
+   97     | expr . DECR
 
     LOG_OR   shift, and go to state 84
     LOG_AND  shift, and go to state 85
@@ -914,12 +915,12 @@ State 50
     INCR     shift, and go to state 102
     DECR     shift, and go to state 103
 
-    $default  reduce using rule 28 (declaration)
+    $default  reduce using rule 29 (declaration)
 
 
 State 51
 
-   40 CONST_EXP: SUB . CONST_EXP
+   41 CONST_EXP: SUB . CONST_EXP
 
     SUB      shift, and go to state 51
     LEFTBR   shift, and go to state 52
@@ -930,7 +931,7 @@ State 51
 
 State 52
 
-   41 CONST_EXP: LEFTBR . CONST_EXP RIGHTBR
+   42 CONST_EXP: LEFTBR . CONST_EXP RIGHTBR
 
     SUB      shift, and go to state 51
     LEFTBR   shift, and go to state 52
@@ -941,19 +942,19 @@ State 52
 
 State 53
 
-   34 CONST_EXP: INTEGER .
+   35 CONST_EXP: INTEGER .
 
-    $default  reduce using rule 34 (CONST_EXP)
+    $default  reduce using rule 35 (CONST_EXP)
 
 
 State 54
 
-   35 CONST_EXP: CONST_EXP . ADD CONST_EXP
-   36          | CONST_EXP . SUB CONST_EXP
-   37          | CONST_EXP . MUL CONST_EXP
-   38          | CONST_EXP . DIV CONST_EXP
-   39          | CONST_EXP . LSHIFT CONST_EXP
-   42 ARRAY: IDENTIFIER M_LBR CONST_EXP . M_RBR
+   36 CONST_EXP: CONST_EXP . ADD CONST_EXP
+   37          | CONST_EXP . SUB CONST_EXP
+   38          | CONST_EXP . MUL CONST_EXP
+   39          | CONST_EXP . DIV CONST_EXP
+   40          | CONST_EXP . LSHIFT CONST_EXP
+   43 ARRAY: IDENTIFIER M_LBR CONST_EXP . M_RBR
 
     LSHIFT  shift, and go to state 106
     ADD     shift, and go to state 107
@@ -983,12 +984,12 @@ State 56
 
 State 57
 
-   35 CONST_EXP: CONST_EXP . ADD CONST_EXP
-   36          | CONST_EXP . SUB CONST_EXP
-   37          | CONST_EXP . MUL CONST_EXP
-   38          | CONST_EXP . DIV CONST_EXP
-   39          | CONST_EXP . LSHIFT CONST_EXP
-   43 ARRAY: ARRAY M_LBR CONST_EXP . M_RBR
+   36 CONST_EXP: CONST_EXP . ADD CONST_EXP
+   37          | CONST_EXP . SUB CONST_EXP
+   38          | CONST_EXP . MUL CONST_EXP
+   39          | CONST_EXP . DIV CONST_EXP
+   40          | CONST_EXP . LSHIFT CONST_EXP
+   44 ARRAY: ARRAY M_LBR CONST_EXP . M_RBR
 
     LSHIFT  shift, and go to state 106
     ADD     shift, and go to state 107
@@ -1000,26 +1001,26 @@ State 57
 
 State 58
 
-   49 IDENTIFIERS: IDENTIFIERS COMMA IDENTIFIER .
+   50 IDENTIFIERS: IDENTIFIERS COMMA IDENTIFIER .
 
-    $default  reduce using rule 49 (IDENTIFIERS)
+    $default  reduce using rule 50 (IDENTIFIERS)
 
 
 State 59
 
-   32 declaration: CONST T_CHAR IDENTIFIER LOP_ASS CHAR .
+   33 declaration: CONST T_CHAR IDENTIFIER LOP_ASS CHAR .
 
-    $default  reduce using rule 32 (declaration)
+    $default  reduce using rule 33 (declaration)
 
 
 State 60
 
-   31 declaration: CONST T_INT IDENTIFIER LOP_ASS CONST_EXP .
-   35 CONST_EXP: CONST_EXP . ADD CONST_EXP
-   36          | CONST_EXP . SUB CONST_EXP
-   37          | CONST_EXP . MUL CONST_EXP
-   38          | CONST_EXP . DIV CONST_EXP
-   39          | CONST_EXP . LSHIFT CONST_EXP
+   32 declaration: CONST T_INT IDENTIFIER LOP_ASS CONST_EXP .
+   36 CONST_EXP: CONST_EXP . ADD CONST_EXP
+   37          | CONST_EXP . SUB CONST_EXP
+   38          | CONST_EXP . MUL CONST_EXP
+   39          | CONST_EXP . DIV CONST_EXP
+   40          | CONST_EXP . LSHIFT CONST_EXP
 
     LSHIFT  shift, and go to state 106
     ADD     shift, and go to state 107
@@ -1027,189 +1028,39 @@ State 60
     MUL     shift, and go to state 109
     DIV     shift, and go to state 110
 
-    $default  reduce using rule 31 (declaration)
+    $default  reduce using rule 32 (declaration)
 
 
 State 61
 
-   33 declaration: CONST T_BOOL IDENTIFIER LOP_ASS INTEGER .
+   34 declaration: CONST T_BOOL IDENTIFIER LOP_ASS INTEGER .
 
-    $default  reduce using rule 33 (declaration)
+    $default  reduce using rule 34 (declaration)
 
 
 State 62
 
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   92     | BIT_AND expr .
-   95     | expr . INCR
-   96     | expr . DECR
-
-    INCR  shift, and go to state 102
-    DECR  shift, and go to state 103
-
-    $default  reduce using rule 92 (expr)
-
-
-State 63
-
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   89     | ADD expr .
-   95     | expr . INCR
-   96     | expr . DECR
-
-    INCR  shift, and go to state 102
-    DECR  shift, and go to state 103
-
-    $default  reduce using rule 89 (expr)
-
-
-State 64
-
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   88     | SUB expr .
-   95     | expr . INCR
-   96     | expr . DECR
-
-    INCR  shift, and go to state 102
-    DECR  shift, and go to state 103
-
-    $default  reduce using rule 88 (expr)
-
-
-State 65
-
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   91     | BIT_NOT expr .
-   95     | expr . INCR
-   96     | expr . DECR
-
-    INCR  shift, and go to state 102
-    DECR  shift, and go to state 103
-
-    $default  reduce using rule 91 (expr)
-
-
-State 66
-
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   90     | LOG_NOT expr .
-   95     | expr . INCR
-   96     | expr . DECR
-
-    INCR  shift, and go to state 102
-    DECR  shift, and go to state 103
-
-    $default  reduce using rule 90 (expr)
-
-
-State 67
-
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   93     | INCR expr .
-   95     | expr . INCR
-   96     | expr . DECR
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   93     | BIT_AND expr .
+   96     | expr . INCR
+   97     | expr . DECR
 
     INCR  shift, and go to state 102
     DECR  shift, and go to state 103
@@ -1217,29 +1068,149 @@ State 67
     $default  reduce using rule 93 (expr)
 
 
-State 68
+State 63
 
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   94     | DECR expr .
-   95     | expr . INCR
-   96     | expr . DECR
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   90     | ADD expr .
+   96     | expr . INCR
+   97     | expr . DECR
+
+    INCR  shift, and go to state 102
+    DECR  shift, and go to state 103
+
+    $default  reduce using rule 90 (expr)
+
+
+State 64
+
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   89     | SUB expr .
+   96     | expr . INCR
+   97     | expr . DECR
+
+    INCR  shift, and go to state 102
+    DECR  shift, and go to state 103
+
+    $default  reduce using rule 89 (expr)
+
+
+State 65
+
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   92     | BIT_NOT expr .
+   96     | expr . INCR
+   97     | expr . DECR
+
+    INCR  shift, and go to state 102
+    DECR  shift, and go to state 103
+
+    $default  reduce using rule 92 (expr)
+
+
+State 66
+
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   91     | LOG_NOT expr .
+   96     | expr . INCR
+   97     | expr . DECR
+
+    INCR  shift, and go to state 102
+    DECR  shift, and go to state 103
+
+    $default  reduce using rule 91 (expr)
+
+
+State 67
+
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   94     | INCR expr .
+   96     | expr . INCR
+   97     | expr . DECR
 
     INCR  shift, and go to state 102
     DECR  shift, and go to state 103
@@ -1247,29 +1218,59 @@ State 68
     $default  reduce using rule 94 (expr)
 
 
+State 68
+
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   95     | DECR expr .
+   96     | expr . INCR
+   97     | expr . DECR
+
+    INCR  shift, and go to state 102
+    DECR  shift, and go to state 103
+
+    $default  reduce using rule 95 (expr)
+
+
 State 69
 
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   95     | expr . INCR
-   96     | expr . DECR
-   97     | LEFTBR expr . RIGHTBR
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   96     | expr . INCR
+   97     | expr . DECR
+   98     | LEFTBR expr . RIGHTBR
 
     LOG_OR   shift, and go to state 84
     LOG_AND  shift, and go to state 85
@@ -1296,8 +1297,7 @@ State 69
 
 State 70
 
-   57 expr: IDENTIFIER LEFTBR . PAS RIGHTBR
-   58     | IDENTIFIER LEFTBR . RIGHTBR
+   59 expr: IDENTIFIER LEFTBR . PAS RIGHTBR
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -1307,7 +1307,32 @@ State 70
     INCR         shift, and go to state 40
     DECR         shift, and go to state 41
     LEFTBR       shift, and go to state 42
-    RIGHTBR      shift, and go to state 118
+    IDENTIFIER   shift, and go to state 43
+    INTEGER      shift, and go to state 44
+    CHAR         shift, and go to state 45
+    STRING       shift, and go to state 46
+    HEX_INTEGER  shift, and go to state 47
+
+    $default  reduce using rule 51 (PAS)
+
+    ARRAY2  go to state 48
+    LVAL    go to state 49
+    PAS     go to state 118
+    expr    go to state 119
+
+
+State 71
+
+   45 ARRAY2: IDENTIFIER M_LBR . expr M_RBR
+
+    BIT_AND      shift, and go to state 35
+    ADD          shift, and go to state 36
+    SUB          shift, and go to state 37
+    BIT_NOT      shift, and go to state 38
+    LOG_NOT      shift, and go to state 39
+    INCR         shift, and go to state 40
+    DECR         shift, and go to state 41
+    LEFTBR       shift, and go to state 42
     IDENTIFIER   shift, and go to state 43
     INTEGER      shift, and go to state 44
     CHAR         shift, and go to state 45
@@ -1316,13 +1341,12 @@ State 70
 
     ARRAY2  go to state 48
     LVAL    go to state 49
-    PAS     go to state 119
     expr    go to state 120
 
 
-State 71
+State 72
 
-   44 ARRAY2: IDENTIFIER M_LBR . expr M_RBR
+   46 ARRAY2: ARRAY2 M_LBR . expr M_RBR
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -1343,9 +1367,9 @@ State 71
     expr    go to state 121
 
 
-State 72
+State 73
 
-   45 ARRAY2: ARRAY2 M_LBR . expr M_RBR
+   78 expr: LVAL LOP_ASS . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -1366,9 +1390,9 @@ State 72
     expr    go to state 122
 
 
-State 73
+State 74
 
-   77 expr: LVAL LOP_ASS . expr
+   79 expr: LVAL ADD_ASS . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -1389,9 +1413,9 @@ State 73
     expr    go to state 123
 
 
-State 74
+State 75
 
-   78 expr: LVAL ADD_ASS . expr
+   80 expr: LVAL SUB_ASS . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -1412,9 +1436,9 @@ State 74
     expr    go to state 124
 
 
-State 75
+State 76
 
-   79 expr: LVAL SUB_ASS . expr
+   81 expr: LVAL MUL_ASS . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -1435,9 +1459,9 @@ State 75
     expr    go to state 125
 
 
-State 76
+State 77
 
-   80 expr: LVAL MUL_ASS . expr
+   82 expr: LVAL DIV_ASS . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -1458,9 +1482,9 @@ State 76
     expr    go to state 126
 
 
-State 77
+State 78
 
-   81 expr: LVAL DIV_ASS . expr
+   83 expr: LVAL SUR_ASS . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -1481,9 +1505,9 @@ State 77
     expr    go to state 127
 
 
-State 78
+State 79
 
-   82 expr: LVAL SUR_ASS . expr
+   84 expr: LVAL LS_ASS . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -1504,9 +1528,9 @@ State 78
     expr    go to state 128
 
 
-State 79
+State 80
 
-   83 expr: LVAL LS_ASS . expr
+   85 expr: LVAL RS_ASS . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -1527,9 +1551,9 @@ State 79
     expr    go to state 129
 
 
-State 80
+State 81
 
-   84 expr: LVAL RS_ASS . expr
+   87 expr: LVAL AND_ASS . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -1550,9 +1574,9 @@ State 80
     expr    go to state 130
 
 
-State 81
+State 82
 
-   86 expr: LVAL AND_ASS . expr
+   86 expr: LVAL OR_ASS . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -1573,9 +1597,9 @@ State 81
     expr    go to state 131
 
 
-State 82
+State 83
 
-   85 expr: LVAL OR_ASS . expr
+   88 expr: LVAL XOR_ASS . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -1596,9 +1620,9 @@ State 82
     expr    go to state 132
 
 
-State 83
+State 84
 
-   87 expr: LVAL XOR_ASS . expr
+   77 expr: expr LOG_OR . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -1619,9 +1643,9 @@ State 83
     expr    go to state 133
 
 
-State 84
+State 85
 
-   76 expr: expr LOG_OR . expr
+   76 expr: expr LOG_AND . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -1642,9 +1666,9 @@ State 84
     expr    go to state 134
 
 
-State 85
+State 86
 
-   75 expr: expr LOG_AND . expr
+   68 expr: expr BIT_OR . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -1665,9 +1689,9 @@ State 85
     expr    go to state 135
 
 
-State 86
+State 87
 
-   67 expr: expr BIT_OR . expr
+   69 expr: expr BIT_XOR . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -1688,9 +1712,9 @@ State 86
     expr    go to state 136
 
 
-State 87
+State 88
 
-   68 expr: expr BIT_XOR . expr
+   67 expr: expr BIT_AND . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -1711,9 +1735,9 @@ State 87
     expr    go to state 137
 
 
-State 88
+State 89
 
-   66 expr: expr BIT_AND . expr
+   70 expr: expr EQ . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -1734,9 +1758,9 @@ State 88
     expr    go to state 138
 
 
-State 89
+State 90
 
-   69 expr: expr EQ . expr
+   71 expr: expr UEQ . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -1757,9 +1781,9 @@ State 89
     expr    go to state 139
 
 
-State 90
+State 91
 
-   70 expr: expr UEQ . expr
+   73 expr: expr GT . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -1780,9 +1804,9 @@ State 90
     expr    go to state 140
 
 
-State 91
+State 92
 
-   72 expr: expr GT . expr
+   72 expr: expr LT . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -1803,9 +1827,9 @@ State 91
     expr    go to state 141
 
 
-State 92
+State 93
 
-   71 expr: expr LT . expr
+   75 expr: expr GE . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -1826,9 +1850,9 @@ State 92
     expr    go to state 142
 
 
-State 93
+State 94
 
-   74 expr: expr GE . expr
+   74 expr: expr LE . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -1849,9 +1873,9 @@ State 93
     expr    go to state 143
 
 
-State 94
+State 95
 
-   73 expr: expr LE . expr
+   65 expr: expr LSHIFT . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -1872,9 +1896,9 @@ State 94
     expr    go to state 144
 
 
-State 95
+State 96
 
-   64 expr: expr LSHIFT . expr
+   66 expr: expr RSHIFT . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -1895,9 +1919,9 @@ State 95
     expr    go to state 145
 
 
-State 96
+State 97
 
-   65 expr: expr RSHIFT . expr
+   60 expr: expr ADD . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -1918,9 +1942,9 @@ State 96
     expr    go to state 146
 
 
-State 97
+State 98
 
-   59 expr: expr ADD . expr
+   61 expr: expr SUB . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -1941,9 +1965,9 @@ State 97
     expr    go to state 147
 
 
-State 98
+State 99
 
-   60 expr: expr SUB . expr
+   62 expr: expr MUL . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -1964,9 +1988,9 @@ State 98
     expr    go to state 148
 
 
-State 99
+State 100
 
-   61 expr: expr MUL . expr
+   63 expr: expr DIV . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -1987,9 +2011,9 @@ State 99
     expr    go to state 149
 
 
-State 100
+State 101
 
-   62 expr: expr DIV . expr
+   64 expr: expr SUR . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -2010,75 +2034,63 @@ State 100
     expr    go to state 150
 
 
-State 101
-
-   63 expr: expr SUR . expr
-
-    BIT_AND      shift, and go to state 35
-    ADD          shift, and go to state 36
-    SUB          shift, and go to state 37
-    BIT_NOT      shift, and go to state 38
-    LOG_NOT      shift, and go to state 39
-    INCR         shift, and go to state 40
-    DECR         shift, and go to state 41
-    LEFTBR       shift, and go to state 42
-    IDENTIFIER   shift, and go to state 43
-    INTEGER      shift, and go to state 44
-    CHAR         shift, and go to state 45
-    STRING       shift, and go to state 46
-    HEX_INTEGER  shift, and go to state 47
-
-    ARRAY2  go to state 48
-    LVAL    go to state 49
-    expr    go to state 151
-
-
 State 102
 
-   95 expr: expr INCR .
-
-    $default  reduce using rule 95 (expr)
-
-
-State 103
-
-   96 expr: expr DECR .
+   96 expr: expr INCR .
 
     $default  reduce using rule 96 (expr)
 
 
+State 103
+
+   97 expr: expr DECR .
+
+    $default  reduce using rule 97 (expr)
+
+
 State 104
 
-   35 CONST_EXP: CONST_EXP . ADD CONST_EXP
-   36          | CONST_EXP . SUB CONST_EXP
-   37          | CONST_EXP . MUL CONST_EXP
-   38          | CONST_EXP . DIV CONST_EXP
-   39          | CONST_EXP . LSHIFT CONST_EXP
-   40          | SUB CONST_EXP .
+   36 CONST_EXP: CONST_EXP . ADD CONST_EXP
+   37          | CONST_EXP . SUB CONST_EXP
+   38          | CONST_EXP . MUL CONST_EXP
+   39          | CONST_EXP . DIV CONST_EXP
+   40          | CONST_EXP . LSHIFT CONST_EXP
+   41          | SUB CONST_EXP .
 
-    $default  reduce using rule 40 (CONST_EXP)
+    $default  reduce using rule 41 (CONST_EXP)
 
 
 State 105
 
-   35 CONST_EXP: CONST_EXP . ADD CONST_EXP
-   36          | CONST_EXP . SUB CONST_EXP
-   37          | CONST_EXP . MUL CONST_EXP
-   38          | CONST_EXP . DIV CONST_EXP
-   39          | CONST_EXP . LSHIFT CONST_EXP
-   41          | LEFTBR CONST_EXP . RIGHTBR
+   36 CONST_EXP: CONST_EXP . ADD CONST_EXP
+   37          | CONST_EXP . SUB CONST_EXP
+   38          | CONST_EXP . MUL CONST_EXP
+   39          | CONST_EXP . DIV CONST_EXP
+   40          | CONST_EXP . LSHIFT CONST_EXP
+   42          | LEFTBR CONST_EXP . RIGHTBR
 
     LSHIFT   shift, and go to state 106
     ADD      shift, and go to state 107
     SUB      shift, and go to state 108
     MUL      shift, and go to state 109
     DIV      shift, and go to state 110
-    RIGHTBR  shift, and go to state 152
+    RIGHTBR  shift, and go to state 151
 
 
 State 106
 
-   39 CONST_EXP: CONST_EXP LSHIFT . CONST_EXP
+   40 CONST_EXP: CONST_EXP LSHIFT . CONST_EXP
+
+    SUB      shift, and go to state 51
+    LEFTBR   shift, and go to state 52
+    INTEGER  shift, and go to state 53
+
+    CONST_EXP  go to state 152
+
+
+State 107
+
+   36 CONST_EXP: CONST_EXP ADD . CONST_EXP
 
     SUB      shift, and go to state 51
     LEFTBR   shift, and go to state 52
@@ -2087,9 +2099,9 @@ State 106
     CONST_EXP  go to state 153
 
 
-State 107
+State 108
 
-   35 CONST_EXP: CONST_EXP ADD . CONST_EXP
+   37 CONST_EXP: CONST_EXP SUB . CONST_EXP
 
     SUB      shift, and go to state 51
     LEFTBR   shift, and go to state 52
@@ -2098,9 +2110,9 @@ State 107
     CONST_EXP  go to state 154
 
 
-State 108
+State 109
 
-   36 CONST_EXP: CONST_EXP SUB . CONST_EXP
+   38 CONST_EXP: CONST_EXP MUL . CONST_EXP
 
     SUB      shift, and go to state 51
     LEFTBR   shift, and go to state 52
@@ -2109,9 +2121,9 @@ State 108
     CONST_EXP  go to state 155
 
 
-State 109
+State 110
 
-   37 CONST_EXP: CONST_EXP MUL . CONST_EXP
+   39 CONST_EXP: CONST_EXP DIV . CONST_EXP
 
     SUB      shift, and go to state 51
     LEFTBR   shift, and go to state 52
@@ -2120,29 +2132,18 @@ State 109
     CONST_EXP  go to state 156
 
 
-State 110
-
-   38 CONST_EXP: CONST_EXP DIV . CONST_EXP
-
-    SUB      shift, and go to state 51
-    LEFTBR   shift, and go to state 52
-    INTEGER  shift, and go to state 53
-
-    CONST_EXP  go to state 157
-
-
 State 111
 
-   42 ARRAY: IDENTIFIER M_LBR CONST_EXP M_RBR .
+   43 ARRAY: IDENTIFIER M_LBR CONST_EXP M_RBR .
 
-    $default  reduce using rule 42 (ARRAY)
+    $default  reduce using rule 43 (ARRAY)
 
 
 State 112
 
-   27 for_RIGHTBR: RIGHTBR .
+   28 for_RIGHTBR: RIGHTBR .
 
-    $default  reduce using rule 27 (for_RIGHTBR)
+    $default  reduce using rule 28 (for_RIGHTBR)
 
 
 State 113
@@ -2155,16 +2156,16 @@ State 113
     T_BOOL    shift, and go to state 4
     T_VOID    shift, and go to state 5
 
-    T  go to state 158
+    T  go to state 157
 
 
 State 114
 
     6 function: T IDENTIFIER for_LEFTBR PARMS for_RIGHTBR . block
 
-    LBRACE  shift, and go to state 159
+    LBRACE  shift, and go to state 158
 
-    block  go to state 160
+    block  go to state 159
 
 
 State 115
@@ -2176,57 +2177,50 @@ State 115
 
 State 116
 
-   43 ARRAY: ARRAY M_LBR CONST_EXP M_RBR .
+   44 ARRAY: ARRAY M_LBR CONST_EXP M_RBR .
 
-    $default  reduce using rule 43 (ARRAY)
+    $default  reduce using rule 44 (ARRAY)
 
 
 State 117
 
-   97 expr: LEFTBR expr RIGHTBR .
+   98 expr: LEFTBR expr RIGHTBR .
 
-    $default  reduce using rule 97 (expr)
+    $default  reduce using rule 98 (expr)
 
 
 State 118
 
-   58 expr: IDENTIFIER LEFTBR RIGHTBR .
+   52 PAS: PAS . COMMA expr
+   59 expr: IDENTIFIER LEFTBR PAS . RIGHTBR
 
-    $default  reduce using rule 58 (expr)
+    RIGHTBR  shift, and go to state 160
+    COMMA    shift, and go to state 161
 
 
 State 119
 
-   51 PAS: PAS . COMMA expr
-   57 expr: IDENTIFIER LEFTBR PAS . RIGHTBR
-
-    RIGHTBR  shift, and go to state 161
-    COMMA    shift, and go to state 162
-
-
-State 120
-
-   50 PAS: expr .
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   95     | expr . INCR
-   96     | expr . DECR
+   53 PAS: expr .
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   96     | expr . INCR
+   97     | expr . DECR
 
     LOG_OR   shift, and go to state 84
     LOG_AND  shift, and go to state 85
@@ -2249,32 +2243,79 @@ State 120
     INCR     shift, and go to state 102
     DECR     shift, and go to state 103
 
-    $default  reduce using rule 50 (PAS)
+    $default  reduce using rule 53 (PAS)
+
+
+State 120
+
+   45 ARRAY2: IDENTIFIER M_LBR expr . M_RBR
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   96     | expr . INCR
+   97     | expr . DECR
+
+    LOG_OR   shift, and go to state 84
+    LOG_AND  shift, and go to state 85
+    BIT_OR   shift, and go to state 86
+    BIT_XOR  shift, and go to state 87
+    BIT_AND  shift, and go to state 88
+    EQ       shift, and go to state 89
+    UEQ      shift, and go to state 90
+    GT       shift, and go to state 91
+    LT       shift, and go to state 92
+    GE       shift, and go to state 93
+    LE       shift, and go to state 94
+    LSHIFT   shift, and go to state 95
+    RSHIFT   shift, and go to state 96
+    ADD      shift, and go to state 97
+    SUB      shift, and go to state 98
+    MUL      shift, and go to state 99
+    DIV      shift, and go to state 100
+    SUR      shift, and go to state 101
+    INCR     shift, and go to state 102
+    DECR     shift, and go to state 103
+    M_RBR    shift, and go to state 162
 
 
 State 121
 
-   44 ARRAY2: IDENTIFIER M_LBR expr . M_RBR
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   95     | expr . INCR
-   96     | expr . DECR
+   46 ARRAY2: ARRAY2 M_LBR expr . M_RBR
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   96     | expr . INCR
+   97     | expr . DECR
 
     LOG_OR   shift, and go to state 84
     LOG_AND  shift, and go to state 85
@@ -2301,122 +2342,27 @@ State 121
 
 State 122
 
-   45 ARRAY2: ARRAY2 M_LBR expr . M_RBR
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   95     | expr . INCR
-   96     | expr . DECR
-
-    LOG_OR   shift, and go to state 84
-    LOG_AND  shift, and go to state 85
-    BIT_OR   shift, and go to state 86
-    BIT_XOR  shift, and go to state 87
-    BIT_AND  shift, and go to state 88
-    EQ       shift, and go to state 89
-    UEQ      shift, and go to state 90
-    GT       shift, and go to state 91
-    LT       shift, and go to state 92
-    GE       shift, and go to state 93
-    LE       shift, and go to state 94
-    LSHIFT   shift, and go to state 95
-    RSHIFT   shift, and go to state 96
-    ADD      shift, and go to state 97
-    SUB      shift, and go to state 98
-    MUL      shift, and go to state 99
-    DIV      shift, and go to state 100
-    SUR      shift, and go to state 101
-    INCR     shift, and go to state 102
-    DECR     shift, and go to state 103
-    M_RBR    shift, and go to state 164
-
-
-State 123
-
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   77     | LVAL LOP_ASS expr .
-   95     | expr . INCR
-   96     | expr . DECR
-
-    LOG_OR   shift, and go to state 84
-    LOG_AND  shift, and go to state 85
-    BIT_OR   shift, and go to state 86
-    BIT_XOR  shift, and go to state 87
-    BIT_AND  shift, and go to state 88
-    EQ       shift, and go to state 89
-    UEQ      shift, and go to state 90
-    GT       shift, and go to state 91
-    LT       shift, and go to state 92
-    GE       shift, and go to state 93
-    LE       shift, and go to state 94
-    LSHIFT   shift, and go to state 95
-    RSHIFT   shift, and go to state 96
-    ADD      shift, and go to state 97
-    SUB      shift, and go to state 98
-    MUL      shift, and go to state 99
-    DIV      shift, and go to state 100
-    SUR      shift, and go to state 101
-    INCR     shift, and go to state 102
-    DECR     shift, and go to state 103
-
-    $default  reduce using rule 77 (expr)
-
-
-State 124
-
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   78     | LVAL ADD_ASS expr .
-   95     | expr . INCR
-   96     | expr . DECR
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   78     | LVAL LOP_ASS expr .
+   96     | expr . INCR
+   97     | expr . DECR
 
     LOG_OR   shift, and go to state 84
     LOG_AND  shift, and go to state 85
@@ -2442,29 +2388,29 @@ State 124
     $default  reduce using rule 78 (expr)
 
 
-State 125
+State 123
 
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   79     | LVAL SUB_ASS expr .
-   95     | expr . INCR
-   96     | expr . DECR
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   79     | LVAL ADD_ASS expr .
+   96     | expr . INCR
+   97     | expr . DECR
 
     LOG_OR   shift, and go to state 84
     LOG_AND  shift, and go to state 85
@@ -2490,29 +2436,29 @@ State 125
     $default  reduce using rule 79 (expr)
 
 
-State 126
+State 124
 
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   80     | LVAL MUL_ASS expr .
-   95     | expr . INCR
-   96     | expr . DECR
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   80     | LVAL SUB_ASS expr .
+   96     | expr . INCR
+   97     | expr . DECR
 
     LOG_OR   shift, and go to state 84
     LOG_AND  shift, and go to state 85
@@ -2538,29 +2484,29 @@ State 126
     $default  reduce using rule 80 (expr)
 
 
-State 127
+State 125
 
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   81     | LVAL DIV_ASS expr .
-   95     | expr . INCR
-   96     | expr . DECR
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   81     | LVAL MUL_ASS expr .
+   96     | expr . INCR
+   97     | expr . DECR
 
     LOG_OR   shift, and go to state 84
     LOG_AND  shift, and go to state 85
@@ -2586,29 +2532,29 @@ State 127
     $default  reduce using rule 81 (expr)
 
 
-State 128
+State 126
 
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   82     | LVAL SUR_ASS expr .
-   95     | expr . INCR
-   96     | expr . DECR
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   82     | LVAL DIV_ASS expr .
+   96     | expr . INCR
+   97     | expr . DECR
 
     LOG_OR   shift, and go to state 84
     LOG_AND  shift, and go to state 85
@@ -2634,29 +2580,29 @@ State 128
     $default  reduce using rule 82 (expr)
 
 
-State 129
+State 127
 
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   83     | LVAL LS_ASS expr .
-   95     | expr . INCR
-   96     | expr . DECR
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   83     | LVAL SUR_ASS expr .
+   96     | expr . INCR
+   97     | expr . DECR
 
     LOG_OR   shift, and go to state 84
     LOG_AND  shift, and go to state 85
@@ -2682,29 +2628,29 @@ State 129
     $default  reduce using rule 83 (expr)
 
 
-State 130
+State 128
 
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   84     | LVAL RS_ASS expr .
-   95     | expr . INCR
-   96     | expr . DECR
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   84     | LVAL LS_ASS expr .
+   96     | expr . INCR
+   97     | expr . DECR
 
     LOG_OR   shift, and go to state 84
     LOG_AND  shift, and go to state 85
@@ -2730,29 +2676,125 @@ State 130
     $default  reduce using rule 84 (expr)
 
 
+State 129
+
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   85     | LVAL RS_ASS expr .
+   96     | expr . INCR
+   97     | expr . DECR
+
+    LOG_OR   shift, and go to state 84
+    LOG_AND  shift, and go to state 85
+    BIT_OR   shift, and go to state 86
+    BIT_XOR  shift, and go to state 87
+    BIT_AND  shift, and go to state 88
+    EQ       shift, and go to state 89
+    UEQ      shift, and go to state 90
+    GT       shift, and go to state 91
+    LT       shift, and go to state 92
+    GE       shift, and go to state 93
+    LE       shift, and go to state 94
+    LSHIFT   shift, and go to state 95
+    RSHIFT   shift, and go to state 96
+    ADD      shift, and go to state 97
+    SUB      shift, and go to state 98
+    MUL      shift, and go to state 99
+    DIV      shift, and go to state 100
+    SUR      shift, and go to state 101
+    INCR     shift, and go to state 102
+    DECR     shift, and go to state 103
+
+    $default  reduce using rule 85 (expr)
+
+
+State 130
+
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   87     | LVAL AND_ASS expr .
+   96     | expr . INCR
+   97     | expr . DECR
+
+    LOG_OR   shift, and go to state 84
+    LOG_AND  shift, and go to state 85
+    BIT_OR   shift, and go to state 86
+    BIT_XOR  shift, and go to state 87
+    BIT_AND  shift, and go to state 88
+    EQ       shift, and go to state 89
+    UEQ      shift, and go to state 90
+    GT       shift, and go to state 91
+    LT       shift, and go to state 92
+    GE       shift, and go to state 93
+    LE       shift, and go to state 94
+    LSHIFT   shift, and go to state 95
+    RSHIFT   shift, and go to state 96
+    ADD      shift, and go to state 97
+    SUB      shift, and go to state 98
+    MUL      shift, and go to state 99
+    DIV      shift, and go to state 100
+    SUR      shift, and go to state 101
+    INCR     shift, and go to state 102
+    DECR     shift, and go to state 103
+
+    $default  reduce using rule 87 (expr)
+
+
 State 131
 
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   86     | LVAL AND_ASS expr .
-   95     | expr . INCR
-   96     | expr . DECR
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   86     | LVAL OR_ASS expr .
+   96     | expr . INCR
+   97     | expr . DECR
 
     LOG_OR   shift, and go to state 84
     LOG_AND  shift, and go to state 85
@@ -2780,27 +2822,27 @@ State 131
 
 State 132
 
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   85     | LVAL OR_ASS expr .
-   95     | expr . INCR
-   96     | expr . DECR
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   88     | LVAL XOR_ASS expr .
+   96     | expr . INCR
+   97     | expr . DECR
 
     LOG_OR   shift, and go to state 84
     LOG_AND  shift, and go to state 85
@@ -2823,34 +2865,33 @@ State 132
     INCR     shift, and go to state 102
     DECR     shift, and go to state 103
 
-    $default  reduce using rule 85 (expr)
+    $default  reduce using rule 88 (expr)
 
 
 State 133
 
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   87     | LVAL XOR_ASS expr .
-   95     | expr . INCR
-   96     | expr . DECR
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   77     | expr LOG_OR expr .
+   96     | expr . INCR
+   97     | expr . DECR
 
-    LOG_OR   shift, and go to state 84
     LOG_AND  shift, and go to state 85
     BIT_OR   shift, and go to state 86
     BIT_XOR  shift, and go to state 87
@@ -2871,34 +2912,33 @@ State 133
     INCR     shift, and go to state 102
     DECR     shift, and go to state 103
 
-    $default  reduce using rule 87 (expr)
+    $default  reduce using rule 77 (expr)
 
 
 State 134
 
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   76     | expr LOG_OR expr .
-   95     | expr . INCR
-   96     | expr . DECR
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   76     | expr LOG_AND expr .
+   77     | expr . LOG_OR expr
+   96     | expr . INCR
+   97     | expr . DECR
 
-    LOG_AND  shift, and go to state 85
     BIT_OR   shift, and go to state 86
     BIT_XOR  shift, and go to state 87
     BIT_AND  shift, and go to state 88
@@ -2923,119 +2963,29 @@ State 134
 
 State 135
 
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   75     | expr LOG_AND expr .
-   76     | expr . LOG_OR expr
-   95     | expr . INCR
-   96     | expr . DECR
-
-    BIT_OR   shift, and go to state 86
-    BIT_XOR  shift, and go to state 87
-    BIT_AND  shift, and go to state 88
-    EQ       shift, and go to state 89
-    UEQ      shift, and go to state 90
-    GT       shift, and go to state 91
-    LT       shift, and go to state 92
-    GE       shift, and go to state 93
-    LE       shift, and go to state 94
-    LSHIFT   shift, and go to state 95
-    RSHIFT   shift, and go to state 96
-    ADD      shift, and go to state 97
-    SUB      shift, and go to state 98
-    MUL      shift, and go to state 99
-    DIV      shift, and go to state 100
-    SUR      shift, and go to state 101
-    INCR     shift, and go to state 102
-    DECR     shift, and go to state 103
-
-    $default  reduce using rule 75 (expr)
-
-
-State 136
-
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   67     | expr BIT_OR expr .
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   95     | expr . INCR
-   96     | expr . DECR
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   68     | expr BIT_OR expr .
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   96     | expr . INCR
+   97     | expr . DECR
 
     BIT_XOR  shift, and go to state 87
-    BIT_AND  shift, and go to state 88
-    EQ       shift, and go to state 89
-    UEQ      shift, and go to state 90
-    GT       shift, and go to state 91
-    LT       shift, and go to state 92
-    GE       shift, and go to state 93
-    LE       shift, and go to state 94
-    LSHIFT   shift, and go to state 95
-    RSHIFT   shift, and go to state 96
-    ADD      shift, and go to state 97
-    SUB      shift, and go to state 98
-    MUL      shift, and go to state 99
-    DIV      shift, and go to state 100
-    SUR      shift, and go to state 101
-    INCR     shift, and go to state 102
-    DECR     shift, and go to state 103
-
-    $default  reduce using rule 67 (expr)
-
-
-State 137
-
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   68     | expr BIT_XOR expr .
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   95     | expr . INCR
-   96     | expr . DECR
-
     BIT_AND  shift, and go to state 88
     EQ       shift, and go to state 89
     UEQ      shift, and go to state 90
@@ -3056,29 +3006,73 @@ State 137
     $default  reduce using rule 68 (expr)
 
 
-State 138
+State 136
 
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   66     | expr BIT_AND expr .
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   95     | expr . INCR
-   96     | expr . DECR
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   69     | expr BIT_XOR expr .
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   96     | expr . INCR
+   97     | expr . DECR
+
+    BIT_AND  shift, and go to state 88
+    EQ       shift, and go to state 89
+    UEQ      shift, and go to state 90
+    GT       shift, and go to state 91
+    LT       shift, and go to state 92
+    GE       shift, and go to state 93
+    LE       shift, and go to state 94
+    LSHIFT   shift, and go to state 95
+    RSHIFT   shift, and go to state 96
+    ADD      shift, and go to state 97
+    SUB      shift, and go to state 98
+    MUL      shift, and go to state 99
+    DIV      shift, and go to state 100
+    SUR      shift, and go to state 101
+    INCR     shift, and go to state 102
+    DECR     shift, and go to state 103
+
+    $default  reduce using rule 69 (expr)
+
+
+State 137
+
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   67     | expr BIT_AND expr .
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   96     | expr . INCR
+   97     | expr . DECR
 
     EQ      shift, and go to state 89
     UEQ     shift, and go to state 90
@@ -3096,73 +3090,32 @@ State 138
     INCR    shift, and go to state 102
     DECR    shift, and go to state 103
 
-    $default  reduce using rule 66 (expr)
+    $default  reduce using rule 67 (expr)
 
 
-State 139
+State 138
 
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   69     | expr EQ expr .
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   95     | expr . INCR
-   96     | expr . DECR
-
-    GT      shift, and go to state 91
-    LT      shift, and go to state 92
-    GE      shift, and go to state 93
-    LE      shift, and go to state 94
-    LSHIFT  shift, and go to state 95
-    RSHIFT  shift, and go to state 96
-    ADD     shift, and go to state 97
-    SUB     shift, and go to state 98
-    MUL     shift, and go to state 99
-    DIV     shift, and go to state 100
-    SUR     shift, and go to state 101
-    INCR    shift, and go to state 102
-    DECR    shift, and go to state 103
-
-    $default  reduce using rule 69 (expr)
-
-
-State 140
-
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   70     | expr UEQ expr .
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   95     | expr . INCR
-   96     | expr . DECR
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   70     | expr EQ expr .
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   96     | expr . INCR
+   97     | expr . DECR
 
     GT      shift, and go to state 91
     LT      shift, and go to state 92
@@ -3181,29 +3134,107 @@ State 140
     $default  reduce using rule 70 (expr)
 
 
+State 139
+
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   71     | expr UEQ expr .
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   96     | expr . INCR
+   97     | expr . DECR
+
+    GT      shift, and go to state 91
+    LT      shift, and go to state 92
+    GE      shift, and go to state 93
+    LE      shift, and go to state 94
+    LSHIFT  shift, and go to state 95
+    RSHIFT  shift, and go to state 96
+    ADD     shift, and go to state 97
+    SUB     shift, and go to state 98
+    MUL     shift, and go to state 99
+    DIV     shift, and go to state 100
+    SUR     shift, and go to state 101
+    INCR    shift, and go to state 102
+    DECR    shift, and go to state 103
+
+    $default  reduce using rule 71 (expr)
+
+
+State 140
+
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   73     | expr GT expr .
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   96     | expr . INCR
+   97     | expr . DECR
+
+    LSHIFT  shift, and go to state 95
+    RSHIFT  shift, and go to state 96
+    ADD     shift, and go to state 97
+    SUB     shift, and go to state 98
+    MUL     shift, and go to state 99
+    DIV     shift, and go to state 100
+    SUR     shift, and go to state 101
+    INCR    shift, and go to state 102
+    DECR    shift, and go to state 103
+
+    $default  reduce using rule 73 (expr)
+
+
 State 141
 
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   72     | expr GT expr .
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   95     | expr . INCR
-   96     | expr . DECR
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   72     | expr LT expr .
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   96     | expr . INCR
+   97     | expr . DECR
 
     LSHIFT  shift, and go to state 95
     RSHIFT  shift, and go to state 96
@@ -3220,27 +3251,27 @@ State 141
 
 State 142
 
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   71     | expr LT expr .
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   95     | expr . INCR
-   96     | expr . DECR
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   75     | expr GE expr .
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   96     | expr . INCR
+   97     | expr . DECR
 
     LSHIFT  shift, and go to state 95
     RSHIFT  shift, and go to state 96
@@ -3252,32 +3283,32 @@ State 142
     INCR    shift, and go to state 102
     DECR    shift, and go to state 103
 
-    $default  reduce using rule 71 (expr)
+    $default  reduce using rule 75 (expr)
 
 
 State 143
 
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   74     | expr GE expr .
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   95     | expr . INCR
-   96     | expr . DECR
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   74     | expr LE expr .
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   96     | expr . INCR
+   97     | expr . DECR
 
     LSHIFT  shift, and go to state 95
     RSHIFT  shift, and go to state 96
@@ -3294,99 +3325,27 @@ State 143
 
 State 144
 
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   73     | expr LE expr .
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   95     | expr . INCR
-   96     | expr . DECR
-
-    LSHIFT  shift, and go to state 95
-    RSHIFT  shift, and go to state 96
-    ADD     shift, and go to state 97
-    SUB     shift, and go to state 98
-    MUL     shift, and go to state 99
-    DIV     shift, and go to state 100
-    SUR     shift, and go to state 101
-    INCR    shift, and go to state 102
-    DECR    shift, and go to state 103
-
-    $default  reduce using rule 73 (expr)
-
-
-State 145
-
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   64     | expr LSHIFT expr .
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   95     | expr . INCR
-   96     | expr . DECR
-
-    ADD   shift, and go to state 97
-    SUB   shift, and go to state 98
-    MUL   shift, and go to state 99
-    DIV   shift, and go to state 100
-    SUR   shift, and go to state 101
-    INCR  shift, and go to state 102
-    DECR  shift, and go to state 103
-
-    $default  reduce using rule 64 (expr)
-
-
-State 146
-
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   65     | expr RSHIFT expr .
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   95     | expr . INCR
-   96     | expr . DECR
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   65     | expr LSHIFT expr .
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   96     | expr . INCR
+   97     | expr . DECR
 
     ADD   shift, and go to state 97
     SUB   shift, and go to state 98
@@ -3399,62 +3358,64 @@ State 146
     $default  reduce using rule 65 (expr)
 
 
-State 147
+State 145
 
-   59 expr: expr . ADD expr
-   59     | expr ADD expr .
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   95     | expr . INCR
-   96     | expr . DECR
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   66     | expr RSHIFT expr .
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   96     | expr . INCR
+   97     | expr . DECR
 
+    ADD   shift, and go to state 97
+    SUB   shift, and go to state 98
     MUL   shift, and go to state 99
     DIV   shift, and go to state 100
     SUR   shift, and go to state 101
     INCR  shift, and go to state 102
     DECR  shift, and go to state 103
 
-    $default  reduce using rule 59 (expr)
+    $default  reduce using rule 66 (expr)
 
 
-State 148
+State 146
 
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   60     | expr SUB expr .
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   95     | expr . INCR
-   96     | expr . DECR
+   60 expr: expr . ADD expr
+   60     | expr ADD expr .
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   96     | expr . INCR
+   97     | expr . DECR
 
     MUL   shift, and go to state 99
     DIV   shift, and go to state 100
@@ -3465,59 +3426,62 @@ State 148
     $default  reduce using rule 60 (expr)
 
 
-State 149
+State 147
 
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   61     | expr MUL expr .
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   95     | expr . INCR
-   96     | expr . DECR
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   61     | expr SUB expr .
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   96     | expr . INCR
+   97     | expr . DECR
 
+    MUL   shift, and go to state 99
+    DIV   shift, and go to state 100
+    SUR   shift, and go to state 101
     INCR  shift, and go to state 102
     DECR  shift, and go to state 103
 
     $default  reduce using rule 61 (expr)
 
 
-State 150
+State 148
 
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   62     | expr DIV expr .
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   95     | expr . INCR
-   96     | expr . DECR
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   62     | expr MUL expr .
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   96     | expr . INCR
+   97     | expr . DECR
 
     INCR  shift, and go to state 102
     DECR  shift, and go to state 103
@@ -3525,29 +3489,29 @@ State 150
     $default  reduce using rule 62 (expr)
 
 
-State 151
+State 149
 
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   63     | expr SUR expr .
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   95     | expr . INCR
-   96     | expr . DECR
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   63     | expr DIV expr .
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   96     | expr . INCR
+   97     | expr . DECR
 
     INCR  shift, and go to state 102
     DECR  shift, and go to state 103
@@ -3555,53 +3519,68 @@ State 151
     $default  reduce using rule 63 (expr)
 
 
+State 150
+
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   64     | expr SUR expr .
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   96     | expr . INCR
+   97     | expr . DECR
+
+    INCR  shift, and go to state 102
+    DECR  shift, and go to state 103
+
+    $default  reduce using rule 64 (expr)
+
+
+State 151
+
+   42 CONST_EXP: LEFTBR CONST_EXP RIGHTBR .
+
+    $default  reduce using rule 42 (CONST_EXP)
+
+
 State 152
 
-   41 CONST_EXP: LEFTBR CONST_EXP RIGHTBR .
-
-    $default  reduce using rule 41 (CONST_EXP)
-
-
-State 153
-
-   35 CONST_EXP: CONST_EXP . ADD CONST_EXP
-   36          | CONST_EXP . SUB CONST_EXP
-   37          | CONST_EXP . MUL CONST_EXP
-   38          | CONST_EXP . DIV CONST_EXP
-   39          | CONST_EXP . LSHIFT CONST_EXP
-   39          | CONST_EXP LSHIFT CONST_EXP .
+   36 CONST_EXP: CONST_EXP . ADD CONST_EXP
+   37          | CONST_EXP . SUB CONST_EXP
+   38          | CONST_EXP . MUL CONST_EXP
+   39          | CONST_EXP . DIV CONST_EXP
+   40          | CONST_EXP . LSHIFT CONST_EXP
+   40          | CONST_EXP LSHIFT CONST_EXP .
 
     ADD  shift, and go to state 107
     SUB  shift, and go to state 108
     MUL  shift, and go to state 109
     DIV  shift, and go to state 110
 
-    $default  reduce using rule 39 (CONST_EXP)
+    $default  reduce using rule 40 (CONST_EXP)
 
 
-State 154
+State 153
 
-   35 CONST_EXP: CONST_EXP . ADD CONST_EXP
-   35          | CONST_EXP ADD CONST_EXP .
-   36          | CONST_EXP . SUB CONST_EXP
-   37          | CONST_EXP . MUL CONST_EXP
-   38          | CONST_EXP . DIV CONST_EXP
-   39          | CONST_EXP . LSHIFT CONST_EXP
-
-    MUL  shift, and go to state 109
-    DIV  shift, and go to state 110
-
-    $default  reduce using rule 35 (CONST_EXP)
-
-
-State 155
-
-   35 CONST_EXP: CONST_EXP . ADD CONST_EXP
-   36          | CONST_EXP . SUB CONST_EXP
-   36          | CONST_EXP SUB CONST_EXP .
-   37          | CONST_EXP . MUL CONST_EXP
-   38          | CONST_EXP . DIV CONST_EXP
-   39          | CONST_EXP . LSHIFT CONST_EXP
+   36 CONST_EXP: CONST_EXP . ADD CONST_EXP
+   36          | CONST_EXP ADD CONST_EXP .
+   37          | CONST_EXP . SUB CONST_EXP
+   38          | CONST_EXP . MUL CONST_EXP
+   39          | CONST_EXP . DIV CONST_EXP
+   40          | CONST_EXP . LSHIFT CONST_EXP
 
     MUL  shift, and go to state 109
     DIV  shift, and go to state 110
@@ -3609,95 +3588,78 @@ State 155
     $default  reduce using rule 36 (CONST_EXP)
 
 
-State 156
+State 154
 
-   35 CONST_EXP: CONST_EXP . ADD CONST_EXP
-   36          | CONST_EXP . SUB CONST_EXP
-   37          | CONST_EXP . MUL CONST_EXP
-   37          | CONST_EXP MUL CONST_EXP .
-   38          | CONST_EXP . DIV CONST_EXP
-   39          | CONST_EXP . LSHIFT CONST_EXP
+   36 CONST_EXP: CONST_EXP . ADD CONST_EXP
+   37          | CONST_EXP . SUB CONST_EXP
+   37          | CONST_EXP SUB CONST_EXP .
+   38          | CONST_EXP . MUL CONST_EXP
+   39          | CONST_EXP . DIV CONST_EXP
+   40          | CONST_EXP . LSHIFT CONST_EXP
+
+    MUL  shift, and go to state 109
+    DIV  shift, and go to state 110
 
     $default  reduce using rule 37 (CONST_EXP)
 
 
-State 157
+State 155
 
-   35 CONST_EXP: CONST_EXP . ADD CONST_EXP
-   36          | CONST_EXP . SUB CONST_EXP
-   37          | CONST_EXP . MUL CONST_EXP
-   38          | CONST_EXP . DIV CONST_EXP
-   38          | CONST_EXP DIV CONST_EXP .
-   39          | CONST_EXP . LSHIFT CONST_EXP
+   36 CONST_EXP: CONST_EXP . ADD CONST_EXP
+   37          | CONST_EXP . SUB CONST_EXP
+   38          | CONST_EXP . MUL CONST_EXP
+   38          | CONST_EXP MUL CONST_EXP .
+   39          | CONST_EXP . DIV CONST_EXP
+   40          | CONST_EXP . LSHIFT CONST_EXP
 
     $default  reduce using rule 38 (CONST_EXP)
 
 
-State 158
+State 156
+
+   36 CONST_EXP: CONST_EXP . ADD CONST_EXP
+   37          | CONST_EXP . SUB CONST_EXP
+   38          | CONST_EXP . MUL CONST_EXP
+   39          | CONST_EXP . DIV CONST_EXP
+   39          | CONST_EXP DIV CONST_EXP .
+   40          | CONST_EXP . LSHIFT CONST_EXP
+
+    $default  reduce using rule 39 (CONST_EXP)
+
+
+State 157
 
     8 PARMS: PARMS COMMA T . IDENTIFIER
 
-    IDENTIFIER  shift, and go to state 165
+    IDENTIFIER  shift, and go to state 164
 
 
-State 159
+State 158
 
    14 block: LBRACE . block_items RBRACE
 
-    T_CHAR       shift, and go to state 1
-    T_INT        shift, and go to state 2
-    T_STRING     shift, and go to state 3
-    T_BOOL       shift, and go to state 4
-    T_VOID       shift, and go to state 5
-    BIT_AND      shift, and go to state 35
-    ADD          shift, and go to state 36
-    SUB          shift, and go to state 37
-    BIT_NOT      shift, and go to state 38
-    LOG_NOT      shift, and go to state 39
-    INCR         shift, and go to state 40
-    DECR         shift, and go to state 41
-    LEFTBR       shift, and go to state 42
-    LBRACE       shift, and go to state 159
-    SEMICOLON    shift, and go to state 166
-    IDENTIFIER   shift, and go to state 43
-    INTEGER      shift, and go to state 44
-    CHAR         shift, and go to state 45
-    STRING       shift, and go to state 46
-    HEX_INTEGER  shift, and go to state 47
-    IF           shift, and go to state 167
-    WHILE        shift, and go to state 168
-    FOR          shift, and go to state 169
-    RETURN       shift, and go to state 170
-    CONST        shift, and go to state 6
+    $default  reduce using rule 12 (block_items)
 
-    block_item   go to state 171
-    block_items  go to state 172
-    block        go to state 173
-    statement    go to state 174
-    declaration  go to state 175
-    ARRAY2       go to state 48
-    LVAL         go to state 49
-    expr         go to state 176
-    T            go to state 177
+    block_items  go to state 165
 
 
-State 160
+State 159
 
     6 function: T IDENTIFIER for_LEFTBR PARMS for_RIGHTBR block .
 
     $default  reduce using rule 6 (function)
 
 
+State 160
+
+   59 expr: IDENTIFIER LEFTBR PAS RIGHTBR .
+
+    $default  reduce using rule 59 (expr)
+
+
 State 161
 
-   57 expr: IDENTIFIER LEFTBR PAS RIGHTBR .
-
-    $default  reduce using rule 57 (expr)
-
-
-State 162
-
-   51 PAS: PAS COMMA . expr
+   52 PAS: PAS COMMA . expr
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -3715,93 +3677,31 @@ State 162
 
     ARRAY2  go to state 48
     LVAL    go to state 49
-    expr    go to state 178
+    expr    go to state 166
 
 
-State 163
+State 162
 
-   44 ARRAY2: IDENTIFIER M_LBR expr M_RBR .
-
-    $default  reduce using rule 44 (ARRAY2)
-
-
-State 164
-
-   45 ARRAY2: ARRAY2 M_LBR expr M_RBR .
+   45 ARRAY2: IDENTIFIER M_LBR expr M_RBR .
 
     $default  reduce using rule 45 (ARRAY2)
 
 
-State 165
+State 163
+
+   46 ARRAY2: ARRAY2 M_LBR expr M_RBR .
+
+    $default  reduce using rule 46 (ARRAY2)
+
+
+State 164
 
     8 PARMS: PARMS COMMA T IDENTIFIER .
 
     $default  reduce using rule 8 (PARMS)
 
 
-State 166
-
-   15 statement: SEMICOLON .
-
-    $default  reduce using rule 15 (statement)
-
-
-State 167
-
-   19 statement: IF . LEFTBR expr RIGHTBR statement
-
-    LEFTBR  shift, and go to state 179
-
-
-State 168
-
-   17 statement: WHILE . LEFTBR expr RIGHTBR statement
-
-    LEFTBR  shift, and go to state 180
-
-
-State 169
-
-   18 statement: FOR . for_LEFTBR for_expr SEMICOLON for_expr SEMICOLON for_expr for_RIGHTBR statement
-
-    LEFTBR  shift, and go to state 27
-
-    for_LEFTBR  go to state 181
-
-
-State 170
-
-   20 statement: RETURN . expr SEMICOLON
-   21          | RETURN . SEMICOLON
-
-    BIT_AND      shift, and go to state 35
-    ADD          shift, and go to state 36
-    SUB          shift, and go to state 37
-    BIT_NOT      shift, and go to state 38
-    LOG_NOT      shift, and go to state 39
-    INCR         shift, and go to state 40
-    DECR         shift, and go to state 41
-    LEFTBR       shift, and go to state 42
-    SEMICOLON    shift, and go to state 182
-    IDENTIFIER   shift, and go to state 43
-    INTEGER      shift, and go to state 44
-    CHAR         shift, and go to state 45
-    STRING       shift, and go to state 46
-    HEX_INTEGER  shift, and go to state 47
-
-    ARRAY2  go to state 48
-    LVAL    go to state 49
-    expr    go to state 183
-
-
-State 171
-
-   12 block_items: block_item .
-
-    $default  reduce using rule 12 (block_items)
-
-
-State 172
+State 165
 
    13 block_items: block_items . block_item
    14 block: LBRACE block_items . RBRACE
@@ -3819,133 +3719,53 @@ State 172
     INCR         shift, and go to state 40
     DECR         shift, and go to state 41
     LEFTBR       shift, and go to state 42
-    LBRACE       shift, and go to state 159
-    RBRACE       shift, and go to state 184
-    SEMICOLON    shift, and go to state 166
+    LBRACE       shift, and go to state 158
+    RBRACE       shift, and go to state 167
+    SEMICOLON    shift, and go to state 168
     IDENTIFIER   shift, and go to state 43
     INTEGER      shift, and go to state 44
     CHAR         shift, and go to state 45
     STRING       shift, and go to state 46
     HEX_INTEGER  shift, and go to state 47
-    IF           shift, and go to state 167
-    WHILE        shift, and go to state 168
-    FOR          shift, and go to state 169
-    RETURN       shift, and go to state 170
+    IF           shift, and go to state 169
+    WHILE        shift, and go to state 170
+    FOR          shift, and go to state 171
+    RETURN       shift, and go to state 172
     CONST        shift, and go to state 6
 
-    block_item   go to state 185
-    block        go to state 173
-    statement    go to state 174
-    declaration  go to state 175
+    block_item   go to state 173
+    block        go to state 174
+    statement    go to state 175
+    declaration  go to state 176
     ARRAY2       go to state 48
     LVAL         go to state 49
-    expr         go to state 176
-    T            go to state 177
+    expr         go to state 177
+    T            go to state 178
 
 
-State 173
+State 166
 
-   16 statement: block .
-
-    $default  reduce using rule 16 (statement)
-
-
-State 174
-
-   10 block_item: statement .
-
-    $default  reduce using rule 10 (block_item)
-
-
-State 175
-
-   11 block_item: declaration . SEMICOLON
-
-    SEMICOLON  shift, and go to state 186
-
-
-State 176
-
-   22 statement: expr . SEMICOLON
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   95     | expr . INCR
-   96     | expr . DECR
-
-    LOG_OR     shift, and go to state 84
-    LOG_AND    shift, and go to state 85
-    BIT_OR     shift, and go to state 86
-    BIT_XOR    shift, and go to state 87
-    BIT_AND    shift, and go to state 88
-    EQ         shift, and go to state 89
-    UEQ        shift, and go to state 90
-    GT         shift, and go to state 91
-    LT         shift, and go to state 92
-    GE         shift, and go to state 93
-    LE         shift, and go to state 94
-    LSHIFT     shift, and go to state 95
-    RSHIFT     shift, and go to state 96
-    ADD        shift, and go to state 97
-    SUB        shift, and go to state 98
-    MUL        shift, and go to state 99
-    DIV        shift, and go to state 100
-    SUR        shift, and go to state 101
-    INCR       shift, and go to state 102
-    DECR       shift, and go to state 103
-    SEMICOLON  shift, and go to state 187
-
-
-State 177
-
-   28 declaration: T . IDENTIFIER LOP_ASS expr
-   29            | T . IDENTIFIERS
-   30            | T . ARRAY
-
-    IDENTIFIER  shift, and go to state 188
-
-    ARRAY        go to state 20
-    IDENTIFIERS  go to state 21
-
-
-State 178
-
-   51 PAS: PAS COMMA expr .
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   95     | expr . INCR
-   96     | expr . DECR
+   52 PAS: PAS COMMA expr .
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   96     | expr . INCR
+   97     | expr . DECR
 
     LOG_OR   shift, and go to state 84
     LOG_AND  shift, and go to state 85
@@ -3968,12 +3788,163 @@ State 178
     INCR     shift, and go to state 102
     DECR     shift, and go to state 103
 
-    $default  reduce using rule 51 (PAS)
+    $default  reduce using rule 52 (PAS)
+
+
+State 167
+
+   14 block: LBRACE block_items RBRACE .
+
+    $default  reduce using rule 14 (block)
+
+
+State 168
+
+   15 statement: SEMICOLON .
+
+    $default  reduce using rule 15 (statement)
+
+
+State 169
+
+   19 statement: IF . LEFTBR expr RIGHTBR statement
+   20          | IF . LEFTBR expr RIGHTBR statement ELSE statement
+
+    LEFTBR  shift, and go to state 179
+
+
+State 170
+
+   17 statement: WHILE . LEFTBR expr RIGHTBR statement
+
+    LEFTBR  shift, and go to state 180
+
+
+State 171
+
+   18 statement: FOR . for_LEFTBR for_expr SEMICOLON for_expr SEMICOLON for_expr for_RIGHTBR statement
+
+    LEFTBR  shift, and go to state 27
+
+    for_LEFTBR  go to state 181
+
+
+State 172
+
+   21 statement: RETURN . expr SEMICOLON
+   22          | RETURN . SEMICOLON
+
+    BIT_AND      shift, and go to state 35
+    ADD          shift, and go to state 36
+    SUB          shift, and go to state 37
+    BIT_NOT      shift, and go to state 38
+    LOG_NOT      shift, and go to state 39
+    INCR         shift, and go to state 40
+    DECR         shift, and go to state 41
+    LEFTBR       shift, and go to state 42
+    SEMICOLON    shift, and go to state 182
+    IDENTIFIER   shift, and go to state 43
+    INTEGER      shift, and go to state 44
+    CHAR         shift, and go to state 45
+    STRING       shift, and go to state 46
+    HEX_INTEGER  shift, and go to state 47
+
+    ARRAY2  go to state 48
+    LVAL    go to state 49
+    expr    go to state 183
+
+
+State 173
+
+   13 block_items: block_items block_item .
+
+    $default  reduce using rule 13 (block_items)
+
+
+State 174
+
+   16 statement: block .
+
+    $default  reduce using rule 16 (statement)
+
+
+State 175
+
+   10 block_item: statement .
+
+    $default  reduce using rule 10 (block_item)
+
+
+State 176
+
+   11 block_item: declaration . SEMICOLON
+
+    SEMICOLON  shift, and go to state 184
+
+
+State 177
+
+   23 statement: expr . SEMICOLON
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   96     | expr . INCR
+   97     | expr . DECR
+
+    LOG_OR     shift, and go to state 84
+    LOG_AND    shift, and go to state 85
+    BIT_OR     shift, and go to state 86
+    BIT_XOR    shift, and go to state 87
+    BIT_AND    shift, and go to state 88
+    EQ         shift, and go to state 89
+    UEQ        shift, and go to state 90
+    GT         shift, and go to state 91
+    LT         shift, and go to state 92
+    GE         shift, and go to state 93
+    LE         shift, and go to state 94
+    LSHIFT     shift, and go to state 95
+    RSHIFT     shift, and go to state 96
+    ADD        shift, and go to state 97
+    SUB        shift, and go to state 98
+    MUL        shift, and go to state 99
+    DIV        shift, and go to state 100
+    SUR        shift, and go to state 101
+    INCR       shift, and go to state 102
+    DECR       shift, and go to state 103
+    SEMICOLON  shift, and go to state 185
+
+
+State 178
+
+   29 declaration: T . IDENTIFIER LOP_ASS expr
+   30            | T . IDENTIFIERS
+   31            | T . ARRAY
+
+    IDENTIFIER  shift, and go to state 186
+
+    ARRAY        go to state 20
+    IDENTIFIERS  go to state 21
 
 
 State 179
 
    19 statement: IF LEFTBR . expr RIGHTBR statement
+   20          | IF LEFTBR . expr RIGHTBR statement ELSE statement
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -3991,7 +3962,7 @@ State 179
 
     ARRAY2  go to state 48
     LVAL    go to state 49
-    expr    go to state 189
+    expr    go to state 187
 
 
 State 180
@@ -4014,7 +3985,7 @@ State 180
 
     ARRAY2  go to state 48
     LVAL    go to state 49
-    expr    go to state 190
+    expr    go to state 188
 
 
 State 181
@@ -4041,46 +4012,46 @@ State 181
     HEX_INTEGER  shift, and go to state 47
     CONST        shift, and go to state 6
 
-    $default  reduce using rule 25 (for_expr)
+    $default  reduce using rule 26 (for_expr)
 
-    for_expr     go to state 191
-    declaration  go to state 192
+    for_expr     go to state 189
+    declaration  go to state 190
     ARRAY2       go to state 48
     LVAL         go to state 49
-    expr         go to state 193
-    T            go to state 177
+    expr         go to state 191
+    T            go to state 178
 
 
 State 182
 
-   21 statement: RETURN SEMICOLON .
+   22 statement: RETURN SEMICOLON .
 
-    $default  reduce using rule 21 (statement)
+    $default  reduce using rule 22 (statement)
 
 
 State 183
 
-   20 statement: RETURN expr . SEMICOLON
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   95     | expr . INCR
-   96     | expr . DECR
+   21 statement: RETURN expr . SEMICOLON
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   96     | expr . INCR
+   97     | expr . DECR
 
     LOG_OR     shift, and go to state 84
     LOG_AND    shift, and go to state 85
@@ -4102,215 +4073,203 @@ State 183
     SUR        shift, and go to state 101
     INCR       shift, and go to state 102
     DECR       shift, and go to state 103
-    SEMICOLON  shift, and go to state 194
+    SEMICOLON  shift, and go to state 192
 
 
 State 184
-
-   14 block: LBRACE block_items RBRACE .
-
-    $default  reduce using rule 14 (block)
-
-
-State 185
-
-   13 block_items: block_items block_item .
-
-    $default  reduce using rule 13 (block_items)
-
-
-State 186
 
    11 block_item: declaration SEMICOLON .
 
     $default  reduce using rule 11 (block_item)
 
 
-State 187
+State 185
 
-   22 statement: expr SEMICOLON .
+   23 statement: expr SEMICOLON .
 
-    $default  reduce using rule 22 (statement)
+    $default  reduce using rule 23 (statement)
 
 
-State 188
+State 186
 
-   28 declaration: T IDENTIFIER . LOP_ASS expr
-   42 ARRAY: IDENTIFIER . M_LBR CONST_EXP M_RBR
-   48 IDENTIFIERS: IDENTIFIER .
+   29 declaration: T IDENTIFIER . LOP_ASS expr
+   43 ARRAY: IDENTIFIER . M_LBR CONST_EXP M_RBR
+   49 IDENTIFIERS: IDENTIFIER .
 
     LOP_ASS  shift, and go to state 26
     M_LBR    shift, and go to state 28
 
-    $default  reduce using rule 48 (IDENTIFIERS)
+    $default  reduce using rule 49 (IDENTIFIERS)
+
+
+State 187
+
+   19 statement: IF LEFTBR expr . RIGHTBR statement
+   20          | IF LEFTBR expr . RIGHTBR statement ELSE statement
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   96     | expr . INCR
+   97     | expr . DECR
+
+    LOG_OR   shift, and go to state 84
+    LOG_AND  shift, and go to state 85
+    BIT_OR   shift, and go to state 86
+    BIT_XOR  shift, and go to state 87
+    BIT_AND  shift, and go to state 88
+    EQ       shift, and go to state 89
+    UEQ      shift, and go to state 90
+    GT       shift, and go to state 91
+    LT       shift, and go to state 92
+    GE       shift, and go to state 93
+    LE       shift, and go to state 94
+    LSHIFT   shift, and go to state 95
+    RSHIFT   shift, and go to state 96
+    ADD      shift, and go to state 97
+    SUB      shift, and go to state 98
+    MUL      shift, and go to state 99
+    DIV      shift, and go to state 100
+    SUR      shift, and go to state 101
+    INCR     shift, and go to state 102
+    DECR     shift, and go to state 103
+    RIGHTBR  shift, and go to state 193
+
+
+State 188
+
+   17 statement: WHILE LEFTBR expr . RIGHTBR statement
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   96     | expr . INCR
+   97     | expr . DECR
+
+    LOG_OR   shift, and go to state 84
+    LOG_AND  shift, and go to state 85
+    BIT_OR   shift, and go to state 86
+    BIT_XOR  shift, and go to state 87
+    BIT_AND  shift, and go to state 88
+    EQ       shift, and go to state 89
+    UEQ      shift, and go to state 90
+    GT       shift, and go to state 91
+    LT       shift, and go to state 92
+    GE       shift, and go to state 93
+    LE       shift, and go to state 94
+    LSHIFT   shift, and go to state 95
+    RSHIFT   shift, and go to state 96
+    ADD      shift, and go to state 97
+    SUB      shift, and go to state 98
+    MUL      shift, and go to state 99
+    DIV      shift, and go to state 100
+    SUR      shift, and go to state 101
+    INCR     shift, and go to state 102
+    DECR     shift, and go to state 103
+    RIGHTBR  shift, and go to state 194
 
 
 State 189
 
-   19 statement: IF LEFTBR expr . RIGHTBR statement
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   95     | expr . INCR
-   96     | expr . DECR
+   18 statement: FOR for_LEFTBR for_expr . SEMICOLON for_expr SEMICOLON for_expr for_RIGHTBR statement
 
-    LOG_OR   shift, and go to state 84
-    LOG_AND  shift, and go to state 85
-    BIT_OR   shift, and go to state 86
-    BIT_XOR  shift, and go to state 87
-    BIT_AND  shift, and go to state 88
-    EQ       shift, and go to state 89
-    UEQ      shift, and go to state 90
-    GT       shift, and go to state 91
-    LT       shift, and go to state 92
-    GE       shift, and go to state 93
-    LE       shift, and go to state 94
-    LSHIFT   shift, and go to state 95
-    RSHIFT   shift, and go to state 96
-    ADD      shift, and go to state 97
-    SUB      shift, and go to state 98
-    MUL      shift, and go to state 99
-    DIV      shift, and go to state 100
-    SUR      shift, and go to state 101
-    INCR     shift, and go to state 102
-    DECR     shift, and go to state 103
-    RIGHTBR  shift, and go to state 195
+    SEMICOLON  shift, and go to state 195
 
 
 State 190
 
-   17 statement: WHILE LEFTBR expr . RIGHTBR statement
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   95     | expr . INCR
-   96     | expr . DECR
-
-    LOG_OR   shift, and go to state 84
-    LOG_AND  shift, and go to state 85
-    BIT_OR   shift, and go to state 86
-    BIT_XOR  shift, and go to state 87
-    BIT_AND  shift, and go to state 88
-    EQ       shift, and go to state 89
-    UEQ      shift, and go to state 90
-    GT       shift, and go to state 91
-    LT       shift, and go to state 92
-    GE       shift, and go to state 93
-    LE       shift, and go to state 94
-    LSHIFT   shift, and go to state 95
-    RSHIFT   shift, and go to state 96
-    ADD      shift, and go to state 97
-    SUB      shift, and go to state 98
-    MUL      shift, and go to state 99
-    DIV      shift, and go to state 100
-    SUR      shift, and go to state 101
-    INCR     shift, and go to state 102
-    DECR     shift, and go to state 103
-    RIGHTBR  shift, and go to state 196
-
-
-State 191
-
-   18 statement: FOR for_LEFTBR for_expr . SEMICOLON for_expr SEMICOLON for_expr for_RIGHTBR statement
-
-    SEMICOLON  shift, and go to state 197
-
-
-State 192
-
-   23 for_expr: declaration .
-
-    $default  reduce using rule 23 (for_expr)
-
-
-State 193
-
-   24 for_expr: expr .
-   59 expr: expr . ADD expr
-   60     | expr . SUB expr
-   61     | expr . MUL expr
-   62     | expr . DIV expr
-   63     | expr . SUR expr
-   64     | expr . LSHIFT expr
-   65     | expr . RSHIFT expr
-   66     | expr . BIT_AND expr
-   67     | expr . BIT_OR expr
-   68     | expr . BIT_XOR expr
-   69     | expr . EQ expr
-   70     | expr . UEQ expr
-   71     | expr . LT expr
-   72     | expr . GT expr
-   73     | expr . LE expr
-   74     | expr . GE expr
-   75     | expr . LOG_AND expr
-   76     | expr . LOG_OR expr
-   95     | expr . INCR
-   96     | expr . DECR
-
-    LOG_OR   shift, and go to state 84
-    LOG_AND  shift, and go to state 85
-    BIT_OR   shift, and go to state 86
-    BIT_XOR  shift, and go to state 87
-    BIT_AND  shift, and go to state 88
-    EQ       shift, and go to state 89
-    UEQ      shift, and go to state 90
-    GT       shift, and go to state 91
-    LT       shift, and go to state 92
-    GE       shift, and go to state 93
-    LE       shift, and go to state 94
-    LSHIFT   shift, and go to state 95
-    RSHIFT   shift, and go to state 96
-    ADD      shift, and go to state 97
-    SUB      shift, and go to state 98
-    MUL      shift, and go to state 99
-    DIV      shift, and go to state 100
-    SUR      shift, and go to state 101
-    INCR     shift, and go to state 102
-    DECR     shift, and go to state 103
+   24 for_expr: declaration .
 
     $default  reduce using rule 24 (for_expr)
 
 
-State 194
+State 191
 
-   20 statement: RETURN expr SEMICOLON .
+   25 for_expr: expr .
+   60 expr: expr . ADD expr
+   61     | expr . SUB expr
+   62     | expr . MUL expr
+   63     | expr . DIV expr
+   64     | expr . SUR expr
+   65     | expr . LSHIFT expr
+   66     | expr . RSHIFT expr
+   67     | expr . BIT_AND expr
+   68     | expr . BIT_OR expr
+   69     | expr . BIT_XOR expr
+   70     | expr . EQ expr
+   71     | expr . UEQ expr
+   72     | expr . LT expr
+   73     | expr . GT expr
+   74     | expr . LE expr
+   75     | expr . GE expr
+   76     | expr . LOG_AND expr
+   77     | expr . LOG_OR expr
+   96     | expr . INCR
+   97     | expr . DECR
 
-    $default  reduce using rule 20 (statement)
+    LOG_OR   shift, and go to state 84
+    LOG_AND  shift, and go to state 85
+    BIT_OR   shift, and go to state 86
+    BIT_XOR  shift, and go to state 87
+    BIT_AND  shift, and go to state 88
+    EQ       shift, and go to state 89
+    UEQ      shift, and go to state 90
+    GT       shift, and go to state 91
+    LT       shift, and go to state 92
+    GE       shift, and go to state 93
+    LE       shift, and go to state 94
+    LSHIFT   shift, and go to state 95
+    RSHIFT   shift, and go to state 96
+    ADD      shift, and go to state 97
+    SUB      shift, and go to state 98
+    MUL      shift, and go to state 99
+    DIV      shift, and go to state 100
+    SUR      shift, and go to state 101
+    INCR     shift, and go to state 102
+    DECR     shift, and go to state 103
+
+    $default  reduce using rule 25 (for_expr)
 
 
-State 195
+State 192
+
+   21 statement: RETURN expr SEMICOLON .
+
+    $default  reduce using rule 21 (statement)
+
+
+State 193
 
    19 statement: IF LEFTBR expr RIGHTBR . statement
+   20          | IF LEFTBR expr RIGHTBR . statement ELSE statement
 
     BIT_AND      shift, and go to state 35
     ADD          shift, and go to state 36
@@ -4320,26 +4279,26 @@ State 195
     INCR         shift, and go to state 40
     DECR         shift, and go to state 41
     LEFTBR       shift, and go to state 42
-    LBRACE       shift, and go to state 159
-    SEMICOLON    shift, and go to state 166
+    LBRACE       shift, and go to state 158
+    SEMICOLON    shift, and go to state 168
     IDENTIFIER   shift, and go to state 43
     INTEGER      shift, and go to state 44
     CHAR         shift, and go to state 45
     STRING       shift, and go to state 46
     HEX_INTEGER  shift, and go to state 47
-    IF           shift, and go to state 167
-    WHILE        shift, and go to state 168
-    FOR          shift, and go to state 169
-    RETURN       shift, and go to state 170
+    IF           shift, and go to state 169
+    WHILE        shift, and go to state 170
+    FOR          shift, and go to state 171
+    RETURN       shift, and go to state 172
 
-    block      go to state 173
-    statement  go to state 198
+    block      go to state 174
+    statement  go to state 196
     ARRAY2     go to state 48
     LVAL       go to state 49
-    expr       go to state 176
+    expr       go to state 177
 
 
-State 196
+State 194
 
    17 statement: WHILE LEFTBR expr RIGHTBR . statement
 
@@ -4351,26 +4310,26 @@ State 196
     INCR         shift, and go to state 40
     DECR         shift, and go to state 41
     LEFTBR       shift, and go to state 42
-    LBRACE       shift, and go to state 159
-    SEMICOLON    shift, and go to state 166
+    LBRACE       shift, and go to state 158
+    SEMICOLON    shift, and go to state 168
     IDENTIFIER   shift, and go to state 43
     INTEGER      shift, and go to state 44
     CHAR         shift, and go to state 45
     STRING       shift, and go to state 46
     HEX_INTEGER  shift, and go to state 47
-    IF           shift, and go to state 167
-    WHILE        shift, and go to state 168
-    FOR          shift, and go to state 169
-    RETURN       shift, and go to state 170
+    IF           shift, and go to state 169
+    WHILE        shift, and go to state 170
+    FOR          shift, and go to state 171
+    RETURN       shift, and go to state 172
 
-    block      go to state 173
-    statement  go to state 199
+    block      go to state 174
+    statement  go to state 197
     ARRAY2     go to state 48
     LVAL       go to state 49
-    expr       go to state 176
+    expr       go to state 177
 
 
-State 197
+State 195
 
    18 statement: FOR for_LEFTBR for_expr SEMICOLON . for_expr SEMICOLON for_expr for_RIGHTBR statement
 
@@ -4394,38 +4353,72 @@ State 197
     HEX_INTEGER  shift, and go to state 47
     CONST        shift, and go to state 6
 
-    $default  reduce using rule 25 (for_expr)
+    $default  reduce using rule 26 (for_expr)
 
-    for_expr     go to state 200
-    declaration  go to state 192
+    for_expr     go to state 198
+    declaration  go to state 190
     ARRAY2       go to state 48
     LVAL         go to state 49
-    expr         go to state 193
-    T            go to state 177
+    expr         go to state 191
+    T            go to state 178
 
 
-State 198
+State 196
 
    19 statement: IF LEFTBR expr RIGHTBR statement .
+   20          | IF LEFTBR expr RIGHTBR statement . ELSE statement
+
+    ELSE  shift, and go to state 199
 
     $default  reduce using rule 19 (statement)
 
 
-State 199
+State 197
 
    17 statement: WHILE LEFTBR expr RIGHTBR statement .
 
     $default  reduce using rule 17 (statement)
 
 
-State 200
+State 198
 
    18 statement: FOR for_LEFTBR for_expr SEMICOLON for_expr . SEMICOLON for_expr for_RIGHTBR statement
 
-    SEMICOLON  shift, and go to state 201
+    SEMICOLON  shift, and go to state 200
 
 
-State 201
+State 199
+
+   20 statement: IF LEFTBR expr RIGHTBR statement ELSE . statement
+
+    BIT_AND      shift, and go to state 35
+    ADD          shift, and go to state 36
+    SUB          shift, and go to state 37
+    BIT_NOT      shift, and go to state 38
+    LOG_NOT      shift, and go to state 39
+    INCR         shift, and go to state 40
+    DECR         shift, and go to state 41
+    LEFTBR       shift, and go to state 42
+    LBRACE       shift, and go to state 158
+    SEMICOLON    shift, and go to state 168
+    IDENTIFIER   shift, and go to state 43
+    INTEGER      shift, and go to state 44
+    CHAR         shift, and go to state 45
+    STRING       shift, and go to state 46
+    HEX_INTEGER  shift, and go to state 47
+    IF           shift, and go to state 169
+    WHILE        shift, and go to state 170
+    FOR          shift, and go to state 171
+    RETURN       shift, and go to state 172
+
+    block      go to state 174
+    statement  go to state 201
+    ARRAY2     go to state 48
+    LVAL       go to state 49
+    expr       go to state 177
+
+
+State 200
 
    18 statement: FOR for_LEFTBR for_expr SEMICOLON for_expr SEMICOLON . for_expr for_RIGHTBR statement
 
@@ -4449,14 +4442,21 @@ State 201
     HEX_INTEGER  shift, and go to state 47
     CONST        shift, and go to state 6
 
-    $default  reduce using rule 25 (for_expr)
+    $default  reduce using rule 26 (for_expr)
 
     for_expr     go to state 202
-    declaration  go to state 192
+    declaration  go to state 190
     ARRAY2       go to state 48
     LVAL         go to state 49
-    expr         go to state 193
-    T            go to state 177
+    expr         go to state 191
+    T            go to state 178
+
+
+State 201
+
+   20 statement: IF LEFTBR expr RIGHTBR statement ELSE statement .
+
+    $default  reduce using rule 20 (statement)
 
 
 State 202
@@ -4480,23 +4480,23 @@ State 203
     INCR         shift, and go to state 40
     DECR         shift, and go to state 41
     LEFTBR       shift, and go to state 42
-    LBRACE       shift, and go to state 159
-    SEMICOLON    shift, and go to state 166
+    LBRACE       shift, and go to state 158
+    SEMICOLON    shift, and go to state 168
     IDENTIFIER   shift, and go to state 43
     INTEGER      shift, and go to state 44
     CHAR         shift, and go to state 45
     STRING       shift, and go to state 46
     HEX_INTEGER  shift, and go to state 47
-    IF           shift, and go to state 167
-    WHILE        shift, and go to state 168
-    FOR          shift, and go to state 169
-    RETURN       shift, and go to state 170
+    IF           shift, and go to state 169
+    WHILE        shift, and go to state 170
+    FOR          shift, and go to state 171
+    RETURN       shift, and go to state 172
 
-    block      go to state 173
+    block      go to state 174
     statement  go to state 204
     ARRAY2     go to state 48
     LVAL       go to state 49
-    expr       go to state 176
+    expr       go to state 177
 
 
 State 204
