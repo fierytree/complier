@@ -103,7 +103,10 @@ public:
     pair<int,int> scope;
     bool is_const;
     int array_dim;
-    Type* func_type;
+    TreeNode* pa_func;
+    string place;
+    int stack_size;
+    int reg_count;
 
 public:
     static string nodeType2String (NodeType t);
@@ -111,6 +114,9 @@ public:
     static string sType2String (StmtType t);
 
     static int node_num;
+    bool rd2();
+    bool rd();
+    int val();
 public:
     TreeNode(int lineno, NodeType type);
     TreeNode(){}

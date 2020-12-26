@@ -9,7 +9,7 @@ void Type::addChild(Type* t){
 }
 
 bool Type::operator==(Type t){
-    //cout<<"1111 "<<type<<endl;
+    //cout<<"1111 "<<type<<" "<<t.type<<endl;
     if(this->type!=t.type)return 0;
     if(type==COMPOSE_ARRAY){
         if(size!=t.size)return 0;

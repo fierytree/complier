@@ -6,10 +6,9 @@ void TreeNode::addChild(TreeNode* child) {
 }
 
 void TreeNode::addSibling(TreeNode* sibling){
-    TreeNode* tmp=sibling;
+    TreeNode* tmp=this;
     while(tmp->siblings!=nullptr)tmp=tmp->siblings;   
-    tmp->siblings=this->siblings;
-    this->siblings=sibling;
+    tmp->siblings=sibling;
 }
 
 TreeNode::TreeNode(int lineno, NodeType type) {
@@ -17,6 +16,7 @@ TreeNode::TreeNode(int lineno, NodeType type) {
     this->nodeType=type;
     nodeID=node_num;
     is_const=0;
+    stack_size=-1,reg_count=-1;
     node_num++;
 }
 
@@ -94,7 +94,7 @@ void TreeNode::printChildrenId() {
         re.push_back(tmp->nodeID);
         tmp=tmp->siblings;
     }
-    sort(re.begin(),re.end());
+    //sort(re.begin(),re.end());
     for(unsigned i=0;i<re.size();i++){
         cout<<re[i];
         if(i!=re.size()-1)cout<<",";
@@ -116,7 +116,7 @@ void TreeNode::printAST() {
         TreeNode* tmp=cur->child;
         while(tmp!=nullptr){
             v.push_back(tmp);
-            if(cur->func_type!=nullptr)tmp->func_type=cur->func_type;
+            if(cur->pa_func!=nullptr)tmp->pa_func=cur->pa_func;
             tmp=tmp->siblings;
         }
         sort(v.begin(),v.end(),cmp);
@@ -124,22 +124,20 @@ void TreeNode::printAST() {
     }
 }
 
-// You can output more info...
-void TreeNode::printSpecialInfo() {
-    switch(this->nodeType){
-        case NODE_CONST:
-            break;
-        case NODE_VAR:
-            break;
-        case NODE_EXPR:
-            break;
-        case NODE_STMT:
-            break;
-        case NODE_TYPE:
-            break;
-        default:
-            break;
-    }
+bool TreeNode::rd2(){
+    return is_const=child->nodeType==NODE_CONST&&child->siblings->nodeType==NODE_CONST;
+}
+
+bool TreeNode::rd(){
+    return is_const=child->nodeType==NODE_CONST;
+}
+
+int TreeNode::val(){
+    int v=0;
+    if(*type==*TYPE_INT)v=int_val;
+    else if(*type==*TYPE_CHAR)v=ch_val;
+    else if(*type==*TYPE_BOOL)v=b_val;
+    return v;
 }
 
 string TreeNode::sType2String(StmtType t) {

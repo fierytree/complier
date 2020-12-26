@@ -26,7 +26,12 @@
         if(s.first==-1)cout<<"Variable "<<t->var_name<<" undefinied"<<endl;
         return t;
     }
-    
+    inline bool rd(TreeNode* t1,TreeNode* t2){
+        return t1->nodeType==NODE_CONST&&t2->nodeType==NODE_CONST;
+    }
+    inline bool rd(TreeNode* t){
+        return t->nodeType==NODE_CONST;
+    }
 %}
 %token T_CHAR T_INT T_STRING T_BOOL T_VOID
 
@@ -98,9 +103,12 @@ function
     $2->type->paramType=$4->type;
     add_id($2);
 
-    $6->func_type=$2->type;
+    $6->pa_func=node;
+    $2->pa_func=node;
+    node->stack_size=0;
+    node->reg_count=0;
     node->var_name=$2->var_name;
-    node->type=TYPE_VOID;
+    node->type=$2->type->retType;
     node->addChild($1);
     node->addChild($2);
     node->addChild($4);
@@ -140,7 +148,7 @@ block_item
 block_items
 : {$$ = new TreeNode(lineno, NODE_STMT); $$->stype = STMT_SKIP;}
 | block_items block_item {
-    if($1->stype == STMT_SKIP)$$=$2;
+    if($1->nodeType==NODE_STMT&&$1->stype == STMT_SKIP)$$=$2;
     else{
         $$=$1; $$->addSibling($2);
     }   
@@ -208,7 +216,7 @@ statement
 for_expr
 : declaration
 | expr
-|
+| {$$ = new TreeNode(lineno, NODE_STMT); $$->stype = STMT_SKIP;$$->place="$1";}
 ;
 
 for_LEFTBR:LEFTBR{$$=$1;br_list.push_back(make_pair(br_count+1,lineno));};
@@ -436,6 +444,7 @@ expr
     node->addChild($1);
     node->addChild($3);
     $$ = node;
+    if(node->rd2())node->int_val=$1->val()+$3->val();
 }
 | expr SUB expr {
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
@@ -443,6 +452,7 @@ expr
     node->addChild($1);
     node->addChild($3);
     $$ = node;
+    if(node->rd2())node->int_val=$1->val()-$3->val();
 }
 | expr MUL expr {
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
@@ -450,6 +460,7 @@ expr
     node->addChild($1);
     node->addChild($3);
     $$ = node;
+    if(node->rd2())node->int_val=$1->val()*$3->val();
 }
 | expr DIV expr {
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
@@ -457,6 +468,7 @@ expr
     node->addChild($1);
     node->addChild($3);
     $$ = node;
+    if(node->rd2())node->int_val=$1->val()/$3->val();
 }
 | expr SUR expr {
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
@@ -464,6 +476,7 @@ expr
     node->addChild($1);
     node->addChild($3);
     $$ = node;
+    if(node->rd2())node->int_val=$1->val()%$3->val();
 }
 | expr LSHIFT expr {
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
@@ -471,6 +484,7 @@ expr
     node->addChild($1);
     node->addChild($3);
     $$ = node;
+    if(node->rd2())node->int_val=$1->val()<<$3->val();
 }
 | expr RSHIFT expr {
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
@@ -478,6 +492,7 @@ expr
     node->addChild($1);
     node->addChild($3);
     $$ = node;
+    if(node->rd2())node->int_val=$1->val()>>$3->val();
 }
 | expr BIT_AND expr {
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
@@ -485,6 +500,7 @@ expr
     node->addChild($1);
     node->addChild($3);
     $$ = node;
+    if(node->rd2())node->int_val=$1->val()&$3->val();
 }
 | expr BIT_OR expr {
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
@@ -492,6 +508,7 @@ expr
     node->addChild($1);
     node->addChild($3);
     $$ = node;
+    if(node->rd2())node->int_val=$1->val()|$3->val();
 }
 | expr BIT_XOR expr {
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
@@ -499,6 +516,7 @@ expr
     node->addChild($1);
     node->addChild($3);
     $$ = node;
+    if(node->rd2())node->int_val=$1->val()^$3->val();
 }
 | expr EQ expr {
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
@@ -506,6 +524,7 @@ expr
     node->addChild($1);
     node->addChild($3);
     $$ = node;
+    if(node->rd2())node->int_val=$1->val()==$3->val();
 }
 | expr UEQ expr {
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
@@ -513,6 +532,7 @@ expr
     node->addChild($1);
     node->addChild($3);
     $$ = node;
+    if(node->rd2())node->int_val=$1->val()!=$3->val();
 }
 | expr LT expr {
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
@@ -520,6 +540,7 @@ expr
     node->addChild($1);
     node->addChild($3);
     $$ = node;
+    if(node->rd2())node->int_val=$1->val()<$3->val();
 }
 | expr GT expr {
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
@@ -527,6 +548,7 @@ expr
     node->addChild($1);
     node->addChild($3);
     $$ = node;
+    if(node->rd2())node->int_val=$1->val()>$3->val();
 }
 | expr LE expr {
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
@@ -534,6 +556,7 @@ expr
     node->addChild($1);
     node->addChild($3);
     $$ = node;
+    if(node->rd2())node->int_val=$1->val()<=$3->val();
 }
 | expr GE expr {
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
@@ -541,6 +564,7 @@ expr
     node->addChild($1);
     node->addChild($3);
     $$ = node;
+    if(node->rd2())node->int_val=$1->val()>=$3->val();
 }
 | expr LOG_AND expr {
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
@@ -548,6 +572,7 @@ expr
     node->addChild($1);
     node->addChild($3);
     $$ = node;
+    if(node->rd2())node->int_val=$1->val()&&$3->val();
 }
 | expr LOG_OR expr {
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
@@ -555,6 +580,7 @@ expr
     node->addChild($1);
     node->addChild($3);
     $$ = node;
+    if(node->rd2())node->int_val=$1->val()||$3->val();
 }
 | LVAL LOP_ASS expr {
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
@@ -639,24 +665,28 @@ expr
 	node->optype = OP_UMINUS;
     node->addChild($2);
     $$ = node;
+    if(node->rd())node->int_val=-$2->val();
 }
 | ADD expr %prec UADD {
     TreeNode* node = new TreeNode($2->lineno, NODE_EXPR);
 	node->optype = OP_UADD;
     node->addChild($2);
     $$ = node;
+    if(node->rd())node->int_val=$2->val();
 }
 | LOG_NOT expr {
     TreeNode* node = new TreeNode($2->lineno, NODE_EXPR);
 	node->optype = OP_LOG_NOT;
     node->addChild($2);
     $$ = node;
+    if(node->rd())node->int_val=!$2->val();
 }
 | BIT_NOT expr {
     TreeNode* node = new TreeNode($2->lineno, NODE_EXPR);
 	node->optype = OP_BIT_NOT;
     node->addChild($2);
     $$ = node;
+    if(node->rd())node->int_val=~$2->val();
 }
 | BIT_AND expr %prec ADDR {
     TreeNode* node = new TreeNode($2->lineno, NODE_EXPR);
@@ -693,6 +723,7 @@ expr
 	node->optype = OP_BR;
     node->addChild($2);
     $$ = node;
+    if(node->rd())node->int_val=$2->val();
 }
 ;
 

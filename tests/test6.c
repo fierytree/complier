@@ -1,6 +1,6 @@
-int a[10][10];
-char b[5<<2];
-void main(){
-    a[0][0]=1;
-    b[0]='1';
+int main(){
+    int a=10;
+    int b=a*111+~(a*(a+1));
+    printf("%d",b);
+    return 0;
 }

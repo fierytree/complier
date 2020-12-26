@@ -47,4 +47,15 @@ clean:
 	rm -f src/*.output src/main.lex.yy.cpp src/main.tab.cpp src/main.tab.h src/main.output src/pch.h.gch $(TARGET) *.o ./bin/* 
 
 test: 
-	./bin/main tests/test.c > result.txt
+	gcc main.s -m32 -o main.out
+	qemu-i386 main.out
+
+ans:
+	gcc ans.s -m32 -o ans.out
+	qemu-i386 ans.out
+
+code:
+	gcc tests/test.c -m32 -std=c99 -S -o ans.S -O0 -fno-asynchronous-unwind-tables -fno-builtin-fno-common -fno-ident -finhibit-size-directive -fno-pie -march=i386
+
+code6:
+	gcc tests/test6.c -m32 -std=c99 -S -o ans.S -O0 -fno-asynchronous-unwind-tables -fno-builtin-fno-common -fno-ident -finhibit-size-directive -fno-pie -march=i386
