@@ -80,6 +80,13 @@ void TreeNode::printNodeInfo() {
             fout<<"prog"<<"\t";
             break;
         }
+        case NODE_STRUCT:{
+            fout<<"struct"<<"\t";
+            fout<<"member:"<<"\t";
+            for(auto x:type->paramType->childType)
+            fout<<x->name<<":\t"<<x->getTypeInfo()<<"\t";
+            break;
+        }
         default:{
             fout<<"error nodetype"<<"\t";
             break;
@@ -168,7 +175,7 @@ string TreeNode::sType2String(StmtType t) {
 
 string TreeNode::nodeType2String (NodeType t){
     string nodeType_name[]={"const","var","expr","type","array","stmt",
-    "para","func","prog"};
+    "para","func","prog","struct"};
     return nodeType_name[t];
 }
 
@@ -178,7 +185,7 @@ string TreeNode::opType2String (OperatorType t){
     "eq","ueq","log_and","log_or","bit_and","bit_or","bit_xor","ass",
     "add_ass","sub_ass","mul_ass","div_ass","sur_ass","ls_ass","rs_ass",
     "and_ass","or_ass","xor_ass","minus_sign","pos_sign","log_not",
-    "bit_not","addr","star","incr","decr","b_incr","b_decr" ,"br"   
+    "bit_not","addr","star","incr","decr","b_incr","b_decr" ,"br","st_mb","stp_mb"   
     };
     return optype_name[t];
 }

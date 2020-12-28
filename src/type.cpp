@@ -37,6 +37,7 @@ bool Type::operator==(Type t){
         return 1;
     }
     else if(type==COMPOSE_POINTER)return *retType==*t.retType;
+    else if(type==COMPOSE_STRUCT)return name==t.name;
     else return 1;
 }
 bool Type::operator!=(Type t){return !((*this)==t);}
@@ -55,6 +56,11 @@ int Type::sz(){
         Type* t=this;
         while(t->type==COMPOSE_ARRAY)cnt*=t->size,t=t->retType;
         return cnt*(t->sz());
+    }
+    else if(type==COMPOSE_STRUCT){
+        int cnt=0;
+        for(auto x:paramType->childType)cnt+=x->sz();
+        return cnt;
     }
     return 4; 
 }
@@ -78,6 +84,8 @@ string Type::getTypeInfo() {
             return "union";
         case COMPOSE_POINTER:
             return "pointer";
+        case COMPOSE_STRUCT:
+            return "struct";
         default:
             cerr << "shouldn't reach here, typeinfo";
             assert(0);

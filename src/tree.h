@@ -16,6 +16,7 @@ enum NodeType
     NODE_PARA,
     NODE_FUNC,
     NODE_PROG,
+    NODE_STRUCT
 };
 
 enum OperatorType
@@ -59,7 +60,9 @@ enum OperatorType
     OP_DECR,
     OP_BACK_INCR,
     OP_BACK_DECR,
-    OP_BR    
+    OP_BR,
+    OP_ST_MB,
+    OP_STP_MB    
 };
 
 enum StmtType {

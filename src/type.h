@@ -28,6 +28,7 @@ public:
     Type* paramType;
     Type* retType; // for function or array
     unsigned size; // for array
+    string name;
     
     void addChild(Type* t);
     void addret(Type* t);

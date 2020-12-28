@@ -9,7 +9,9 @@
     int yylex();
     int yyerror( char const * );
     map<pair<string,int>,TreeNode*> id_list;
+    map<string,TreeNode*>struct_list;
     void add_id(TreeNode* t){
+        fout<<t->nodeID<<" "<<t->var_name<<endl;
         auto x=make_pair(t->var_name,t->scope.first);
         if(id_list.find(x)==id_list.end())id_list[x]=t;
         else cerr<<"in line"<<lineno<<", Variable "<<t->var_name<<" repeated definition"<<endl,exit(0);
@@ -37,6 +39,7 @@
             else cerr<<"in line"<<lineno<<", Variable "<<t->var_name<<" undefinied"<<endl,exit(0);
         }
         t->scope=s;t->type=tp;
+        fout<<"577 "<<t->type->getTypeInfo()<<" "<<t->nodeID<<endl;
         return t;
     }
     inline bool rd(TreeNode* t1,TreeNode* t2){
@@ -65,13 +68,14 @@
 %token UMINUS UADD
 %token INCR DECR
 %token LBRACE RBRACE
+%token ST_MB STP_MB
 %token M_LBR M_RBR
 %token BACK_INCR BACK_DECR
 
 %token SEMICOLON
 %token COMMA
 %token IDENTIFIER INTEGER CHAR BOOL STRING HEX_INTEGER
-%token IF WHILE FOR RETURN CONST ELSE BREAK CONTINUE
+%token IF WHILE FOR RETURN CONST ELSE BREAK CONTINUE STRUCT
 
 %right LOP_ASS ADD_ASS SUB_ASS MUL_ASS DIV_ASS SUR_ASS LS_ASS RS_ASS AND_ASS OR_ASS XOR_ASS
 %left LOG_OR
@@ -89,6 +93,7 @@
 %right LOG_NOT BIT_NOT
 %right UMINUS UADD
 %right INCR DECR
+%left ST_MB STP_MB
 %left M_LBR M_RBR
 %left BACK_INCR BACK_DECR
 
@@ -102,12 +107,53 @@ program
 : units {root = new TreeNode(0, NODE_PROG); root->addChild($1);root->type=TYPE_VOID;};
 ;
 
-units
-: declaration SEMICOLON{$$=$1;};
-| function {$$=$1;}
-| units declaration SEMICOLON{$$=$1;$$->addSibling($2);}
-| units function {$$=$1;$$->addSibling($2);}
+program_unit:function
+| declaration SEMICOLON{$$=$1;}
+| struct SEMICOLON{$$=$1;}
 ;
+
+units:program_unit
+| units program_unit {$$=$1;$$->addSibling($2);}
+;
+
+struct_items: declaration SEMICOLON{
+    TreeNode* node=new TreeNode(lineno,NODE_PARA);
+    node->addChild($1);
+    node->type=new Type(COMPOSE_UNION);
+    
+    TreeNode* tmp=$1->child->siblings;
+    while(tmp!=nullptr){
+        Type* mb=new Type($1->child->type->type);
+        if(tmp->child==nullptr)mb->name=tmp->var_name;
+        else mb->name=tmp->child->var_name;
+        tmp=tmp->siblings;
+        node->type->childType.push_back(mb);
+    }
+    $$=node;
+}
+| struct_items declaration SEMICOLON{
+    $$=$1;$$->addChild($2);
+    TreeNode* tmp=$2->child->siblings;
+    while(tmp!=nullptr){
+        Type* mb=new Type($2->child->type->type);
+        if(tmp->child==nullptr)mb->name=tmp->var_name;
+        else mb->name=tmp->child->var_name;
+        tmp=tmp->siblings;
+        $$->type->childType.push_back(mb);
+    }
+}
+;
+
+struct: STRUCT IDENTIFIER LBRACE struct_items RBRACE{
+    TreeNode* node=new TreeNode($2->lineno,NODE_STRUCT);
+    struct_list[$2->var_name]=node;
+    node->addChild($2);
+    node->addChild($4);
+    node->type=new Type(COMPOSE_STRUCT);
+    node->type->name=$2->var_name;
+    node->type->paramType=$4->type;
+    $$=node;
+}
 
 function
 : T IDENTIFIER for_LEFTBR PARMS for_RIGHTBR block{
@@ -257,6 +303,7 @@ for_RIGHTBR:RIGHTBR{$$=$1;br_list.pop_back();};
 
 declaration
 : T IDENTIFIERS {
+    fout<<"444 "<<endl;
     TreeNode* node = new TreeNode($2->lineno, NODE_STMT);
     node->stype = STMT_DECL;
     node->addChild($1);
@@ -420,12 +467,29 @@ ARRAY2
     $1->addChild($3);
 }
 
+struct_mem: IDENTIFIER ST_MB IDENTIFIER{
+    TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
+    node->optype=OP_ST_MB;
+    node->addChild(find_id($1));
+    node->addChild($3);
+    $$=node;
+}
+| IDENTIFIER STP_MB IDENTIFIER{
+    TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
+    node->optype=OP_STP_MB;
+    node->addChild(find_id($1));
+    node->addChild($3);
+    $$=node;
+}
+;
+
 LVAL: ARRAY2 
 | IDENTIFIER {$$=find_id($1);}
+| struct_mem
 ;
 
 decl_item
-: IDENTIFIER {$$=$1;add_id($1);}
+: IDENTIFIER {$$=$1;add_id($1);fout<<"444 "<<endl;}
 | IDENTIFIER LOP_ASS expr{
     TreeNode* node=new TreeNode($1->lineno,NODE_EXPR);
     node->addChild($1);
@@ -471,6 +535,9 @@ expr
     $$ = $1;
 }
 | ARRAY2{
+    $$ = $1;
+}
+| struct_mem{
     $$ = $1;
 }
 | IDENTIFIER LEFTBR PAS RIGHTBR{
@@ -791,6 +858,16 @@ T1: T_INT {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_INT;}
 | T_BOOL {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_BOOL;}
 | T_STRING {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_STRING;}
 | T_VOID {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_VOID;}
+| STRUCT IDENTIFIER{
+    if(struct_list.find($2->var_name)==struct_list.end()){
+        cerr<<"in line"<<lineno<<endl;
+        cerr<<"undefined struct name "<<$2->var_name<<endl;
+        exit(0);
+    }
+    $$ = new TreeNode(lineno, NODE_TYPE); 
+    $$->type = struct_list[$2->var_name]->type;
+    fout<<"555 "<<$$->type->getTypeInfo()<<endl;
+}
 ;
 
 %%

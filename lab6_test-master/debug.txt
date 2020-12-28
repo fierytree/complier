@@ -1,118 +1,19 @@
 file has been opened
-@46	lineno:0	prog	children:45	
-@45	lineno:1	func	type:int 	name:main	children:8,9,10,44	
-@8	lineno:1	type	int 	children:	
-@9	lineno:1	var 	name:main	scope:global	children:	
-@10	lineno:1	para	children:	
-@44	lineno:8	stmt	type:block	children:20,26,31,36,41,43	
-@20	lineno:2	stmt	type:decl	children:12,15,16,19	
-@26	lineno:3	stmt	type:func_use	name:scanf	children:21,23	
-@31	lineno:4	stmt	type:func_use	name:printf	children:27,29	
-@36	lineno:5	stmt	type:func_use	name:printf	children:32,34	
-@41	lineno:6	stmt	type:func_use	name:printf	children:37,39	
-@43	lineno:7	stmt	type:return	children:42	
-@12	lineno:2	type	int 	children:	
-@15	lineno:2	expr	op:ass	children:13,14	
-@16	lineno:2	var 	name:b	scope:br1 in line1	children:	
-@19	lineno:2	expr	op:ass	children:17,18	
-@21	lineno:3	var 	name:scanf	scope:global	children:	
-@23	lineno:3	para	children:22,25	
-@27	lineno:4	var 	name:printf	scope:global	children:	
-@29	lineno:4	para	children:28,30	
-@32	lineno:5	var 	name:printf	scope:global	children:	
-@34	lineno:5	para	children:33,35	
-@37	lineno:6	var 	name:printf	scope:global	children:	
-@39	lineno:6	para	children:38,40	
-@42	lineno:7	const	int 	val:0	children:	
-@13	lineno:2	var 	name:a	scope:br1 in line1	children:	
-@14	lineno:2	const	int 	val:20	children:	
-@17	lineno:2	var 	name:c	scope:br1 in line1	children:	
-@18	lineno:2	const	int 	val:16	children:	
-@22	lineno:3	const	string	val:%d	children:	
-@25	lineno:3	expr	op:addr	children:24	
-@28	lineno:4	const	string	val:Test:%d	children:	
-@30	lineno:4	var 	name:a	scope:br1 in line1	children:	
-@33	lineno:5	const	string	val: %d	children:	
-@35	lineno:5	var 	name:b	scope:br1 in line1	children:	
-@38	lineno:6	const	string	val: %d\n	children:	
-@40	lineno:6	var 	name:c	scope:br1 in line1	children:	
-@24	lineno:3	var 	name:b	scope:br1 in line1	children:	
+9 main
+@16	lineno:0	prog	children:15	
+@15	lineno:2	func	type:void	name:main	children:8,9,10,14	
+@8	lineno:2	type	void	children:	
+@9	lineno:2	var 	name:main	scope:global	children:	
+@10	lineno:2	para	children:	
+@14	lineno:4	stmt	type:block	children:13	
+@13	lineno:3	stmt	type:return	children:12	
+@12	lineno:3	const	int 	val:0	children:	
 
-tmp_var:0
-ass 15 %eax
-tmp_var:1
-ass 19 %ecx
-tmp_var:0
-addr 25 %eax
-type check pass!
-46 void 
-45 int  
-8 int  
-9 function 
-10 union 
-44 20 26 31 36 41 43 12 int  
-15 int  %eax
-16 int  
-19 int  %ecx
-21 function 
-23 union 
-27 function 
-29 union 
-32 function 
-34 union 
-37 function 
-39 union 
-42 int  $0
-13 int  
-14 int  $20
-17 int  
-18 int  $16
-22 string $.STR0
-25 pointer %eax
-28 string $.STR1
-30 int  
-33 string $.STR2
-35 int  
-38 string $.STR3
-40 int  
-24 int  
-
-place:
-a -4(%ebp)
-b -8(%ebp)
-c -12(%ebp)
-main main
-printf printf
-scanf scanf
-gencode id 46
-gencode id 45
-gencode id 44
-gencode id 20
-gencode id 12
-gencode id 15
-gencode id 13
-gencode id 14
-gencode id 16
-gencode id 19
-gencode id 17
-gencode id 18
-gencode id 26
-gencode id 21
-gencode id 22
-gencode id 25
-gencode id 24
-gencode id 31
-gencode id 27
-gencode id 28
-gencode id 30
-gencode id 36
-gencode id 32
-gencode id 33
-gencode id 35
-gencode id 41
-gencode id 37
-gencode id 38
-gencode id 40
-gencode id 43
-gencode id 42
-code has been generated
+check 16
+check 15
+check 8
+check 9
+check 10
+check 14
+check 13
+check 12

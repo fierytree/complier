@@ -40,6 +40,7 @@ IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
 "else" return ELSE;
 "break" return BREAK;
 "continue" return CONTINUE;
+"struct" return STRUCT;
 
 "(" return LEFTBR;
 ")" return RIGHTBR;
@@ -92,6 +93,8 @@ IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
 "]" return M_RBR;
 
 "," return COMMA;
+"." return ST_MB;
+"->" return STP_MB;
 
 {INTEGER} {
     TreeNode* node = new TreeNode(lineno, NODE_CONST);

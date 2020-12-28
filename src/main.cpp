@@ -10,6 +10,7 @@ extern TreeNode *root;
 extern FILE *yyin;
 extern int yyparse();
 extern map<pair<string,int>,TreeNode*> id_list;
+extern map<string,TreeNode*>struct_list;
 extern TreeNode* find_id(TreeNode* t);
 int TreeNode::node_num=0;
 int tmp_var;
@@ -95,7 +96,7 @@ Type* check_array(TreeNode* cur);
 Type* check_func(TreeNode* cur);
 Type* check_union(TreeNode* cur);
 Type* check(TreeNode* cur){
-    //fout<<"check "<<cur->nodeID<<endl;
+    fout<<"check "<<cur->nodeID<<endl;
     int ln=cur->lineno;
     switch(cur->nodeType){
         case NODE_PROG:case NODE_FUNC:case NODE_PARA:{
@@ -112,7 +113,7 @@ Type* check(TreeNode* cur){
             cur->place=get_val(ln,cur);
             return cur->type;
         }
-        case NODE_TYPE:{
+        case NODE_TYPE:case NODE_STRUCT:{
             return cur->type;
         }
         case NODE_VAR:{
@@ -169,7 +170,19 @@ Type* check(TreeNode* cur){
         case NODE_EXPR:{           
             TreeNode* tmp=c1;
             Type* ret;
-            if(cur->optype==OP_ADD||cur->optype==OP_ADD_ASS
+            if(cur->optype==OP_ST_MB||cur->optype==OP_STP_MB){
+                Type* t1=check(c1);
+                Type* tt=cur->optype==OP_STP_MB?t1->retType:t1;
+                if(struct_list.find(tt->name)==struct_list.end())
+                raise_error(ln,"undefined struct name "+c1->var_name);
+                Type* t=struct_list[tt->name]->type->paramType;
+                bool find=0;
+                for(auto x:t->childType){
+                    if(x->name==c2->var_name)find=1,ret=x;
+                }
+                if(!find)raise_error(ln,"undefined struct member ");
+            }
+            else if(cur->optype==OP_ADD||cur->optype==OP_ADD_ASS
             ||cur->optype==OP_SUB||cur->optype==OP_SUB_ASS){
                 Type* t1=check(c1);
                 Type* t2=check(c2);
@@ -418,6 +431,9 @@ void locate(){
                 if(cur->array_dim>=1){
                     cur->pa_func->stack_size+=cur->type->sz()/4*4;
                 }
+                else if(cur->type->type==COMPOSE_STRUCT){
+                    cur->pa_func->stack_size+=cur->type->sz();
+                }
                 else{
                     cur->pa_func->stack_size+=4;
                 }
@@ -487,7 +503,7 @@ void gen_code(TreeNode* cur){
         case NODE_PARA:{
             return;
         }
-        case NODE_CONST:case NODE_TYPE:{
+        case NODE_CONST:case NODE_TYPE:case NODE_STRUCT:{
             return;
         }
         case NODE_VAR:{
@@ -623,7 +639,8 @@ void gen_code(TreeNode* cur){
                 return;
             }
             if(gen_pointer(cur))return;
-            if(cur->optype<OP_LOP_ASS||cur->optype>OP_XOR_ASS)gen_children(cur);
+            if((cur->optype<OP_LOP_ASS||cur->optype>OP_XOR_ASS)
+            &&cur->optype!=OP_ST_MB&&cur->optype!=OP_STP_MB)gen_children(cur);
             switch(cur->optype){
                 case OP_ADD:case OP_SUB:case OP_MUL:case OP_DIV:case OP_SUR:
                 case OP_LSHIFT:case OP_RSHIFT:
@@ -710,6 +727,20 @@ void gen_code(TreeNode* cur){
                     }
                     else mov('('+c1->place+')',cur->place);
                     break;
+                }
+                case OP_ST_MB:{
+                    gen_code(c1);
+                    Type* t=c1->type->paramType;
+                    int cnt=0;
+                    for(auto x:t->childType){
+                        if(x->name==c2->var_name)break;
+                        cnt+=x->sz();
+                    }
+                    fout<<c1->place<<endl;
+                    int p2=c1->place.find('(');
+                    fout<<p2<<"  "<<c1->place.substr(0,p2)<<endl;
+                    int p=atoi(c1->place.substr(0,p2).c_str())+cnt;
+                    cur->place=to_string(p)+"(%ebp)";
                 }
                 default:
                 break;
