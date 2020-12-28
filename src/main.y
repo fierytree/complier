@@ -4,6 +4,7 @@
     TreeNode* root;
     extern int lineno;
     extern int br_count;
+    extern ofstream fout;
     extern vector<pair<int,int> > br_list;
     int yylex();
     int yyerror( char const * );
@@ -11,19 +12,31 @@
     void add_id(TreeNode* t){
         auto x=make_pair(t->var_name,t->scope.first);
         if(id_list.find(x)==id_list.end())id_list[x]=t;
-        else cout<<"Variable "<<t->var_name<<" repeated definition"<<endl;
+        else cerr<<"in line"<<lineno<<", Variable "<<t->var_name<<" repeated definition"<<endl,exit(0);
     }
     TreeNode* find_id(TreeNode* t){
         auto s=make_pair(-1,-1);
-        Type* tp;
+        Type* tp=nullptr;
         auto y=make_pair(t->var_name,0);
+        //for(auto x:id_list)fout<<x.first.first<<" "<<x.first.second<<endl;
         if(id_list.find(y)!=id_list.end())s=make_pair(0,0),tp=id_list[y]->type;
         for(auto x:br_list){
             auto y=make_pair(t->var_name,x.first);
             if(id_list.find(y)!=id_list.end())s=x,tp=id_list[y]->type;
         }
+        if(s.first==-1&&t->type!=nullptr&&t->type->type==COMPOSE_FUNCTION)return t;
+        if(s.first==-1){
+            auto y=make_pair(t->var_name,br_count+1);
+            if(id_list.find(y)!=id_list.end()){
+                t->scope=id_list[y]->scope;
+                t->type=id_list[y]->type;
+                cerr<<"in line"<<id_list[y]->lineno;
+                cerr<<", warning，use bracket when write a statement."<<endl;
+                return t;
+            }
+            else cerr<<"in line"<<lineno<<", Variable "<<t->var_name<<" undefinied"<<endl,exit(0);
+        }
         t->scope=s;t->type=tp;
-        if(s.first==-1)cout<<"Variable "<<t->var_name<<" undefinied"<<endl;
         return t;
     }
     inline bool rd(TreeNode* t1,TreeNode* t2){
@@ -46,18 +59,19 @@
 %token LSHIFT RSHIFT 
 %token ADD SUB
 %token MUL DIV SUR
-%token BIT_NOT LOG_NOT
-%token INCR DECR
+%token ADDR STAR
 %token LEFTBR RIGHTBR
+%token LOG_NOT BIT_NOT
+%token UMINUS UADD
+%token INCR DECR
 %token LBRACE RBRACE
 %token M_LBR M_RBR
+%token BACK_INCR BACK_DECR
 
 %token SEMICOLON
-
 %token COMMA
-
 %token IDENTIFIER INTEGER CHAR BOOL STRING HEX_INTEGER
-%token IF WHILE FOR RETURN CONST ELSE
+%token IF WHILE FOR RETURN CONST ELSE BREAK CONTINUE
 
 %right LOP_ASS ADD_ASS SUB_ASS MUL_ASS DIV_ASS SUR_ASS LS_ASS RS_ASS AND_ASS OR_ASS XOR_ASS
 %left LOG_OR
@@ -70,13 +84,14 @@
 %left LSHIFT RSHIFT 
 %left ADD SUB
 %left MUL DIV SUR
-%right ADDR
+%right ADDR STAR
 %right LEFTBR RIGHTBR
 %right LOG_NOT BIT_NOT
 %right UMINUS UADD
 %right INCR DECR
 %left M_LBR M_RBR
 %left BACK_INCR BACK_DECR
+
 %precedence IF
 %precedence ELSE
 
@@ -171,6 +186,7 @@ statement
     node->stype=STMT_WHILE;
     node->addChild($3);
     node->addChild($5);
+    $5->pa_loop=node;
     $$=node;
 }
 | FOR for_LEFTBR for_expr SEMICOLON for_expr SEMICOLON for_expr for_RIGHTBR statement{
@@ -180,7 +196,14 @@ statement
     node->addChild($5);
     node->addChild($7);
     node->addChild($9);
+    $9->pa_loop=node;
     $$=node;
+    for(auto x:id_list){
+        if(x.first.second==br_count+1){
+            ++br_count;
+            fout<<"omit bracket"<<endl;break;
+        }
+    }
 }
 | IF LEFTBR expr RIGHTBR statement{
     TreeNode* node = new TreeNode($3->lineno, NODE_STMT);
@@ -204,8 +227,18 @@ statement
     $$=node;
 }
 | RETURN SEMICOLON{
-    TreeNode* node = new TreeNode($1->lineno, NODE_STMT);
+    TreeNode* node = new TreeNode(lineno, NODE_STMT);
     node->stype=STMT_RETURN;
+    $$=node;
+}
+| BREAK SEMICOLON{
+    TreeNode* node = new TreeNode(lineno, NODE_STMT);
+    node->stype=STMT_BREAK;
+    $$=node;
+}
+| CONTINUE SEMICOLON{
+    TreeNode* node = new TreeNode(lineno, NODE_STMT);
+    node->stype=STMT_CONTINUE;
     $$=node;
 }
 | expr SEMICOLON{
@@ -223,17 +256,7 @@ for_LEFTBR:LEFTBR{$$=$1;br_list.push_back(make_pair(br_count+1,lineno));};
 for_RIGHTBR:RIGHTBR{$$=$1;br_list.pop_back();};
 
 declaration
-: T IDENTIFIER LOP_ASS expr{ 
-    TreeNode* node = new TreeNode($1->lineno, NODE_STMT);
-    $2->type=$1->type;
-    add_id($2);
-    node->stype = STMT_DECL;
-    node->addChild($1);
-    node->addChild($2);
-    node->addChild($4);
-    $$ = node;   
-} 
-| T IDENTIFIERS {
+: T IDENTIFIERS {
     TreeNode* node = new TreeNode($2->lineno, NODE_STMT);
     node->stype = STMT_DECL;
     node->addChild($1);
@@ -241,6 +264,7 @@ declaration
     TreeNode* tmp=$2;
     while(tmp!=nullptr){
         tmp->type=$1->type;
+        if(tmp->child!=nullptr)tmp->child->type=$1->type;
         tmp=tmp->siblings;
     }
     $$ = node;   
@@ -256,37 +280,46 @@ declaration
 | CONST T_INT IDENTIFIER LOP_ASS CONST_EXP{
     TreeNode* node1 = new TreeNode($3->lineno, NODE_TYPE);node1->type=TYPE_INT;    
     TreeNode* node = new TreeNode($3->lineno, NODE_STMT);
+    TreeNode* node2 = new TreeNode($3->lineno, NODE_EXPR);
+    node2->optype=OP_LOP_ASS;
     $3->is_const=1;
     $3->type=TYPE_INT;
     add_id($3);
     node->stype = STMT_DECL;
     node->addChild(node1);
-    node->addChild($3);
-    node->addChild($5);
+    node->addChild(node2);
+    node2->addChild($3);
+    node2->addChild($5);
     $$ = node;
 }
 | CONST T_CHAR IDENTIFIER LOP_ASS CHAR{
-    TreeNode* node1 = new TreeNode($3->lineno, NODE_TYPE);node1->type=TYPE_CHAR; 
+    TreeNode* node1 = new TreeNode($3->lineno, NODE_TYPE);node1->type=TYPE_CHAR;    
     TreeNode* node = new TreeNode($3->lineno, NODE_STMT);
+    TreeNode* node2 = new TreeNode($3->lineno, NODE_EXPR);
+    node2->optype=OP_LOP_ASS;
     $3->is_const=1;
     $3->type=TYPE_CHAR;
     add_id($3);
     node->stype = STMT_DECL;
     node->addChild(node1);
-    node->addChild($3);
-    node->addChild($5);
+    node->addChild(node2);
+    node2->addChild($3);
+    node2->addChild($5);
     $$ = node;
 }
 | CONST T_BOOL IDENTIFIER LOP_ASS INTEGER{
-    TreeNode* node1 = new TreeNode($3->lineno, NODE_TYPE);node1->type=TYPE_BOOL; 
+    TreeNode* node1 = new TreeNode($3->lineno, NODE_TYPE);node1->type=TYPE_BOOL;    
     TreeNode* node = new TreeNode($3->lineno, NODE_STMT);
+    TreeNode* node2 = new TreeNode($3->lineno, NODE_EXPR);
+    node2->optype=OP_LOP_ASS;
     $3->is_const=1;
     $3->type=TYPE_BOOL;
     add_id($3);
     node->stype = STMT_DECL;
     node->addChild(node1);
-    node->addChild($3);
-    node->addChild($5);
+    node->addChild(node2);
+    node2->addChild($3);
+    node2->addChild($5);
     $$ = node;
 }
 ;
@@ -387,19 +420,26 @@ ARRAY2
     $1->addChild($3);
 }
 
-LVAL
-: ARRAY2 {$$=$1;}
+LVAL: ARRAY2 
 | IDENTIFIER {$$=find_id($1);}
+;
 
-IDENTIFIERS
-: IDENTIFIER{
-    $$=$1;
+decl_item
+: IDENTIFIER {$$=$1;add_id($1);}
+| IDENTIFIER LOP_ASS expr{
+    TreeNode* node=new TreeNode($1->lineno,NODE_EXPR);
+    node->addChild($1);
+    node->addChild($3);
+    node->optype=OP_LOP_ASS;
     add_id($1);
+    $$=node;
 }
-| IDENTIFIERS COMMA IDENTIFIER{
+;
+
+IDENTIFIERS: decl_item
+| IDENTIFIERS COMMA decl_item{
     $$=$1;
     $$->addSibling($3);
-    add_id($3);
 }
 ;
 
@@ -430,10 +470,14 @@ expr
 | STRING {
     $$ = $1;
 }
+| ARRAY2{
+    $$ = $1;
+}
 | IDENTIFIER LEFTBR PAS RIGHTBR{
     TreeNode* node = new TreeNode($1->lineno, NODE_STMT);
     node->stype=STMT_FUNC_USE;
     node->var_name=$1->var_name;
+    $1->type=new Type(COMPOSE_FUNCTION);
     node->addChild(find_id($1));
     node->addChild($3);
     $$=node;
@@ -584,7 +628,7 @@ expr
 }
 | LVAL LOP_ASS expr {
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
-    if($1->is_const)cout<<"const Variable can't be assigned!"<<endl;
+    if($1->is_const)fout<<"const Variable can't be assigned!"<<endl;
 	node->optype = OP_LOP_ASS;
     node->addChild($1);
     node->addChild($3);
@@ -694,6 +738,12 @@ expr
     node->addChild($2);
     $$ = node;
 }
+| MUL expr %prec STAR {
+    TreeNode* node = new TreeNode($2->lineno, NODE_EXPR);
+	node->optype = OP_STAR;
+    node->addChild($2);
+    $$ = node;
+}
 | INCR expr {
     TreeNode* node = new TreeNode($2->lineno, NODE_EXPR);
 	node->optype = OP_INCR;
@@ -727,7 +777,16 @@ expr
 }
 ;
 
-T: T_INT {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_INT;} 
+T: T1
+| T1 MUL %prec STAR{
+    TreeNode* node = new TreeNode(lineno, NODE_TYPE);
+    node->type=new Type(COMPOSE_POINTER);
+    node->type->retType=$1->type;
+    $$=node;
+}
+;
+
+T1: T_INT {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_INT;} 
 | T_CHAR {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_CHAR;}
 | T_BOOL {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_BOOL;}
 | T_STRING {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_STRING;}
@@ -738,6 +797,6 @@ T: T_INT {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_INT;}
 
 int yyerror(char const* message)
 {
-  cout << message << " at line " << lineno << endl;
+  fout << message << " at line " << lineno << endl;
   return -1;
 }

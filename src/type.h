@@ -13,7 +13,8 @@ enum ValueType
     COMPOSE_STRUCT,
     COMPOSE_UNION,
     COMPOSE_FUNCTION,
-    COMPOSE_ARRAY
+    COMPOSE_ARRAY,
+    COMPOSE_POINTER
 };
 
 class Type
@@ -30,6 +31,7 @@ public:
     
     void addChild(Type* t);
     void addret(Type* t);
+    int sz();
  
 public:
     string getTypeInfo();

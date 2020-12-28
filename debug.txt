@@ -1,0 +1,411 @@
+file has been opened
+@136	lineno:0	prog	children:21,35,49,84,135	
+@21	lineno:1	func	type:int 	name:func1	children:8,9,10,20	
+@35	lineno:7	func	type:int 	name:func2	children:22,23,24,34	
+@49	lineno:13	func	type:int 	name:func3	children:36,37,38,48	
+@84	lineno:19	func	type:int 	name:func4	children:50,51,52,83	
+@135	lineno:34	func	type:int 	name:main	children:85,86,87,134	
+@8	lineno:1	type	int 	children:	
+@9	lineno:1	var 	name:func1	scope:global	children:	
+@10	lineno:1	para	children:	
+@20	lineno:5	stmt	type:block	children:14,17,19	
+@22	lineno:7	type	int 	children:	
+@23	lineno:7	var 	name:func2	scope:global	children:	
+@24	lineno:7	para	children:	
+@34	lineno:11	stmt	type:block	children:28,31,33	
+@36	lineno:13	type	int 	children:	
+@37	lineno:13	var 	name:func3	scope:global	children:	
+@38	lineno:13	para	children:	
+@48	lineno:17	stmt	type:block	children:42,45,47	
+@50	lineno:19	type	int 	children:	
+@51	lineno:19	var 	name:func4	scope:global	children:	
+@52	lineno:19	para	children:	
+@83	lineno:32	stmt	type:block	children:56,67,80,82	
+@85	lineno:34	type	int 	children:	
+@86	lineno:34	var 	name:main	scope:global	children:	
+@87	lineno:34	para	children:	
+@134	lineno:44	stmt	type:block	children:91,94,97,100,103,106,131,133	
+@14	lineno:2	stmt	type:decl	children:12,13	
+@17	lineno:3	expr	op:ass	children:15,16	
+@19	lineno:4	stmt	type:return	children:18	
+@28	lineno:8	stmt	type:decl	children:26,27	
+@31	lineno:9	expr	op:ass	children:29,30	
+@33	lineno:10	stmt	type:return	children:32	
+@42	lineno:14	stmt	type:decl	children:40,41	
+@45	lineno:15	expr	op:ass	children:43,44	
+@47	lineno:16	stmt	type:return	children:46	
+@56	lineno:20	stmt	type:decl	children:54,55	
+@67	lineno:25	stmt	type:block	children:60,63,66	
+@80	lineno:30	stmt	type:block	children:71,74,79	
+@82	lineno:31	stmt	type:return	children:81	
+@91	lineno:35	stmt	type:decl	children:89,90	
+@94	lineno:36	stmt	type:decl	children:92,93	
+@97	lineno:37	stmt	type:decl	children:95,96	
+@100	lineno:38	expr	op:ass	children:98,99	
+@103	lineno:39	expr	op:ass	children:101,102	
+@106	lineno:40	expr	op:ass	children:104,105	
+@131	lineno:42	stmt	type:func_use	name:printf	children:107,109	
+@133	lineno:43	stmt	type:return	children:132	
+@12	lineno:2	type	int 	children:	
+@13	lineno:2	var 	name:a	scope:br1 in line1	children:	
+@15	lineno:3	var 	name:a	scope:br1 in line1	children:	
+@16	lineno:3	const	int 	val:1	children:	
+@18	lineno:4	var 	name:a	scope:br1 in line1	children:	
+@26	lineno:8	type	int 	children:	
+@27	lineno:8	var 	name:a	scope:br2 in line7	children:	
+@29	lineno:9	var 	name:a	scope:br2 in line7	children:	
+@30	lineno:9	const	int 	val:2	children:	
+@32	lineno:10	var 	name:a	scope:br2 in line7	children:	
+@40	lineno:14	type	int 	children:	
+@41	lineno:14	var 	name:a	scope:br3 in line13	children:	
+@43	lineno:15	var 	name:a	scope:br3 in line13	children:	
+@44	lineno:15	const	int 	val:4	children:	
+@46	lineno:16	var 	name:a	scope:br3 in line13	children:	
+@54	lineno:20	type	int 	children:	
+@55	lineno:20	var 	name:a	scope:br4 in line19	children:	
+@60	lineno:22	stmt	type:decl	children:58,59	
+@63	lineno:23	expr	op:ass	children:61,62	
+@66	lineno:24	expr	op:ass	children:64,65	
+@71	lineno:27	stmt	type:decl	children:69,70	
+@74	lineno:28	expr	op:ass	children:72,73	
+@79	lineno:29	expr	op:ass	children:75,78	
+@81	lineno:31	var 	name:a	scope:br4 in line19	children:	
+@89	lineno:35	type	int 	children:	
+@90	lineno:35	var 	name:a	scope:br7 in line34	children:	
+@92	lineno:36	type	int 	children:	
+@93	lineno:36	var 	name:b	scope:br7 in line34	children:	
+@95	lineno:37	type	int 	children:	
+@96	lineno:37	var 	name:c	scope:br7 in line34	children:	
+@98	lineno:38	var 	name:a	scope:br7 in line34	children:	
+@99	lineno:38	const	int 	val:32	children:	
+@101	lineno:39	var 	name:b	scope:br7 in line34	children:	
+@102	lineno:39	const	int 	val:32	children:	
+@104	lineno:40	var 	name:c	scope:br7 in line34	children:	
+@105	lineno:40	const	int 	val:32	children:	
+@107	lineno:42	var 	name:printf	scope:global	children:	
+@109	lineno:42	para	children:108,130	
+@132	lineno:43	const	int 	val:0	children:	
+@58	lineno:22	type	int 	children:	
+@59	lineno:22	var 	name:b	scope:br5 in line21	children:	
+@61	lineno:23	var 	name:b	scope:br5 in line21	children:	
+@62	lineno:23	const	int 	val:8	children:	
+@64	lineno:24	var 	name:a	scope:br4 in line19	children:	
+@65	lineno:24	var 	name:b	scope:br5 in line21	children:	
+@69	lineno:27	type	int 	children:	
+@70	lineno:27	var 	name:b	scope:br6 in line26	children:	
+@72	lineno:28	var 	name:b	scope:br6 in line26	children:	
+@73	lineno:28	const	int 	val:16	children:	
+@75	lineno:29	var 	name:a	scope:br4 in line19	children:	
+@78	lineno:29	expr	op:add	children:76,77	
+@108	lineno:42	const	string	val:%d\n	children:	
+@130	lineno:42	expr	op:add	children:128,129	
+@76	lineno:29	var 	name:a	scope:br4 in line19	children:	
+@77	lineno:29	var 	name:b	scope:br6 in line26	children:	
+@128	lineno:42	expr	op:add	children:126,127	
+@129	lineno:42	var 	name:c	scope:br7 in line34	children:	
+@126	lineno:42	expr	op:add	children:124,125	
+@127	lineno:42	var 	name:b	scope:br7 in line34	children:	
+@124	lineno:42	expr	op:add	children:120,123	
+@125	lineno:42	var 	name:a	scope:br7 in line34	children:	
+@120	lineno:42	expr	op:add	children:116,119	
+@123	lineno:42	stmt	type:func_use	name:func4	children:121,122	
+@116	lineno:42	expr	op:add	children:112,115	
+@119	lineno:42	stmt	type:func_use	name:func3	children:117,118	
+@121	lineno:42	var 	name:func4	scope:global	children:	
+@122	lineno:42	para	children:	
+@112	lineno:42	stmt	type:func_use	name:func1	children:110,111	
+@115	lineno:42	stmt	type:func_use	name:func2	children:113,114	
+@117	lineno:42	var 	name:func3	scope:global	children:	
+@118	lineno:42	para	children:	
+@110	lineno:42	var 	name:func1	scope:global	children:	
+@111	lineno:42	para	children:	
+@113	lineno:42	var 	name:func2	scope:global	children:	
+@114	lineno:42	para	children:	
+
+tmp_var:0
+ass 17 %eax
+tmp_var:0
+ass 31 %eax
+tmp_var:0
+ass 45 %eax
+tmp_var:0
+ass 63 %eax
+tmp_var:0
+ass 66 %eax
+tmp_var:0
+ass 74 %eax
+tmp_var:0
+add 78 %eax
+tmp_var:0
+ass 79 %eax
+tmp_var:0
+ass 100 %eax
+tmp_var:0
+ass 103 %eax
+tmp_var:0
+ass 106 %eax
+tmp_var:0
+func ret112 %eax
+tmp_var:1
+func ret112 %ecx
+tmp_var:2
+func ret115 %edx
+tmp_var:1
+func ret112 %ecx
+tmp_var:2
+func ret115 %edx
+tmp_var:1
+add 116 %ecx
+tmp_var:2
+func ret119 %edx
+tmp_var:1
+add 116 %ecx
+tmp_var:2
+func ret119 %edx
+tmp_var:1
+add 120 %ecx
+tmp_var:2
+func ret123 %edx
+tmp_var:1
+add 120 %ecx
+tmp_var:2
+func ret123 %edx
+tmp_var:1
+add 124 %ecx
+tmp_var:1
+add 124 %ecx
+tmp_var:2
+tmp_var:1
+add 126 %ecx
+tmp_var:1
+add 126 %ecx
+tmp_var:2
+tmp_var:1
+add 128 %ecx
+tmp_var:1
+add 128 %ecx
+tmp_var:2
+tmp_var:1
+add 130 %ecx
+type check pass!
+136 void 
+21 int  
+35 int  
+49 int  
+84 int  
+135 int  
+8 int  
+9 function 
+10 union 
+20 22 int  
+23 function 
+24 union 
+34 36 int  
+37 function 
+38 union 
+48 50 int  
+51 function 
+52 union 
+83 85 int  
+86 function 
+87 union 
+134 14 17 int  %eax
+19 28 31 int  %eax
+33 42 45 int  %eax
+47 56 67 80 82 91 94 97 100 int  %eax
+103 int  %eax
+106 int  %eax
+131 133 12 int  
+13 int  
+15 int  
+16 int  $1
+18 int  
+26 int  
+27 int  
+29 int  
+30 int  $2
+32 int  
+40 int  
+41 int  
+43 int  
+44 int  $4
+46 int  
+54 int  
+55 int  
+60 63 int  %eax
+66 int  %eax
+71 74 int  %eax
+79 int  %eax
+81 int  
+89 int  
+90 int  
+92 int  
+93 int  
+95 int  
+96 int  
+98 int  
+99 int  $32
+101 int  
+102 int  $32
+104 int  
+105 int  $32
+107 function 
+109 union 
+132 int  $0
+58 int  
+59 int  
+61 int  
+62 int  $8
+64 int  
+65 int  
+69 int  
+70 int  
+72 int  
+73 int  $16
+75 int  
+78 int  %eax
+108 string $.STR0
+130 int  %ecx
+76 int  
+77 int  
+128 int  %ecx
+129 int  
+126 int  %ecx
+127 int  
+124 int  %ecx
+125 int  
+120 int  %ecx
+123 int  %edx
+116 int  %ecx
+119 int  %edx
+121 function 
+122 union 
+112 int  %ecx
+115 int  %edx
+117 function 
+118 union 
+110 function 
+111 union 
+113 function 
+114 union 
+
+place:
+a -4(%ebp)
+a -4(%ebp)
+a -4(%ebp)
+a -4(%ebp)
+a -4(%ebp)
+b -8(%ebp)
+b -12(%ebp)
+b -8(%ebp)
+c -12(%ebp)
+func1 func1
+func2 func2
+func3 func3
+func4 func4
+main main
+printf printf
+scanf scanf
+gencode id 136
+gencode id 21
+gencode id 20
+gencode id 14
+gencode id 12
+gencode id 13
+gencode id 17
+gencode id 15
+gencode id 16
+gencode id 19
+gencode id 18
+gencode id 35
+gencode id 34
+gencode id 28
+gencode id 26
+gencode id 27
+gencode id 31
+gencode id 29
+gencode id 30
+gencode id 33
+gencode id 32
+gencode id 49
+gencode id 48
+gencode id 42
+gencode id 40
+gencode id 41
+gencode id 45
+gencode id 43
+gencode id 44
+gencode id 47
+gencode id 46
+gencode id 84
+gencode id 83
+gencode id 56
+gencode id 54
+gencode id 55
+gencode id 67
+gencode id 60
+gencode id 58
+gencode id 59
+gencode id 63
+gencode id 61
+gencode id 62
+gencode id 66
+gencode id 64
+gencode id 65
+gencode id 80
+gencode id 71
+gencode id 69
+gencode id 70
+gencode id 74
+gencode id 72
+gencode id 73
+gencode id 79
+gencode id 75
+gencode id 78
+gencode id 76
+gencode id 77
+gencode id 82
+gencode id 81
+gencode id 135
+gencode id 134
+gencode id 91
+gencode id 89
+gencode id 90
+gencode id 94
+gencode id 92
+gencode id 93
+gencode id 97
+gencode id 95
+gencode id 96
+gencode id 100
+gencode id 98
+gencode id 99
+gencode id 103
+gencode id 101
+gencode id 102
+gencode id 106
+gencode id 104
+gencode id 105
+gencode id 131
+gencode id 107
+gencode id 108
+gencode id 130
+gencode id 128
+gencode id 126
+gencode id 124
+gencode id 120
+gencode id 116
+gencode id 112
+gencode id 110
+gencode id 115
+gencode id 113
+gencode id 119
+gencode id 117
+gencode id 123
+gencode id 121
+gencode id 125
+gencode id 127
+gencode id 129
+gencode id 133
+gencode id 132
+code has been generated

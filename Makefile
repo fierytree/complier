@@ -18,30 +18,12 @@ lex: src/main.lex.yy.c
 yacc: src/main.tab.c
 
 main: src/pch.h.gch
-	$(CC) $(CFLAGS) $(shell ls ./src/*.cpp) -o ./bin/main
+	$(CC) $(CFLAGS) $(shell ls ./src/*.cpp) -o ./bin/main.out
 
 .PHONY: all clean main run lex yacc test debug link testscope asm nasm example-code out
 
 run: lex yacc main
-	./bin/main tests/test.c > result.txt
-
-run1: lex yacc main
-	./bin/main tests/test1.c > result.txt
-
-run2: lex yacc main
-	./bin/main tests/test2.c > result.txt
-
-run3: lex yacc main
-	./bin/main tests/test3.c > result.txt
-
-run4: lex yacc main
-	./bin/main tests/test4.c > result.txt
-
-run5: lex yacc main
-	./bin/main tests/test5.c > result.txt
-
-run6: lex yacc main
-	./bin/main tests/test6.c > result.txt
+	./bin/main.out tests/test6.c > main.S
 
 clean:
 	rm -f src/*.output src/main.lex.yy.cpp src/main.tab.cpp src/main.tab.h src/main.output src/pch.h.gch $(TARGET) *.o ./bin/* 

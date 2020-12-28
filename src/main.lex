@@ -7,6 +7,7 @@ int br_count=0;
 typedef pair<int,int> br;
 br global=make_pair(0,1);
 vector<br> br_list;
+extern ofstream fout;
 %}
 BLOCKCOMMENT \/\*([^\*^\/]*|[\*^\/*]*|[^\**\/]*)*\*\/
 LINECOMMENT \/\/[^\n]*
@@ -16,7 +17,7 @@ WHILTESPACE [[:blank:]]
 INTEGER [0-9]+
 HEX_INTERGER 0x[A-Fa-f0-9]+|0X[A-Fa-f0-9]+
 
-CHAR \'.?\'
+CHAR \'.?\'|\'\\n\'|\'\\t\'
 STRING \".+\"
 
 IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
@@ -34,9 +35,11 @@ IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
 "if" return IF;
 "while" return WHILE;
 "for" return FOR;
-"return" {TreeNode* node = new TreeNode(lineno, NODE_CONST);yylval=node;return RETURN;}
+"return" return RETURN;
 "const" return CONST;
 "else" return ELSE;
+"break" return BREAK;
+"continue" return CONTINUE;
 
 "(" return LEFTBR;
 ")" return RIGHTBR;
@@ -115,7 +118,7 @@ IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
         if(x[i]>='0'&&x[i]<='9')tmp=tmp*16+x[i]-'0';
         else if(x[i]>='A'&&x[i]<='F')tmp=tmp*16+x[i]-'A'+10;
         else if(x[i]>='a'&&x[i]<='f')tmp=tmp*16+x[i]-'a'+10;
-        else cout<<"wrong hex integer!"<<endl;
+        else fout<<"wrong hex integer!"<<endl;
     }
     node->int_val=tmp;
     yylval = node;
@@ -125,7 +128,11 @@ IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
 {CHAR} {
     TreeNode* node = new TreeNode(lineno, NODE_CONST);
     node->type = TYPE_CHAR;
-    node->ch_val = yytext[1];
+    if(yytext[1]=='\\'){
+        if(yytext[2]=='n')node->ch_val='\n';
+        else if(yytext[2]=='t')node->ch_val='\t';
+    }
+    else node->ch_val = yytext[1];
     yylval = node;
     return CHAR;
 }

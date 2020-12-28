@@ -1,8 +1,57 @@
 	.file	"test6.c"
 	.text
+	.globl	func1
+	.type	func1, @function
+func1:
+	endbr32
+	pushl	%ebp
+	movl	%esp, %ebp
+	subl	$16, %esp
+	movl	$1, -4(%ebp)
+	movl	-4(%ebp), %eax
+	leave
+	ret
+	.globl	func2
+	.type	func2, @function
+func2:
+	endbr32
+	pushl	%ebp
+	movl	%esp, %ebp
+	subl	$16, %esp
+	movl	$2, -4(%ebp)
+	movl	-4(%ebp), %eax
+	leave
+	ret
+	.globl	func3
+	.type	func3, @function
+func3:
+	endbr32
+	pushl	%ebp
+	movl	%esp, %ebp
+	subl	$16, %esp
+	movl	$4, -4(%ebp)
+	movl	-4(%ebp), %eax
+	leave
+	ret
+	.globl	func4
+	.type	func4, @function
+func4:
+	endbr32
+	pushl	%ebp
+	movl	%esp, %ebp
+	subl	$16, %esp
+	movl	$8, -12(%ebp)
+	movl	-12(%ebp), %eax
+	movl	%eax, -8(%ebp)
+	movl	$16, -4(%ebp)
+	movl	-4(%ebp), %eax
+	addl	%eax, -8(%ebp)
+	movl	-8(%ebp), %eax
+	leave
+	ret
 	.section	.rodata
 .LC0:
-	.string	"%d"
+	.string	"%d\n"
 	.text
 	.globl	main
 	.type	main, @function
@@ -13,33 +62,36 @@ main:
 	pushl	-4(%ecx)
 	pushl	%ebp
 	movl	%esp, %ebp
+	pushl	%ebx
 	pushl	%ecx
-	subl	$20, %esp
-	movl	$10, -16(%ebp)
-	movl	-16(%ebp), %edx
-	movl	%edx, %eax
-	sall	$2, %eax
-	addl	%edx, %eax
-	addl	%eax, %eax
-	addl	%edx, %eax
-	leal	0(,%eax,4), %ecx
-	addl	%ecx, %eax
-	addl	%eax, %eax
+	subl	$16, %esp
+	movl	$32, -20(%ebp)
+	movl	$32, -16(%ebp)
+	movl	$32, -12(%ebp)
+	call	func1
+	movl	%eax, %ebx
+	call	func2
+	addl	%eax, %ebx
+	call	func3
+	addl	%eax, %ebx
+	call	func4
+	leal	(%ebx,%eax), %edx
+	movl	-20(%ebp), %eax
 	addl	%eax, %edx
 	movl	-16(%ebp), %eax
-	incl	%eax
-	imull	-16(%ebp), %eax
-	notl	%eax
+	addl	%eax, %edx
+	movl	-12(%ebp), %eax
 	addl	%edx, %eax
-	movl	%eax, -12(%ebp)
 	subl	$8, %esp
-	pushl	-12(%ebp)
+	pushl	%eax
 	pushl	$.LC0
 	call	printf
 	addl	$16, %esp
 	movl	$0, %eax
-	movl	-4(%ebp), %ecx
-	leave
+	leal	-8(%ebp), %esp
+	popl	%ecx
+	popl	%ebx
+	popl	%ebp
 	leal	-4(%ecx), %esp
 	ret
 	.section	.note.GNU-stack,"",@progbits

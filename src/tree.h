@@ -54,6 +54,7 @@ enum OperatorType
     OP_LOG_NOT,
     OP_BIT_NOT,
     OP_ADDR,
+    OP_STAR,
     OP_INCR,
     OP_DECR,
     OP_BACK_INCR,
@@ -69,7 +70,9 @@ enum StmtType {
     STMT_IF,
     STMT_RETURN,
     STMT_BLOCK,
-    STMT_FUNC_USE
+    STMT_FUNC_USE,
+    STMT_BREAK,
+    STMT_CONTINUE
 }
 ;
 
@@ -90,10 +93,11 @@ public:
 
     void printAST(); // 先输出自己 + 孩子们的id；再依次让每个孩子输出AST。
     void printSpecialInfo();
+    void printType();
 
 public:
     OperatorType optype;  // 如果是表达式
-    Type* type;  // 变量、类型、表达式结点，有类型。
+    Type* type=nullptr;  // 变量、类型、表达式结点，有类型。
     StmtType stype;
     int int_val;
     char ch_val;
@@ -103,10 +107,13 @@ public:
     pair<int,int> scope;
     bool is_const;
     int array_dim;
-    TreeNode* pa_func;
+    TreeNode* pa_func=nullptr;
+    TreeNode* pa_loop=nullptr;
     string place;
     int stack_size;
     int reg_count;
+    int start_labal;
+    int quit_labal;
 
 public:
     static string nodeType2String (NodeType t);

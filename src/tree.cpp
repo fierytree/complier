@@ -1,5 +1,5 @@
 #include "tree.h"
-
+extern ofstream fout;
 void TreeNode::addChild(TreeNode* child) {
     if(this->child==nullptr)this->child=child;    
     else this->child->addSibling(child);
@@ -17,77 +17,78 @@ TreeNode::TreeNode(int lineno, NodeType type) {
     nodeID=node_num;
     is_const=0;
     stack_size=-1,reg_count=-1;
+    start_labal=-1,quit_labal=-1;
     node_num++;
 }
 
 void TreeNode::printNodeInfo() {
-    cout<<"@"<<nodeID<<"\t"<<"lineno:"<<lineno<<"\t";
+    fout<<"@"<<nodeID<<"\t"<<"lineno:"<<lineno<<"\t";
     switch(this->nodeType){
         case NODE_CONST:{
-            cout<<"const"<<"\t";
+            fout<<"const"<<"\t";
             string t=type->getTypeInfo();
-            cout<<t<<"\t";
-            cout<<"val:";
-            if(t=="int ")cout<<int_val<<"\t";
-            else if(t=="char")cout<<ch_val<<"\t";
-            else if(t=="bool")cout<<b_val<<"\t";
-            else if(t=="string")cout<<str_val<<"\t";
-            else cout<<"errorType" ;
+            fout<<t<<"\t";
+            fout<<"val:";
+            if(t=="int ")fout<<int_val<<"\t";
+            else if(t=="char")fout<<ch_val<<"\t";
+            else if(t=="bool")fout<<b_val<<"\t";
+            else if(t=="string")fout<<str_val<<"\t";
+            else fout<<"errorType" ;
             break;
         }
             
         case NODE_VAR:{
-            if(is_const)cout<<"const var"<<"\t";
-            else cout<<"var "<<"\t";
-            cout<<"name:"<<var_name<<"\t";
-            if(scope.first==0)cout<<"scope:global"<<"\t";
-            else cout<<"scope:br"<<scope.first<<" in line"<<scope.second<<"\t";
+            if(is_const)fout<<"const var"<<"\t";
+            else fout<<"var "<<"\t";
+            fout<<"name:"<<var_name<<"\t";
+            if(scope.first==0)fout<<"scope:global"<<"\t";
+            else fout<<"scope:br"<<scope.first<<" in line"<<scope.second<<"\t";
             break;
         }
         case NODE_EXPR:{
-            cout<<"expr"<<"\t";
-            cout<<"op:"+opType2String(optype)<<"\t";    
+            fout<<"expr"<<"\t";
+            fout<<"op:"+opType2String(optype)<<"\t";    
             break;
         }
         case NODE_STMT:{
-            cout<<"stmt"<<"\t";
-            cout<<"type:"+sType2String(stype)<<"\t";
-            if(stype==STMT_FUNC_USE)cout<<"name:"<<var_name<<"\t";      
+            fout<<"stmt"<<"\t";
+            fout<<"type:"+sType2String(stype)<<"\t";
+            if(stype==STMT_FUNC_USE)fout<<"name:"<<var_name<<"\t";      
             break;
         }
         case NODE_PARA:{
-            cout<<"para"<<"\t";   
+            fout<<"para"<<"\t";   
             break;
         }
         case NODE_FUNC:{
-            cout<<"func"<<"\t";
-            cout<<"type:"+type->getTypeInfo()<<"\t";
-            cout<<"name:"<<var_name<<"\t";    
+            fout<<"func"<<"\t";
+            fout<<"type:"+type->getTypeInfo()<<"\t";
+            fout<<"name:"<<var_name<<"\t";    
             break;
         }
         case NODE_TYPE:{
-            cout<<"type"<<"\t";
-            cout<<type->getTypeInfo()<<"\t";
+            fout<<"type"<<"\t";
+            fout<<type->getTypeInfo()<<"\t";
             break;
         }
         case NODE_ARRAY:{
-            cout<<"array"<<"\t";
-            cout<<"dimen:"<<array_dim<<"\t";
+            fout<<"array"<<"\t";
+            fout<<"dimen:"<<array_dim<<"\t";
             break;
         }
         case NODE_PROG:{
-            cout<<"prog"<<"\t";
+            fout<<"prog"<<"\t";
             break;
         }
         default:{
-            cout<<"error nodetype"<<"\t";
+            fout<<"error nodetype"<<"\t";
             break;
         }
     }
 }
 
 void TreeNode::printChildrenId() {
-    cout<<"children:";
+    fout<<"children:";
     vector<int> re;
     TreeNode* tmp=child;
     while(tmp!=nullptr){
@@ -96,10 +97,10 @@ void TreeNode::printChildrenId() {
     }
     //sort(re.begin(),re.end());
     for(unsigned i=0;i<re.size();i++){
-        cout<<re[i];
-        if(i!=re.size()-1)cout<<",";
+        fout<<re[i];
+        if(i!=re.size()-1)fout<<",";
     }
-    cout<<"\t"<<endl;
+    fout<<"\t"<<endl;
 }
 bool cmp(TreeNode* t1,TreeNode* t2){
     return t1->nodeID<t2->nodeID;
@@ -117,10 +118,28 @@ void TreeNode::printAST() {
         while(tmp!=nullptr){
             v.push_back(tmp);
             if(cur->pa_func!=nullptr)tmp->pa_func=cur->pa_func;
+            if(cur->pa_loop!=nullptr&&tmp->pa_loop==nullptr)tmp->pa_loop=cur->pa_loop;
+            if(tmp->nodeType==NODE_STMT&&tmp->stype==STMT_BREAK)
+            tmp->pa_loop->quit_labal=-2;
+            if(tmp->nodeType==NODE_STMT&&tmp->stype==STMT_CONTINUE)
+            tmp->pa_loop->start_labal=-2;
             tmp=tmp->siblings;
         }
-        sort(v.begin(),v.end(),cmp);
         for(auto& x:v)q.push(x);
+    }
+}
+
+void TreeNode::printType() {
+    queue<TreeNode*> q;
+    q.push(this);
+    while(!q.empty()){
+        TreeNode* cur=q.front();
+        fout<<cur->nodeID<<" ";
+        if(cur->type!=nullptr)
+        fout<<cur->type->getTypeInfo()<<" "<<cur->place<<endl;
+        q.pop();
+        TreeNode* tmp=cur->child;
+        while(tmp!=nullptr)q.push(tmp),tmp=tmp->siblings;
     }
 }
 
@@ -141,13 +160,15 @@ int TreeNode::val(){
 }
 
 string TreeNode::sType2String(StmtType t) {
-    string stype_name[]={"skip","decl","while","for","if","return","block","func_use"};
+    string stype_name[]={"skip","decl","while","for","if","return","block",
+    "func_use","break","continue"};
     return stype_name[t];
 }
 
 
 string TreeNode::nodeType2String (NodeType t){
-    string nodeType_name[]={"const","var","expr","type","array","stmt","para","func","prog"};
+    string nodeType_name[]={"const","var","expr","type","array","stmt",
+    "para","func","prog"};
     return nodeType_name[t];
 }
 
@@ -157,7 +178,7 @@ string TreeNode::opType2String (OperatorType t){
     "eq","ueq","log_and","log_or","bit_and","bit_or","bit_xor","ass",
     "add_ass","sub_ass","mul_ass","div_ass","sur_ass","ls_ass","rs_ass",
     "and_ass","or_ass","xor_ass","minus_sign","pos_sign","log_not",
-    "bit_not","addr","incr","decr","b_incr","b_decr" ,"br"   
+    "bit_not","addr","star","incr","decr","b_incr","b_decr" ,"br"   
     };
     return optype_name[t];
 }

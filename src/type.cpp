@@ -1,5 +1,5 @@
 #include "type.h"
-
+extern ofstream fout;
 Type::Type(ValueType valueType) {
     this->type = valueType;
 }
@@ -9,7 +9,16 @@ void Type::addChild(Type* t){
 }
 
 bool Type::operator==(Type t){
-    //cout<<"1111 "<<type<<" "<<t.type<<endl;
+    //fout<<"1111 "<<type<<" "<<t.type<<endl;
+    if((this->type==COMPOSE_ARRAY&&t.type==COMPOSE_POINTER)||
+    (t.type==COMPOSE_ARRAY&&this->type==COMPOSE_POINTER)){
+        Type*t1;Type*t2;
+        if(this->type==COMPOSE_ARRAY)t2=this,t1=&t;
+        else t1=this,t2=&t;
+        t1=t1->retType;
+        while(t2->type==COMPOSE_ARRAY)t2=t2->retType;
+        return *t1==*t2;
+    }
     if(this->type!=t.type)return 0;
     if(type==COMPOSE_ARRAY){
         if(size!=t.size)return 0;
@@ -27,6 +36,7 @@ bool Type::operator==(Type t){
         }
         return 1;
     }
+    else if(type==COMPOSE_POINTER)return *retType==*t.retType;
     else return 1;
 }
 bool Type::operator!=(Type t){return !((*this)==t);}
@@ -34,6 +44,19 @@ void Type::addret(Type* t){
     Type* tmp=this;
     while(tmp->retType!=nullptr)tmp=tmp->retType;
     tmp->retType=t;
+}
+int Type::sz(){
+    if(type==VALUE_BOOL)return 1;
+    else if(type==VALUE_CHAR)return 1;
+    else if(type==VALUE_STRING)return size;
+    else if(type==VALUE_VOID)return 0;
+    else if(type==COMPOSE_ARRAY){
+        int cnt=1;
+        Type* t=this;
+        while(t->type==COMPOSE_ARRAY)cnt*=t->size,t=t->retType;
+        return cnt*(t->sz());
+    }
+    return 4; 
 }
 string Type::getTypeInfo() {
     switch(this->type) {
@@ -53,6 +76,8 @@ string Type::getTypeInfo() {
             return "function";
         case COMPOSE_UNION:
             return "union";
+        case COMPOSE_POINTER:
+            return "pointer";
         default:
             cerr << "shouldn't reach here, typeinfo";
             assert(0);
